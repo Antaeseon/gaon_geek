@@ -14,7 +14,7 @@ npm install
 ****************
 
 
-* cd client
+* cd front
   * npm run dev
   
 * cd server
