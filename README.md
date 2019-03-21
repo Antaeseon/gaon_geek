@@ -15,7 +15,7 @@ npm install
 
 
 * cd front
-  * npm run dev
+  * npm run serve
   
 * cd server
   * npm start
