@@ -4,6 +4,7 @@ import router from './router'
 
 Vue.config.productionTip = false
 
+//fdfsdfes
 new Vue({
   router,
   render: h => h(App)
