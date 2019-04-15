@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const router = express.Router();
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
+
 
 /* Get users listing.
     GET /
@@ -28,11 +30,53 @@ router.get('/', function(req, res, next) {
     }
 */
 router.post('/signup', function(req, res, next) {
-    req.body.signup_Date = Date.now();
-    // create가 성공적이면, then 이후를 실행. 에러가 일어나면 catch가 실행.
-    User.create(req.body).then(complete => {
-        res.send(complete);
-    }).catch(next);
+    // req.body.signup_Date = Date.now();
+    // crypto.randomBytes(64, (err, buf) => {
+    //     crypto.pbkdf2(req.body.pwd, buf.toString('base64'), 100000, 64, 'sha512', (err, key) => {
+    //       console.log(key.toString('base64'));
+    //       req.body.pwd=key.toString('base64')
+    //     });
+    //   });
+
+    var user_obj = new User({
+        id: req.body.name,
+        name: req.body.name,
+        pwd: req.body.pw,
+        nation: req.body.nation,
+        phoneNum: req.body.phoneNum,
+        email: req.body.email,
+        signup_Date: Date.now(),
+        point: 0, // empty array
+        isSeller : false
+    });
+
+    User.find({id:req.body.id},function(err,result){
+        if(err){
+            console.log(err);
+            res.status(500).send({message: "database_fail"});
+        }
+        else if(result.length==0){
+            user_obj.save(function(err){
+                if (err) res.status(500).send({message: "database_fail"});
+                else{
+                    res.send({message:"create"})
+                }
+            })
+        }else{
+            res.send({message:"already exist"})
+        }
+    })
+
+
+
+
+
+
+
+    // // create가 성공적이면, then 이후를 실행. 에러가 일어나면 catch가 실행.
+    // User.create(req.body).then(complete => {
+    //     res.send(complete);
+    // }).catch(next);
 });
 
 /*
