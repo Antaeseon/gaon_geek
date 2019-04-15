@@ -67,22 +67,17 @@ router.post('/signup', function(req, res, next) {
         }
     })
 
-
-
-
-
-
-
     // // create가 성공적이면, then 이후를 실행. 에러가 일어나면 catch가 실행.
     // User.create(req.body).then(complete => {
     //     res.send(complete);
     // }).catch(next);
 });
-
 /*
 
 */
+
 /* Update a user in the db */
+
 /*
     POST /user/modify/
     {
@@ -95,6 +90,7 @@ router.post('/signup', function(req, res, next) {
     
     }
 */
+
 router.put('/modify', function(req, res, next) {
     User.findOneAndUpdate({ id: req.body.id }, req.body).then(user => {
         User.findOne({ id: req.body.id }).then(user => {
