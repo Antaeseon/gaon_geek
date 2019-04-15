@@ -39,7 +39,7 @@ router.post('/signup', function(req, res, next) {
     //   });
 
     var user_obj = new User({
-        id: req.body.name,
+        id: req.body.id,
         name: req.body.name,
         pwd: req.body.pw,
         nation: req.body.nation,
