@@ -1,31 +1,101 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app id="inspire">
+
+    <v-navigation-drawer
+      v-model="drawer"
+      fixed
+      app
+    >
+      <v-list dense>
+        
+        <!-- 라우터 home으로 지정 -->
+        <v-list-tile router :to="{name: 'home'}">
+          <v-list-tile-action>
+            <v-icon>home</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Home</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        
+        <!-- 회원가입  -->
+        <v-list-tile router :to="{name: 'signup'}">
+          <v-list-tile-action>
+            <v-icon>assignment_ind</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>회원가입</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <!-- isLogin이 false인 경우에만 왼쪽 바에서 로그인 버튼이 출력된다. -->
+        <v-list-tile router :to="{name: 'login'}">
+          <v-list-tile-action>
+            <v-icon>contact_mail</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>로그인</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <!-- mypage router로 지시 -->
+        <v-list-tile router :to="{name: 'mypage'}" exact>
+        <v-list-tile-action>
+          <v-icon>contact_mail</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>마이페이지</v-list-tile-title>
+        </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
+
+
+    <v-toolbar color="indigo" dark fixed app>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+      <v-toolbar-title>Application</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-items class="hidden-sm-and-down">
+        <!-- 로그인 되어있으면 welcome 표시 -->
+        <v-menu offset-y v-if="isLogin">
+      <template v-slot:activator="{ on }">
+        <v-btn
+          flat
+          dark
+          v-on="on"
+          icon
+        >
+          <v-icon>more_vert</v-icon>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-tile router :to="{name: 'mypage'}">
+          <v-list-tile-title>My Page</v-list-tile-title>
+        </v-list-tile>
+        <!-- store.action 참조하는 방법 -->
+        <!-- store.mutation 참조하는 방법-->
+        <!-- @click="$store.commit('loginSuccess')" -->
+        <v-list-tile
+          @click="$store.dispatch('logout')"
+        >
+          <v-list-tile-title>Log Out</v-list-tile-title>
+        </v-list-tile>
+      </v-list>
+    </v-menu>
+
+        <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
+        <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+
+    <v-content>
+      <router-view></router-view>
+    </v-content>
+    
+    <v-footer color="indigo" app>
+      <span class="white--text">&copy; 2017</span>
+    
+    </v-footer>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
