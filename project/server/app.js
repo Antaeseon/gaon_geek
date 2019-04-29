@@ -22,7 +22,10 @@ app.set('view engine', 'pug');
 app.set('jwt-secret', config.secret)
 
 // connect to modules
-mongoose.connect('mongodb://localhost/wearever');
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
+mongoose.connect('mongodb://localhost/wearever',{ useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 // parse JSON and url-encoded query
 app.use(bodyParser.urlencoded({ extended: false }))
