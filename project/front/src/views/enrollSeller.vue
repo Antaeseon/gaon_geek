@@ -41,10 +41,35 @@
                         :error-messages="tagErrors"
                         required
                         label="업체 소개에 보여질 카테고리 태그를 입력해주세요."
-                        @input="$v.tag.$tag()"
-                        @blur="$v.tag.$tag()"
+                        @input="$v.tag.$touch()"
+                        @blur="$v.tag.$touch()"
                     >
                     </v-text-field>
+                    <template v-if="imageNum >= 1">
+                        <div class="img-wrapper">
+                            <div class="img-container" v-for="(url, index) in imageUrl" :key="index">
+                            <img :src="url" height="150" />
+                            </div>
+                        </div>
+                    </template>
+					<v-text-field
+                        label="Select Image"
+                        @click='pickFile'
+                        v-model="imageName"
+                        prepend-icon='attach_file'
+                        required
+                        :error-messages="ImageErrors"
+                        @input="$v.imageName.$touch()"
+                        @blur="$v.imageName.$touch()"
+                        ></v-text-field>
+					<input
+						type="file"
+						style="display: none"
+						ref="image"
+                        multiple
+						accept="image/*"
+						@change="onFilePicked"
+					>
                     <v-btn
                         color="primary"
                         depressed
@@ -63,58 +88,99 @@
 
 
 <script>
-  import { validationMixin } from 'vuelidate'
-  import { required } from 'vuelidate/lib/validators'
+    import { validationMixin } from 'vuelidate'
+    import { required } from 'vuelidate/lib/validators'
 
-  export default {
+    export default {
     mixins: [validationMixin],
 
     validations: {
-      name: { required },
-      location: { required },
-      about_us: { required },
-      tag: { required }
+        name: { required },
+        location: { required },
+        about_us: { required },
+        tag: { required },
+        imageName: { required }
+
     },
 
     data: () => ({
-      name: '',
-      location: '',
-      about_us: '',
-      tag: '',
+        name: '',
+        location: '',
+        about_us: '',
+        tag: '',
+        title: "Image Upload",
+        dialog: false,
+		imageName: [],
+		imageUrl: [],
+        imageFile: [],
+        imageNum: 0
     }),
 
     computed: {
-      nameErrors () {
+        nameErrors () {
         const errors = []
         if (!this.$v.name.$dirty) return errors
         !this.$v.name.required && errors.push('Name is required')
         return errors
-      },
-      locationErrors () {
+        },
+        locationErrors () {
         const errors = []
         if (!this.$v.location.$dirty) return errors
         !this.$v.location.required && errors.push('Location is required')
         return errors
-      },
-      aboutusErrors () {
+        },
+        aboutusErrors () {
         const errors = []
         if (!this.$v.about_us.$dirty) return errors
         !this.$v.about_us.required && errors.push('About us is required')
         return errors
-      },
-      tagErrors () {
+        },
+        tagErrors () {
         const errors = []
         if (!this.$v.tag.$dirty) return errors
         !this.$v.tag.required && errors.push('Tag info is required')
         return errors
-      },
-      
+        },
+        ImageErrors () {
+        const errors = []
+        if (!this.$v.imageName.$dirty) return errors
+        !this.$v.imageName.required && errors.push('Seller Authentication Image is required')
+        return errors
+        }
     },
 
     methods: {
-      submit () {
+        submit () {
         this.$v.$touch()
-      }
+        },
+        pickFile () {
+            this.$refs.image.click ()
+        },
+		onFilePicked (e) {
+            const files = e.target.files
+            this.imageNum = files.length
+            for(var i = 0; i < this.imageNum; i++)
+            {
+                const fileElement = files[i];
+                if(fileElement !== undefined) {
+                    this.imageName.push(fileElement.name)
+                    if(this.imageName[i].lastIndexOf('.') <= 0) {
+                        return
+                    }
+                    const fr = new FileReader ()
+                    fr.readAsDataURL(fileElement)
+                    fr.addEventListener('load', () => {
+                        this.imageUrl.push(fr.result)
+                        this.imageFile.push(fileElement) // this is an image file that can be sent to server...
+                    })
+                } else {
+                    this.imageName = []
+                    this.imageFile = []
+                    this.imageUrl = []
+                }
+            }
+		}
     }
-  }
+    }
+
 </script>
