@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser'); // http로 요청한 클라이언�
 var logger = require('morgan'); // http 리퀘스트에 대해 로깅하는 모듈이다.
 const mongoose = require('mongoose');
 const config = require('./config')
+var cors = require('cors')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/user/user');
@@ -14,7 +15,7 @@ var usersRouter = require('./routes/user/user');
 
 // set up express app
 var app = express();
-
+app.use(cors())
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');

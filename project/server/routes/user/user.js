@@ -38,10 +38,11 @@ router.post('/signup', function(req, res, next) {
     //     });
     //   });
 
+    console.log(req.body)
     var user_obj = new User({
         id: req.body.id,
         name: req.body.name,
-        pwd: req.body.pw,
+        pwd: req.body.pwd,
         nation: req.body.nation,
         phoneNum: req.body.phoneNum,
         email: req.body.email,
@@ -53,11 +54,14 @@ router.post('/signup', function(req, res, next) {
     User.find({id:req.body.id},function(err,result){
         if(err){
             console.log(err);
-            res.status(500).send({message: "database_fail"});
+            res.status(500).send({message: "database_fail1"});
         }
         else if(result.length==0){
             user_obj.save(function(err){
-                if (err) res.status(500).send({message: "database_fail"});
+                if (err) {
+                    res.status(500).send({message: "database_fail2"});
+                    console.log(err)
+                }
                 else{
                     res.send({message:"create"})
                 }
