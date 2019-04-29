@@ -86,7 +86,8 @@
     </v-container>
 </template>
 
-
+<!-- Replace the value of the key parameter with your own API key. -->
+<!-- script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&libraries=places&callback=initAutocomplete" async defer -->
 <script>
     import { validationMixin } from 'vuelidate'
     import { required } from 'vuelidate/lib/validators'
@@ -104,12 +105,14 @@
     },
 
     data: () => ({
+        title: "Image Upload",
+        dialog: false,
         name: '',
         location: '',
         about_us: '',
         tag: '',
-        title: "Image Upload",
-        dialog: false,
+        lat: 0.0,
+        lon: 0.0,
 		imageName: [],
 		imageUrl: [],
         imageFile: [],
@@ -152,6 +155,12 @@
     methods: {
         submit () {
         this.$v.$touch()
+        var autocomplete = new google.maps.places.Autocomplete(this.location,{types: ['geocode']});
+        autocomplete.addListener('place_changed', () => {
+            var place = autocomplete.getPlace();
+            this.lat = place.geometry.location.lat();
+            this.lon = place.geometry.location.lng();
+        });
         },
         pickFile () {
             this.$refs.image.click ()
