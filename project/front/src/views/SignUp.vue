@@ -1,61 +1,138 @@
 <template>
-<!-- 높이 맞추기 -->
-    <v-container fill-height style="max-width:450px;">  
-        <!-- 정 가운데로 맞추기 -->
-        <v-layout align-center row wrap>
-            <v-flex xs12>
-                <v-card>
-                    <v-toolbar flat height="30">
-                        <v-toolbar-title>Sign Up</v-toolbar-title>
-                    </v-toolbar>
-                    <div class="pa-3">
-                    <v-text-field
-                        v-model="id"
-                        label="아이디를 입력하세요"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                        v-model="pwd"
-                        label="비밀번호를 입력하세요"
-                        type="password"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                        v-model="name"
-                        label="이름을 입력하세요"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                        v-model="nation"
-                        label="국가를 입력하세요"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                        v-model="email"
-                        label="이메일을 입력하세요"
-                    >
-                    </v-text-field>
-                    <v-text-field
-                        v-model="phoneNum"
-                        label="핸드폰 번호를 입력하세요"
-                    >
-                    </v-text-field>
-                    <v-btn
-                        color="primary"
-                        depressed
-                        block
-                        large
-                        @click="login({
-                            email:email,
-                            password:password
-                        })"
-                    >
-                        회원가입하기
-                    </v-btn>
-                    </div>
-                </v-card>
-            </v-flex>
-        </v-layout>
-    </v-container>
+  <form>
+    <v-text-field
+      v-model="name"
+      :error-messages="nameErrors"
+      :counter="10"
+      label="Name"
+      required
+      @input="$v.name.$touch()"
+      @blur="$v.name.$touch()"
+    ></v-text-field>
+    <v-text-field
+      v-model="email"
+      :error-messages="emailErrors"
+      label="E-mail"
+      required
+      @input="$v.email.$touch()"
+      @blur="$v.email.$touch()"
+    ></v-text-field>
+    <v-text-field
+      v-model="email"
+      :error-messages="emailErrors"
+      label="E-mail"
+      required
+      @input="$v.email.$touch()"
+      @blur="$v.email.$touch()"
+    ></v-text-field>
+    <v-text-field
+      v-model="email"
+      :error-messages="emailErrors"
+      label="E-mail"
+      required
+      @input="$v.email.$touch()"
+      @blur="$v.email.$touch()"
+    ></v-text-field>
+    <v-text-field
+      v-model="email"
+      :error-messages="emailErrors"
+      label="E-mail"
+      required
+      @input="$v.email.$touch()"
+      @blur="$v.email.$touch()"
+    ></v-text-field>
+    <v-checkbox
+      v-model="checkbox"
+      :error-messages="checkboxErrors"
+      label="Do you agree?"
+      required
+      @change="$v.checkbox.$touch()"
+      @blur="$v.checkbox.$touch()"
+    ></v-checkbox>
+
+    <v-btn @click="submit">submit</v-btn>
+    <v-btn @click="clear">clear</v-btn>
+  </form>
 </template>
 
+
+<script>
+  import { validationMixin } from 'vuelidate'
+  import { required, maxLength, email } from 'vuelidate/lib/validators'
+
+  export default {
+    mixins: [validationMixin],
+
+    validations: {
+      name: { required, maxLength: maxLength(10) },
+      email: { required, email },
+      select: { required },
+      checkbox: {
+        checked (val) {
+          return val
+        }
+      }
+    },
+
+    data: () => ({
+      name: '',
+      email: '',
+      select: null,
+      items: [
+        'Item 1',
+        'Item 2',
+        'Item 3',
+        'Item 4'
+      ],
+      checkbox: false
+    }),
+
+    computed: {
+      checkboxErrors () {
+        const errors = []
+        if (!this.$v.checkbox.$dirty) return errors
+        !this.$v.checkbox.checked && errors.push('You must agree to continue!')
+        return errors
+      },
+      selectErrors () {
+        const errors = []
+        if (!this.$v.select.$dirty) return errors
+        !this.$v.select.required && errors.push('Item is required')
+        return errors
+      },
+      nameErrors () {
+        const errors = []
+        if (!this.$v.name.$dirty) return errors
+        !this.$v.name.maxLength && errors.push('Name must be at most 10 characters long')
+        !this.$v.name.required && errors.push('Name is required.')
+        return errors
+      },
+      emailErrors () {
+        const errors = []
+        if (!this.$v.email.$dirty) return errors
+        !this.$v.email.email && errors.push('Must be valid e-mail')
+        !this.$v.email.required && errors.push('E-mail is required')
+        return errors
+      }
+    },
+
+    methods: {
+      submit () {
+        this.$v.$touch()
+      },
+      clear () {
+        this.$v.$reset()
+        this.name = ''
+        this.email = ''
+        this.select = null
+        this.checkbox = false
+      }
+    }
+  }
+</script>
+
+
+
+<style>
+
+</style>
