@@ -41,7 +41,7 @@
         </v-list-tile>
 
          <!-- mypage router로 지시 -->
-        <v-list-tile router :to="{name: 'googleMap'}" exact>
+        <v-list-tile router :to="{name: 'googlemap'}" exact>
           <v-list-tile-action>
             <v-icon>place</v-icon>
           </v-list-tile-action>
@@ -51,6 +51,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
+    
 
     <v-toolbar color="indigo" dark fixed app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>

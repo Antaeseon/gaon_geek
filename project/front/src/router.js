@@ -27,8 +27,8 @@ export default new Router({
       component: () => import(/* webpackChunkName: "about" */ './views/SignUp.vue')
     },
     {
-      path: '/GoogleMap',
-      name: 'GoogleMap',
+      path: '/googlemap',
+      name: 'googlemap',
       component: () => import(/* webpackChunkName: "about" */ './views/GoogleMap.vue')
     }
   ]
