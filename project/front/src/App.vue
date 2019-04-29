@@ -27,7 +27,7 @@
           <v-list-tile-action>
             <v-icon>contact_mail</v-icon>
           </v-list-tile-action>
-          <v-list-tile-content></v-list-tile-content>
+          <v-list-tile-content>로그인</v-list-tile-content>
         </v-list-tile>
 
         <!-- mypage router로 지시 -->
@@ -37,6 +37,16 @@
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>마이페이지</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+         <!-- mypage router로 지시 -->
+        <v-list-tile router :to="{name: 'googleMap'}" exact>
+          <v-list-tile-action>
+            <v-icon>place</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>googleMap</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
