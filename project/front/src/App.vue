@@ -47,6 +47,16 @@
           <v-list-tile-title>마이페이지</v-list-tile-title>
         </v-list-tile-content>
         </v-list-tile>
+
+        <!-- googlemap router로 지시 -->
+        <v-list-tile router :to="{name: 'googlemap'}" exact>
+        <v-list-tile-action>
+          <v-icon>place</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-content>
+          <v-list-tile-title>Googlemap</v-list-tile-title>
+        </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
 
