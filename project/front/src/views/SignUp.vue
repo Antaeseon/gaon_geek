@@ -152,8 +152,12 @@
       },
       clear () {
         this.$v.$reset()
-        this.name = ''
-        this.email = ''
+        this.id = ''
+        this.password = ''
+        this.name=''
+        this.nation=''
+        this.phone=''
+        this.email=''
         this.select = null
         this.checkbox = false
       }
