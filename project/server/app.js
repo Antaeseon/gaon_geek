@@ -10,13 +10,15 @@ var cors = require('cors')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/user/user');
+var enrollSellerRouter = require('./routes/enrollSeller');
+var uploads = require('./routes/upload');
 
 // 익스프레스 객체를 생성하고 환경 설정을 한다.
 
 // set up express app
 var app = express();
 app.use(cors())
-// view engine setup
+    // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 // set the secret key variable for jwt
@@ -26,12 +28,12 @@ app.set('jwt-secret', config.secret)
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
-mongoose.connect('mongodb://localhost/wearever',{ useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/wearever', { useNewUrlParser: true });
 mongoose.Promise = global.Promise;
 // parse JSON and url-encoded query
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json());
-// print the request log on console
+app.use(bodyParser.json({ limit: '10mb', extended: true }))
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }))
+    // print the request log on console
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -41,6 +43,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 라우팅 설정. 세부 라우팅 설정은 /routes 폴더에 구현된다.
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
+app.use('/enrollSeller', enrollSellerRouter);
+app.use('/upload', uploads);
+app.use('/upload', express.static('uploads'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

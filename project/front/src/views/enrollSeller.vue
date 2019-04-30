@@ -87,10 +87,13 @@
 </template>
 
 <!-- Replace the value of the key parameter with your own API key. -->
-<!-- script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCkUOdZ5y7hMm0yrcCQoCvLwzdM6M8s5qk&libraries=places&callback=initAutocomplete" async defer -->
+<!-- script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN-EalhkgItu9dDWfcr02Ca0u7w64XN-I&callback=gmapsCallback" async defer -->
 <script>
+    // import MarkerClusterer from '@google/markerclusterer'
+    // import gmapsInit from './../utils/gmaps'
     import { validationMixin } from 'vuelidate'
     import { required } from 'vuelidate/lib/validators'
+    import { mapActions } from 'vuex'
 
     export default {
     mixins: [validationMixin],
@@ -101,7 +104,6 @@
         about_us: { required },
         tag: { required },
         imageName: { required }
-
     },
 
     data: () => ({
@@ -111,8 +113,8 @@
         location: '',
         about_us: '',
         tag: '',
-        lat: 0.0,
-        lon: 0.0,
+        // lat: 0.0,
+        // lon: 0.0,
 		imageName: [],
 		imageUrl: [],
         imageFile: [],
@@ -153,14 +155,28 @@
     },
 
     methods: {
+        ...mapActions(['requestEnrollSeller']),
         submit () {
-        this.$v.$touch()
-        var autocomplete = new google.maps.places.Autocomplete(this.location,{types: ['geocode']});
-        autocomplete.addListener('place_changed', () => {
-            var place = autocomplete.getPlace();
-            this.lat = place.geometry.location.lat();
-            this.lon = place.geometry.location.lng();
-        });
+            this.$v.$touch()
+            // var autocomplete = new google.maps.places.Autocomplete(this.location,{types: ['geocode']});
+            // autocomplete.addListener('place_changed', () => {
+            //     var place = autocomplete.getPlace();
+            //     this.lat = place.geometry.location.lat();
+            //     this.lon = place.geometry.location.lng();
+            //     console.log(this.lat + " " + this.lon);
+            // });
+            this.requestEnrollSeller({
+                // id: this.id,
+                name: this.name,
+                location: this.location,
+                about_us: this.about_us,
+                tag: this.tag,
+                imageUrl: this.imageUrl,
+                imageNum: this.imageNum,
+                imageFile: this.imageFile
+                // lat: this.lat,
+                // lon: this.lon
+            })
         },
         pickFile () {
             this.$refs.image.click ()
