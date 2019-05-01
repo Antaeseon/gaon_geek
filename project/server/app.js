@@ -11,7 +11,6 @@ var cors = require('cors')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/user/user');
 var enrollSellerRouter = require('./routes/enrollSeller');
-var uploads = require('./routes/upload');
 
 // 익스프레스 객체를 생성하고 환경 설정을 한다.
 
@@ -44,8 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/enrollSeller', enrollSellerRouter);
-app.use('/upload', uploads);
-app.use('/upload', express.static('uploads'));
+// app.use('/enrollSeller', express.static('uploads'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

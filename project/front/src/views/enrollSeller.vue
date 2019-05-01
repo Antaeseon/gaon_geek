@@ -158,25 +158,32 @@
         ...mapActions(['requestEnrollSeller']),
         submit () {
             this.$v.$touch()
-            // var autocomplete = new google.maps.places.Autocomplete(this.location,{types: ['geocode']});
-            // autocomplete.addListener('place_changed', () => {
-            //     var place = autocomplete.getPlace();
-            //     this.lat = place.geometry.location.lat();
-            //     this.lon = place.geometry.location.lng();
-            //     console.log(this.lat + " " + this.lon);
-            // });
-            this.requestEnrollSeller({
-                // id: this.id,
-                name: this.name,
-                location: this.location,
-                about_us: this.about_us,
-                tag: this.tag,
-                imageUrl: this.imageUrl,
-                imageNum: this.imageNum,
-                imageFile: this.imageFile
-                // lat: this.lat,
-                // lon: this.lon
-            })
+            if(this.name !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== [])
+            {
+                // var autocomplete = new google.maps.places.Autocomplete(this.location,{types: ['geocode']});
+                // autocomplete.addListener('place_changed', () => {
+                //     var place = autocomplete.getPlace();
+                //     this.lat = place.geometry.location.lat();
+                //     this.lon = place.geometry.location.lng();
+                //     console.log(this.lat + " " + this.lon);
+                // });
+                const formData = new FormData();
+                formData.append('id', 'temp');
+                formData.append('name', this.name);
+                formData.append('location', this.location);
+                formData.append('about_us', this.about_us);
+                formData.append('tag', this.tag);
+                formData.append('imageNum', this.imageNum);
+                // formData.append('lat', this.lat);
+                // formData.append('lon', this.lon);
+                for (var i = 0; i < this.imageNum; i++)
+                {
+                    var tempfileUrl = 'resources/images/' + this.imageName[i];
+                    formData.append('img', this.imageFile[i]);
+                    formData.append('imageUrl', tempfileUrl);
+                }
+                this.requestEnrollSeller(formData)
+            }
         },
         pickFile () {
             this.$refs.image.click ()

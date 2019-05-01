@@ -11,10 +11,10 @@ export default new Vuex.Store({
     getters: {},
     mutations: {},
     actions: {
-        requestEnrollSeller({ commit, dispatch }, sellerInfo) {
-            axios.post('http://localhost:3000/enrollSeller', sellerInfo)
+        requestEnrollSeller({ dispatch, commit }, form) {
+            axios.post('http://localhost:3000/enrollSeller', form)
                 .then(res => {
-                    console.log("잘 받아옴");
+                    console.log(res);
                 })
         }
     }
