@@ -4,9 +4,11 @@ import App from './App.vue'
 import router from './router'
 import axios from 'axios'
 import store from './store'
+import AccountKit from 'vue-facebook-account-kit'
 
 Vue.config.productionTip = false
 Vue.prototype.$http=axios
+Vue.use(AccountKit)
 
 //fdfsdfes
 new Vue({

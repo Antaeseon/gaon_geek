@@ -49,6 +49,10 @@
       @input="$v.email.$touch()"
       @blur="$v.email.$touch()"
     ></v-text-field>
+     <v-btn block depressed color="blue-grey" class="white--text" @click="smsLogin">
+      핸드폰 인증하기
+      <v-icon right dark>phone_android</v-icon>
+    </v-btn>
     <v-checkbox
       v-model="checkbox"
       :error-messages="checkboxErrors"
@@ -67,6 +71,8 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
+const axios = require('axios');
+
 
 export default {
   mixins: [validationMixin],
@@ -86,13 +92,20 @@ export default {
   },
 
   data: () => ({
+    creds: {
+        fbAppEventsEnabled: true,
+        redirect: 'http://localhost:8080',
+        display: 'popup',
+        debug: true
+    },
     id: "",
     password: "",
     name: "",
     nation: "",
     phone: "",
     email: "",
-    checkbox: false
+    checkbox: false,
+    
   }),
 
   computed: {
@@ -104,6 +117,7 @@ export default {
     },
 
     methods: {
+
       async register() {
         if (this.id.length < 3) {
           alert("Please fill Id");
@@ -142,6 +156,9 @@ export default {
         this.$router.push("/");
       }
     },
+    mounted() {
+    this.getSession();
+  },
 
     //   selectErrors () {
     //     const errors = []
@@ -194,6 +211,77 @@ export default {
   },
 
   methods: {
+        /**
+    * Facebook default init function
+    */
+    AccountKit_OnInteractive() {
+      AccountKit.init(this.creds);
+    },
+    /**
+    * callback after user submit otp
+    */
+    loginCallback(response) {
+      if (response.status === "PARTIALLY_AUTHENTICATED") {
+        this.doLogin(response.code, response.state);
+      }
+      else if (response.status === "NOT_AUTHENTICATED") {
+        // handle NOT_AUTHENTICATED error
+      }
+      else if (response.status === "BAD_PARAMS") {
+        // handle BAD_PARAMS error
+      }
+      else {
+        // handle unknown error
+      }
+    },
+    /**
+    * Init account kit popup
+    */
+    smsLogin() {
+      AccountKit.login(
+        'PHONE', 
+        { countryCode: '+880', phoneNumber: '' }, // will use default values if not specified
+        this.loginCallback
+      );
+    },
+    /**
+    * For server side verification
+    */
+    async doLogin(code, state) {
+      try {
+        const response = await axios.post('http://localhost:3030/api/otp/success', { code, state });
+        // server validation successful with response.data.phone
+      }
+      catch (err) {
+        console.log(err.response || err);
+      }
+    },
+    /**
+    * get the csrf token and account kit appid & version from server
+    */
+    async getSession() {
+      try {
+        const response = await axios.get(`http://localhost:3030/api/otp/session`);
+        this.creds.state = response.data.csrf;
+        this.creds.appId = response.data.appId;
+        this.creds.version = response.data.version;
+        this.loadAccountkitApi();
+      }
+      catch (err) {
+        console.log(err.response || err);
+      }
+    },
+    /**
+    * append the account kit script in head
+    */
+    loadAccountkitApi() {
+      const accountkitScript = document.createElement('script');
+      accountkitScript.setAttribute('src',`https://sdk.accountkit.com/en_US/sdk.js`);
+      accountkitScript.onload = () => {
+        window.AccountKit_OnInteractive = this.AccountKit_OnInteractive;
+      };
+      document.head.appendChild(accountkitScript);
+    },
     async submit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
