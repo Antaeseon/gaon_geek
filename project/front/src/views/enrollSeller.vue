@@ -4,6 +4,20 @@
         <!-- 정 가운데로 맞추기 -->
         <v-layout align-center row wrap>
             <v-flex xs12>
+                <v-alert
+                class="mb-3"
+                :value="isSubmitDup"
+                type="error"
+                >
+                이미 제출했습니다.
+                </v-alert>
+                <v-alert
+                class="mb-3"
+                :value="isSubmitError"
+                type="error"
+                >
+                장애가 발생했습니다. 잠시만 기다려주세요.
+                </v-alert>
                 <v-card>
                     <v-toolbar flat height="30">
                         <v-toolbar-title>Enroll Seller</v-toolbar-title>
@@ -53,6 +67,7 @@
                         </div>
                     </template>
 					<v-text-field
+                        readonly
                         label="Select Image"
                         @click='pickFile'
                         v-model="imageName"
@@ -93,7 +108,7 @@
     // import gmapsInit from './../utils/gmaps'
     import { validationMixin } from 'vuelidate'
     import { required } from 'vuelidate/lib/validators'
-    import { mapActions } from 'vuex'
+    import { mapState, mapActions } from 'vuex'
 
     export default {
     mixins: [validationMixin],
@@ -122,10 +137,11 @@
     }),
 
     computed: {
+        ...mapState([ "isSubmitted", "isSubmitDup", "isSubmitError"]),
         nameErrors () {
         const errors = []
         if (!this.$v.name.$dirty) return errors
-        !this.$v.name.required && errors.push('Name is required')
+        !this.$v.name.required && errors.push('Shop name is required')
         return errors
         },
         locationErrors () {
@@ -168,14 +184,14 @@
                 //     console.log(this.lat + " " + this.lon);
                 // });
                 const formData = new FormData();
-                formData.append('id', 'temp');
-                formData.append('name', this.name);
+                formData.append('id', 'temp'); // this.id);
+                formData.append('shop_name', this.name);
                 formData.append('location', this.location);
                 formData.append('about_us', this.about_us);
                 formData.append('tag', this.tag);
                 formData.append('imageNum', this.imageNum);
-                // formData.append('lat', this.lat);
-                // formData.append('lon', this.lon);
+                formData.append('lat', 0.0); // this.lat);
+                formData.append('lon', 0.0); // this.lon);
                 for (var i = 0; i < this.imageNum; i++)
                 {
                     var tempfileUrl = 'resources/images/' + this.imageName[i];
