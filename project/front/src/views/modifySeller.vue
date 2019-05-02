@@ -6,28 +6,14 @@
             <v-flex xs12>
                 <v-alert
                 class="mb-3"
-                :value="isSubmitDup"
-                type="error"
-                >
-                이미 제출했습니다.
-                </v-alert>
-                <v-alert
-                class="mb-3"
-                :value="isSubmitError"
+                :value="modifySellerError"
                 type="error"
                 >
                 장애가 발생했습니다. 잠시만 기다려주세요.
                 </v-alert>
-                <v-alert
-                class="mb-3"
-                :value="alreadySeller"
-                type="error"
-                >
-                이미 제출한 유저입니다.
-                </v-alert>
                 <v-card>
                     <v-toolbar flat height="30"> 
-                        <v-toolbar-title>Enroll Seller</v-toolbar-title>
+                        <v-toolbar-title>Modify Seller</v-toolbar-title>
                     </v-toolbar>
                     <div class="pa-3">
                     <v-text-field
@@ -66,32 +52,6 @@
                         @blur="$v.tag.$touch()"
                     >
                     </v-text-field>
-                    <template v-if="imageNum >= 1">
-                        <div class="img-wrapper">
-                            <div class="img-container" v-for="(url, index) in imageUrl" :key="index">
-                            <img :src="url" height="150" />
-                            </div>
-                        </div>
-                    </template>
-					<v-text-field
-                        readonly
-                        label="Select Image"
-                        @click='pickFile'
-                        v-model="imageName"
-                        prepend-icon='attach_file'
-                        required
-                        :error-messages="ImageErrors"
-                        @input="$v.imageName.$touch()"
-                        @blur="$v.imageName.$touch()"
-                        ></v-text-field>
-                        <!--multiple> <-->
-					<input
-						type="file"
-						style="display: none"
-						ref="image"
-						accept="image/*"
-						@change="onFilePicked"
-					>
                     <v-btn
                         color="primary"
                         depressed
@@ -99,7 +59,7 @@
                         large
                         @click="submit"
                     >
-                        Register
+                        Submit
                     </v-btn>
                     </div>
                 </v-card>
@@ -114,6 +74,7 @@
     import { validationMixin } from 'vuelidate'
     import { required } from 'vuelidate/lib/validators'
     import { mapState, mapActions, mapMutations } from 'vuex'
+    import store from './../store'
 
     export default {
     mixins: [validationMixin],
@@ -122,28 +83,21 @@
         name: { required },
         location: { required },
         about_us: { required },
-        tag: { required },
-        imageName: { required }
+        tag: { required }
     },
 
     data: () => ({
-        title: "Image Upload",
         dialog: false,
-        name: '',
-        location: '',
-        about_us: '',
-        tag: '',
+        name: store.state.sellerInfo.shop_name,
+        location: store.state.sellerInfo.location,
+        about_us: store.state.sellerInfo.about_us,
+        tag: store.state.sellerInfo.tag,
         lat: 0.0,
-        lon: 0.0,
-		imageName: [],
-		imageUrl: [],
-        imageFile: [],
-        imageNum: 0
+        lon: 0.0
     }),
 
     computed: {
-        ...mapState([ "isSubmitted", "isSubmitDup", "isSubmitError","alreadySeller"]),
-        ...mapMutations(["enrollError"]),
+        ...mapState([ "modifySellerError", "sellerInfo"]),
         nameErrors () {
         const errors = []
         if (!this.$v.name.$dirty) return errors
@@ -167,17 +121,11 @@
         if (!this.$v.tag.$dirty) return errors
         !this.$v.tag.required && errors.push('Tag info is required')
         return errors
-        },
-        ImageErrors () {
-        const errors = []
-        if (!this.$v.imageName.$dirty) return errors
-        !this.$v.imageName.required && errors.push('Seller Authentication Image is required')
-        return errors
         }
     },
 
     methods: {
-        ...mapActions(['requestEnrollSeller']),
+        ...mapActions(['modifySellerInfo']),
         async submit () {
             this.$v.$touch()
             if(this.formBlankTest())
@@ -190,56 +138,21 @@
                     // throw new Error(status);
                     }
                     const formData = new FormData();
-                    formData.append('id', 'temp'); // this.id);
+                    formData.append('id', store.state.sellerInfo.id);
                     formData.append('shop_name', this.name);
                     formData.append('location', this.location);
                     formData.append('about_us', this.about_us);
                     formData.append('tag', this.tag);
-                    formData.append('imageNum', this.imageNum);
                     formData.append('lat', results[0].geometry.location.lat());
                     formData.append('lon', results[0].geometry.location.lng());
-                    for (var i = 0; i < this.imageNum; i++)
-                    {
-                        var tempfileUrl = 'resources/images/' + this.imageName[i];
-                        formData.append('img', this.imageFile[i]);
-                        formData.append('imageUrl', tempfileUrl);
-                    }
-                    this.requestEnrollSeller(formData)
+                    this.modifySellerInfo(formData)
                 });
-            }
-        },
-        pickFile () {
-            this.$refs.image.click ()
-        },
-		onFilePicked (e) {
-            const files = e.target.files
-            this.imageNum = files.length
-            for(var i = 0; i < this.imageNum; i++)
-            {
-                const fileElement = files[i];
-                if(fileElement !== undefined) {
-                    this.imageName.push(fileElement.name)
-                    if(this.imageName[i].lastIndexOf('.') <= 0) {
-                        return
-                    }
-                    const fr = new FileReader ()
-                    fr.readAsDataURL(fileElement)
-                    fr.addEventListener('load', () => {
-                        this.imageUrl.push(fr.result)
-                        this.imageFile.push(fileElement) // this is an image file that can be sent to server...
-                    })
-                } else {
-                    this.imageName = []
-                    this.imageFile = []
-                    this.imageUrl = []
-                }
             }
         },
         formBlankTest()
         {
-            return this.name !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== [];
+            return this.name !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '';
         }
     }
     }
-
 </script>

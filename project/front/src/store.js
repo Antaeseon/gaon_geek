@@ -12,7 +12,8 @@ export default new Vuex.Store({
         isSubmitDup: false,
         isSubmitError: false,
         alreadySeller: false,
-        requestLists: [],
+        modifySellerError: false,
+        sellerInfo: null
     },
     getters: {},
     mutations: {
@@ -35,12 +36,20 @@ export default new Vuex.Store({
             state.isSubmitDup = false;
             state.isSubmitError = false;
             state.alreadySeller = false;
+        },
+        getSellerInfoSuccess(state, payload) {
+            state.sellerInfo = payload;
+        },
+        modifyError(state) {
+            state.modifySellerError = true;
+        },
+        modifyComplete(state) {
+            state.modifySellerError = false;
         }
     },
     actions: {
+        // Seller 등록 신청
         requestEnrollSeller({ commit }, form) {
-            // User의 권한 확인 이미 Seller이면, 못올리게함.
-
             // 아직 Seller가 아닐때 올림.
             axios.post('http://localhost:3000/enrollSeller', form)
                 .then(res => {
@@ -56,6 +65,44 @@ export default new Vuex.Store({
                 }).catch((err) => {
                     commit('enrollError');
                 })
-        }
+        },
+        // Seller 정보 받아오기
+        getSellerInfo({ commit }, form) {
+            // 아직 Seller가 아닐때 올림.
+            axios.post('http://localhost:3000/enrollSeller/getSellerInfo', form)
+                .then(res => {
+                    let current = {
+                        id: res.data.body[0].id,
+                        location: res.data.body[0].location,
+                        shop_name: res.data.body[0].shop_name,
+                        about_us: res.data.body[0].about_us,
+                        tag: res.data.body[0].tag,
+                        lat: res.data.body[0].lat,
+                        lon: res.data.body[0].lon,
+                        enroll_Date: res.data.body[0].enroll_Date,
+                        rating: res.data.body[0].rating,
+                        total_visit: res.data.body[0].total_visit
+                    }
+                    commit('getSellerInfoSuccess', current);
+                }).catch((err) => {
+                    console.log(err);
+                })
+        },
+        // Seller 정보 수정
+        modifySellerInfo({ commit }, form) {
+            // 아직 Seller가 아닐때 올림.
+            axios.post('http://localhost:3000/enrollSeller/modifySellerInfo', form)
+                .then(res => {
+                    if (res.data.tag === "You are not Seller") {
+                        commit('modifyError');
+                    } else {
+                        alert("수정이 완료되었습니다!");
+                        commit('modifyComplete');
+                        router.push({ name: "home" });
+                    }
+                }).catch((err) => {
+                    commit('modifyError');
+                })
+        },
     }
 })

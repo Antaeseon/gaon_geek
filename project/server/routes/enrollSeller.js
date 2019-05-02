@@ -179,5 +179,50 @@ router.get('/lists', function(req, res, next) {
     });
 });
 
+/* Get Seller Info of the enrollSeller */
+/*
+    POST /enrollSeller/getSellerInfo
+    {
+        id
+    }
+*/
+router.post('/getSellerInfo', function(req, res, next) {
+    Shop.find({ id: req.body.id }, function(err, result) {
+        if (err) {
+            res.status(500).send({ "Response": 500, "tag": err });
+        } else if (result.length == 0) {
+            res.send({ "Response": 500, "tag": "You are not Seller" });
+        } else {
+            res.status(202).send({ "Response": 202, "body": result });
+        }
+    });
+
+});
+
+/* Modify Seller Info of the enrollSeller */
+/*
+    POST /enrollSeller/modifySellerInfo
+    {
+        id
+    }
+*/
+router.post('/modifySellerInfo', upload.array('img'), function(req, res, next) {
+    Shop.findOneAndUpdate({ id: req.body.id }, {
+        location: req.body.location,
+        shop_name: req.body.shop_name,
+        about_us: req.body.about_us,
+        tag: req.body.tag,
+        lat: req.body.lat,
+        lon: req.body.lon,
+    }, function(err) {
+        if (err) {
+            res.status(500).send({ "Response": 500, "tag": err });
+            console.log(err);
+        } else {
+            res.status(202).send({ "Response": 202, "tag": "Success" });
+        }
+    });
+});
+
 // app.js로 모듈 연결
 module.exports = router;

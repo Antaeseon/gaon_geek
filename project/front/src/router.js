@@ -1,8 +1,13 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import store from "./store"
+import store from "./store"
 
-Vue.use(Router)
+Vue.use(Router);
+
+const checkSeller = (to, from, next) => {
+    store.dispatch('getSellerInfo', { id: 'temp' }); // 로그인이랑 연동
+    next();
+}
 
 export default new Router({
     mode: 'history',
@@ -39,6 +44,13 @@ export default new Router({
             name: 'enrollSeller',
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/enrollSeller.vue')
+        },
+        {
+            path: '/modifySeller',
+            name: 'modifySeller',
+            beforeEnter: checkSeller,
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/modifySeller.vue')
         }
     ]
 })
