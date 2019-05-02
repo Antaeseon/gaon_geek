@@ -77,7 +77,7 @@ const axios = require('axios');
 export default {
   mixins: [validationMixin],
 
-  validations: {
+validations: {
     id: { required },
     password: { required },
     name: { required },
@@ -97,7 +97,7 @@ export default {
         redirect: 'http://localhost:8080',
         display: 'popup',
         debug: true
-    },
+    },   
     id: "",
     password: "",
     name: "",
@@ -105,7 +105,7 @@ export default {
     phone: "",
     email: "",
     checkbox: false,
-    
+
   }),
 
   computed: {
