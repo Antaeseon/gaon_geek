@@ -6,13 +6,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     // 컴포넌트 간에 공유할 데이터 속성
-    state: {
-    },
-    getters: {
-    },
-    mutations: {
-    },
+    state: {},
+    getters: {},
+    mutations: {},
     actions: {
-        
+
     }
 })
