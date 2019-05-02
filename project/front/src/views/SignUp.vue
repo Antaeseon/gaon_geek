@@ -60,14 +60,14 @@
 
     <v-btn @click="submit">submit</v-btn>
     <v-btn @click="clear">clear</v-btn>
+    <v-btn @click="aaa">aaa</v-btn>
   </form>
 </template>
-
 
 <script>
 import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
-
+import Vue from 'vue'
 export default {
   mixins: [validationMixin],
 
@@ -101,46 +101,6 @@ export default {
       if (!this.$v.checkbox.$dirty) return errors;
       !this.$v.checkbox.checked && errors.push("You must agree to continue!");
       return errors;
-    },
-
-    methods: {
-      async register() {
-        if (this.id.length < 3) {
-          alert("Please fill Id");
-          return;
-        } else if (this.password.length < 8) {
-          alert("Please fill Password");
-          return;
-        } else if (!this.selected) {
-          alert("Please check category");
-          return;
-        }
-        console.log(this.id, this.password);
-        try {
-          await this.$http.post(`${config.uri}/register`, {
-            id: this.id,
-            password: this.password,
-            teamName: this.teamname,
-            position: this.position,
-            sportsCategory: this.selected,
-            isTeamLeader: this.teamLeader
-          });
-        } catch (error) {
-          console.log(error.response.data.message);
-          alert(error.response.data.message);
-          return;
-        }
-        try {
-          await this.$store.dispatch("login", {
-            id: this.id,
-            password: this.password
-          });
-        } catch (err) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
-        }
-        this.$router.push("/");
-      }
     },
 
     //   selectErrors () {
@@ -209,12 +169,12 @@ export default {
             email: this.email
           });
         } catch (error) {
-        //   console.log(error.response.data.message);
-        //   alert(error.response.data.message);
+          //   console.log(error.response.data.message);
+          //   alert(error.response.data.message);
           return;
         }
-        console.log("정상적으로 완료")
-        this.clear()
+        console.log("정상적으로 완료");
+        this.clear();
       }
     },
     clear() {
@@ -227,6 +187,27 @@ export default {
       this.email = "";
       this.select = null;
       this.checkbox = false;
+    },
+    aaa() {
+      console.log("ggg");
+      Vue.IMP().certification(
+        {
+          merchant_uid: "merchant_" + new Date().getTime() //본인인증과 연관된 가맹점 내부 주문번호가 있다면 넘겨주세요
+        },
+        result_success => {
+          // 인증성공
+          console.log(result_success.imp_uid);
+          console.log(result_success.merchant_uid);
+          // 이후 Business Logic 처리하시면 됩니다.
+        },
+        result_failure => {
+          //실패시 실행 될 콜백 함수
+          var msg = "인증에 실패하였습니다.";
+          msg += "에러내용 : " + rsp.error_msg;
+
+          alert(msg);
+        }
+      );
     }
   }
 };
