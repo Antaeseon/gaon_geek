@@ -11,24 +11,34 @@ export default new Vuex.Store({
         isSubmitted: false,
         isSubmitDup: false,
         isSubmitError: false,
+        alreadySeller: false,
+        requestLists: [],
     },
     getters: {},
     mutations: {
         enrollDup(state) {
             state.isSubmitDup = true;
             state.isSubmitError = false;
+            state.alreadySeller = false;
+        },
+        alreadySellerState(state) {
+            state.isSubmitDup = false;
+            state.isSubmitError = false;
+            state.alreadySeller = true;
         },
         enrollError(state) {
             state.isSubmitDup = false;
             state.isSubmitError = true;
+            state.alreadySeller = false;
         },
         enrollComplete(state) {
             state.isSubmitDup = false;
             state.isSubmitError = false;
+            state.alreadySeller = false;
         }
     },
     actions: {
-        requestEnrollSeller({ dispatch, commit }, form) {
+        requestEnrollSeller({ commit }, form) {
             // User의 권한 확인 이미 Seller이면, 못올리게함.
 
             // 아직 Seller가 아닐때 올림.
@@ -36,6 +46,8 @@ export default new Vuex.Store({
                 .then(res => {
                     if (res.data.tag === "Duplicate") {
                         commit('enrollDup');
+                    } else if (res.data.tag === "Already Seller") {
+                        commit('alreadySellerState');
                     } else {
                         alert("제출이 완료되었습니다!");
                         commit('enrollComplete');
@@ -43,7 +55,6 @@ export default new Vuex.Store({
                     }
                 }).catch((err) => {
                     commit('enrollError');
-                    console.log(err);
                 })
         }
     }

@@ -18,8 +18,15 @@
                 >
                 장애가 발생했습니다. 잠시만 기다려주세요.
                 </v-alert>
+                <v-alert
+                class="mb-3"
+                :value="alreadySeller"
+                type="error"
+                >
+                이미 제출한 유저입니다.
+                </v-alert>
                 <v-card>
-                    <v-toolbar flat height="30">
+                    <v-toolbar flat height="30"> 
                         <v-toolbar-title>Enroll Seller</v-toolbar-title>
                     </v-toolbar>
                     <div class="pa-3">
@@ -77,11 +84,11 @@
                         @input="$v.imageName.$touch()"
                         @blur="$v.imageName.$touch()"
                         ></v-text-field>
+                        <!--multiple> <-->
 					<input
 						type="file"
 						style="display: none"
 						ref="image"
-                        multiple
 						accept="image/*"
 						@change="onFilePicked"
 					>
@@ -104,11 +111,11 @@
 <!-- Replace the value of the key parameter with your own API key. -->
 <!-- script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCN-EalhkgItu9dDWfcr02Ca0u7w64XN-I&callback=gmapsCallback" async defer -->
 <script>
-    // import MarkerClusterer from '@google/markerclusterer'
-    // import gmapsInit from './../utils/gmaps'
+    import MarkerClusterer from '@google/markerclusterer'
+    import gmapsInit from './../utils/gmaps'
     import { validationMixin } from 'vuelidate'
     import { required } from 'vuelidate/lib/validators'
-    import { mapState, mapActions } from 'vuex'
+    import { mapState, mapActions, mapMutations } from 'vuex'
 
     export default {
     mixins: [validationMixin],
@@ -128,8 +135,8 @@
         location: '',
         about_us: '',
         tag: '',
-        // lat: 0.0,
-        // lon: 0.0,
+        lat: 0.0,
+        lon: 0.0,
 		imageName: [],
 		imageUrl: [],
         imageFile: [],
@@ -137,7 +144,8 @@
     }),
 
     computed: {
-        ...mapState([ "isSubmitted", "isSubmitDup", "isSubmitError"]),
+        ...mapState([ "isSubmitted", "isSubmitDup", "isSubmitError","alreadySeller"]),
+        ...mapMutations(["enrollError"]),
         nameErrors () {
         const errors = []
         if (!this.$v.name.$dirty) return errors
@@ -172,33 +180,34 @@
 
     methods: {
         ...mapActions(['requestEnrollSeller']),
-        submit () {
+        async submit () {
             this.$v.$touch()
-            if(this.name !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== [])
+            if(this.formBlankTest())
             {
-                // var autocomplete = new google.maps.places.Autocomplete(this.location,{types: ['geocode']});
-                // autocomplete.addListener('place_changed', () => {
-                //     var place = autocomplete.getPlace();
-                //     this.lat = place.geometry.location.lat();
-                //     this.lon = place.geometry.location.lng();
-                //     console.log(this.lat + " " + this.lon);
-                // });
-                const formData = new FormData();
-                formData.append('id', 'temp'); // this.id);
-                formData.append('shop_name', this.name);
-                formData.append('location', this.location);
-                formData.append('about_us', this.about_us);
-                formData.append('tag', this.tag);
-                formData.append('imageNum', this.imageNum);
-                formData.append('lat', 0.0); // this.lat);
-                formData.append('lon', 0.0); // this.lon);
-                for (var i = 0; i < this.imageNum; i++)
-                {
-                    var tempfileUrl = 'resources/images/' + this.imageName[i];
-                    formData.append('img', this.imageFile[i]);
-                    formData.append('imageUrl', tempfileUrl);
-                }
-                this.requestEnrollSeller(formData)
+                const google = await gmapsInit();
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ address: this.location }, (results, status) => {
+                    if (status !== `OK` || !results[0]) {
+                        this.enrollError()
+                    // throw new Error(status);
+                    }
+                    const formData = new FormData();
+                    formData.append('id', 'temp'); // this.id);
+                    formData.append('shop_name', this.name);
+                    formData.append('location', this.location);
+                    formData.append('about_us', this.about_us);
+                    formData.append('tag', this.tag);
+                    formData.append('imageNum', this.imageNum);
+                    formData.append('lat', results[0].geometry.location.lat());
+                    formData.append('lon', results[0].geometry.location.lng());
+                    for (var i = 0; i < this.imageNum; i++)
+                    {
+                        var tempfileUrl = 'resources/images/' + this.imageName[i];
+                        formData.append('img', this.imageFile[i]);
+                        formData.append('imageUrl', tempfileUrl);
+                    }
+                    this.requestEnrollSeller(formData)
+                });
             }
         },
         pickFile () {
@@ -227,7 +236,11 @@
                     this.imageUrl = []
                 }
             }
-		}
+        },
+        formBlankTest()
+        {
+            return this.name !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== [];
+        }
     }
     }
 

@@ -70,7 +70,7 @@
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
         <!-- 로그인 되어있으면 welcome 표시 -->
-        <v-menu offset-y v-if="isLogin">
+        <!-- <v-menu offset-y v-if="isLogin">
           <template v-slot:activator="{ on }">
             <v-btn flat dark v-on="on" icon>
               <v-icon>more_vert</v-icon>
@@ -79,18 +79,18 @@
           <v-list>
             <v-list-tile router :to="{name: 'mypage'}">
               <v-list-tile-title>My Page</v-list-tile-title>
-            </v-list-tile>
+            </v-list-tile> -->
             <!-- store.action 참조하는 방법 -->
             <!-- store.mutation 참조하는 방법-->
             <!-- @click="$store.commit('loginSuccess')" -->
-            <v-list-tile @click="$store.dispatch('logout')">
+            <!-- <v-list-tile @click="$store.dispatch('logout')">
               <v-list-tile-title>Log Out</v-list-tile-title>
             </v-list-tile>
           </v-list>
-        </v-menu>
+        </v-menu> -->
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
-        <v-btn v-else @click.stop="dialog = true">log in</v-btn>
+        <v-btn @click.stop="dialog = true">log in</v-btn>
             <v-dialog
       v-model="dialog"
       max-width="290"
@@ -141,7 +141,8 @@
     data () {
       return {
         dialog: false,
-        drawer: null
+        drawer: null,
+        valid: true       // front console에서 에러나서 만든것임...
       }
     }
   }
