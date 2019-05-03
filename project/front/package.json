@@ -14,7 +14,11 @@
     "jquery": "^3.4.0",
     "sass-loader": "^7.1.0",
     "vue": "^2.6.6",
+<<<<<<< HEAD
     "vue-iamport": "^0.1.2",
+=======
+    "vue-facebook-account-kit": "^0.1.0",
+>>>>>>> 4d982225b0d3099951d3217c45ff6be3f7c67242
     "vue-router": "^3.0.1",
     "vue2-google-maps": "^0.10.6",
     "vuelidate": "^0.7.4",

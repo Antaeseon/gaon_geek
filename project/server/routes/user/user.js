@@ -29,6 +29,11 @@ router.get('/', function(req, res, next) {
     
     }
 */
+
+
+
+
+
 router.post('/signup', function(req, res, next) {
     // req.body.signup_Date = Date.now();
     // crypto.randomBytes(64, (err, buf) => {
@@ -122,44 +127,66 @@ router.post('/delete', function(req, res, next) {
         pwd
     }
 */
-router.post('/login', (req, res, next) => {
-    User.findOne({ id: req.body.id }).then(user => {
-        if (req.body.pwd === user.pwd) {
-            // create a promise that generates jwt asynchronously
-            const userToken = getToken(req, user);
-            res.status(202).send({ "Response": 202, "token": userToken });
-        } else res.status(400).send({ "Response": 400, "error": "아이디와 비밀번호를 확인해주세요." });
-    }).catch(next);
-});
-
-/*
-    POST /user/check/
-    {
-        accessToken
-    }
-*/
-router.post('/check', (req, res, next) => {
+router.post('/login', function (req, res, next) {
+    const {
+      id,
+      pwd
+    } = req.body;
     const secret = req.app.get('jwt-secret');
-    var token = req.get('accessToken');
-    if (typeof token !== 'undefined') {
-        var decoded = jwt.verify(token, secret);
-        User.findOne({ id: decoded.id }).then(user => {
-            res.send({ "Response": 202, "token": token });
-        }).catch(function(err) {
-            res.status(400).send({
-                "Response": 400,
-                "error": err.message
-            });
-        });
-    } else {
-        res.status(403).send({
-            "Response": 403,
-            "error": "로그인 토큰이 잘못된 형식입니다."
-        });
-    }
-});
+    console.log("secrete : ", secret);
+    console.log(id, pwd);
+    // check exist user
+    const check = function (user) {
+      if (!user) { //유저 존재 안함
+        throw new Error('user not exist');
+      } else {
+        if (user.verify(pwd)) { //비밀번호 맞음
+          const p = new Promise((resolve, reject) => {
+            jwt.sign({
+                id: user.id
+              },
+              secret, {
+                expiresIn: '7d',
+              },
+              (err, token) => {
+                if (err) reject(err);
+                resolve(token);
+              }
+            )
+          });
+          return p;
+        } else { //비밀번호 틀림
+          throw new Error('incorrect password');
+        }
+      }
+    };
+  
+    // return token
+    const respond = function (Token) {
+      console.log(Token)
+      res.json({
+        message: 'logged in successfully',
+        Token
+      });
+    };
+  
+    // Error handling
+    const onError = function (error) {
+      console.log("-------------------------this", error.message)
+      res.status(405).json({
+        message: error.message
+      })
+    };
+  
+    User.findOneById(id)
+      .then(check)
+      .then(respond)
+      .catch(onError);
+  });
 
-function getToken(req, user) {
+
+
+  function getToken(req, user) {
     const secret = req.app.get('jwt-secret');
     var token = jwt.sign({
             id: user.id,
