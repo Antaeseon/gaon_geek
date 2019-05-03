@@ -146,7 +146,6 @@
     methods : {
       login(){
         this.dialog=false;
-        X
       }
     }
   }
