@@ -92,7 +92,7 @@
               <v-list-tile-title>Log Out</v-list-tile-title>
             </v-list-tile>
           </v-list>
-        </v-menu> -->
+        </v-menu>
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
         <v-btn v-else @click.stop="dialog = true">log in</v-btn>
