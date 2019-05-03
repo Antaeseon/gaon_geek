@@ -40,7 +40,7 @@
           </v-list-tile-content>
         </v-list-tile>
 
-         <!-- mypage router로 지시 -->
+        <!-- mypage router로 지시 -->
         <v-list-tile router :to="{name: 'googlemap'}" exact>
           <v-list-tile-action>
             <v-icon>place</v-icon>
@@ -58,11 +58,8 @@
             <v-list-tile-title>판매자 등록</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-
       </v-list>
     </v-navigation-drawer>
-    
-
 
     <v-toolbar color="indigo" dark fixed app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
@@ -70,7 +67,7 @@
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
         <!-- 로그인 되어있으면 welcome 표시 -->
-        <v-menu offset-y v-if="isLogin">
+        <v-menu offset-y v-if="showId">
           <template v-slot:activator="{ on }">
             <v-btn flat dark v-on="on" icon>
               <v-icon>more_vert</v-icon>
@@ -83,7 +80,7 @@
             <!-- store.action 참조하는 방법 -->
             <!-- store.mutation 참조하는 방법-->
             <!-- @click="$store.commit('loginSuccess')" -->
-            <v-list-tile @click="$store.dispatch('logout')">
+            <v-list-tile @click="$store.dispatch('signOut')">
               <v-list-tile-title>Log Out</v-list-tile-title>
             </v-list-tile>
           </v-list>
@@ -91,37 +88,38 @@
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
         <v-btn v-else @click.stop="dialog = true">log in</v-btn>
-            <v-dialog
-      v-model="dialog"
-      max-width="290"
-    >
-      <v-card>
-        <v-card-title class="headline">Log in</v-card-title>
-          <v-form v-model="valid">
-    <v-container>
-      <v-layout>
-          <v-form>
-                  <v-text-field prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
-                  <v-text-field prepend-icon="lock" name="password" label="Password" id="password" type="password"></v-text-field>
-                </v-form>      </v-layout>
-    </v-container>
-  </v-form>
+        <v-dialog v-model="dialog" max-width="290">
+          <v-card>
+            <v-card-title class="headline">Log in</v-card-title>
+            <v-form>
+              <v-container>
+                <v-layout>
+                  <v-form>
+                    <v-text-field
+                      prepend-icon="person"
+                      name="login"
+                      label="Login"
+                      type="text"
+                      v-model="uid"
+                    ></v-text-field>
+                    <v-text-field
+                      prepend-icon="lock"
+                      name="password"
+                      label="Password"
+                      id="password"
+                      type="password"
+                      v-model="pwd"
+                    ></v-text-field>
+                  </v-form>
+                </v-layout>
+              </v-container>
+            </v-form>
 
-        <v-card-actions>
-            <v-spacer></v-spacer>
-
-
-          <v-btn
-            color="green darken-1"
-            flat="flat"
-            @click="login"
-          >
-            submit
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
+            <v-card-actions>
+              <v-btn color="green darken-1" flat="flat" @click="login">submit</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-toolbar-items>
     </v-toolbar>
 
@@ -136,17 +134,47 @@
 </template>
 
 <script>
-  export default {
-    data () {
-      return {
-        dialog: false,
-        drawer: null
+import { mapGetters } from "vuex";
+
+export default {
+  data() {
+    return {
+      dialog: false,
+      drawer: null,
+      uid: "",
+      pwd: ""
+    };
+  },
+  computed: {
+    ...mapGetters({
+      showId: "id",
+      Token: "Token"
+    })
+  },
+  methods: {
+    async login() {
+      try {
+        console.log("들어옴");
+        console.log(this.uid, this.pwd);
+        await this.$store.dispatch("login", {
+          id : this.uid,
+          pwd : this.pwd
+        });
+      } catch (err) {
+        console.log(err)
+        // console.log(err.response.data.message);
+        // alert(err.response.data.message);
       }
+      this.dialog = false;
+      this.clear();
     },
-    methods : {
-      login(){
-        this.dialog=false;
-      }
+    logout() {
+      this.$store.dispatch("signOut");
+    },
+    clear(){
+      this.uid='';
+      this.pwd='';
     }
   }
+};
 </script>
