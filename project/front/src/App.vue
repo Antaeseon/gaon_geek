@@ -88,39 +88,6 @@
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
         <v-btn v-else @click.stop="dialog = true">log in</v-btn>
-<<<<<<< HEAD
-            <v-dialog
-      v-model="dialog"
-      max-width="290"
-    >
-      <v-card>
-        <v-card-title class="headline">Log in</v-card-title>
-          <v-form v-model="valid">
-    <v-container>
-      <v-layout>
-          <v-form>
-                  <v-text-field prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
-                  <v-text-field prepend-icon="lock" name="password" label="Password" id="password" type="password"></v-text-field>
-                </v-form>      </v-layout>
-    </v-container>
-  </v-form>
-
-        <v-card-actions>
-            <v-spacer></v-spacer>
-
-
-          <v-btn
-            color="green darken-1"
-            flat="flat"
-            @click="login"
-          >
-            submit
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-=======
         <v-dialog v-model="dialog" max-width="290">
           <v-card>
             <v-card-title class="headline">Log in</v-card-title>
@@ -153,7 +120,6 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
->>>>>>> 4d982225b0d3099951d3217c45ff6be3f7c67242
       </v-toolbar-items>
     </v-toolbar>
 
@@ -196,16 +162,9 @@ export default {
         });
       } catch (err) {
         console.log(err)
-        // console.log(err.response.data.message);
-        // alert(err.response.data.message);
+        console.log(err.response.data.message);
+        alert(err.response.data.message);
       }
-<<<<<<< HEAD
-    },
-    methods : {
-      login(){
-        this.dialog=false;
-      }
-=======
       this.dialog = false;
       this.clear();
     },
@@ -215,7 +174,6 @@ export default {
     clear(){
       this.uid='';
       this.pwd='';
->>>>>>> 4d982225b0d3099951d3217c45ff6be3f7c67242
     }
   }
 };
