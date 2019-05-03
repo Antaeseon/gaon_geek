@@ -51,6 +51,12 @@ export default new Router({
             beforeEnter: checkSeller,
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/modifySeller.vue')
-        }
+        },
+        {
+            path: '/temp',
+            name: 'temp',
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/temp.vue')
+        },
     ]
 })

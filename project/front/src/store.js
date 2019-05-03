@@ -98,6 +98,7 @@ export default new Vuex.Store({
                     } else {
                         alert("수정이 완료되었습니다!");
                         commit('modifyComplete');
+                        commit('getSellerInfoSuccess', res.data.data);
                         router.push({ name: "home" });
                     }
                 }).catch((err) => {

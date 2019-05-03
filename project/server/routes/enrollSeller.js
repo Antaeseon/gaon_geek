@@ -214,12 +214,18 @@ router.post('/modifySellerInfo', upload.array('img'), function(req, res, next) {
         tag: req.body.tag,
         lat: req.body.lat,
         lon: req.body.lon,
-    }, function(err) {
+    }, function(err, result) {
         if (err) {
             res.status(500).send({ "Response": 500, "tag": err });
             console.log(err);
         } else {
-            res.status(202).send({ "Response": 202, "tag": "Success" });
+            Shop.findOne({ id: req.body.id }, function(errr, newresults) {
+                if (err) {
+                    res.status(500).send({ "Response": 500, "tag": err });
+                } else {
+                    res.status(202).send({ "Response": 202, "tag": "Success", "data": newresults });
+                }
+            });
         }
     });
 });
