@@ -114,7 +114,7 @@
           <v-btn
             color="green darken-1"
             flat="flat"
-            @click="dialog = false"
+            @click="login"
           >
             submit
           </v-btn>
@@ -135,13 +135,17 @@
   </v-app>
 </template>
 
-
 <script>
   export default {
     data () {
       return {
         dialog: false,
         drawer: null
+      }
+    },
+    methods : {
+      login(){
+        this.dialog=false;
       }
     }
   }
