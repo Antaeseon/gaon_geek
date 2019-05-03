@@ -58,6 +58,14 @@
             <v-list-tile-title>판매자 등록</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile router :to="{name: 'modifySeller'}">
+          <v-list-tile-action>
+            <v-icon>supervisor_account</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>판매자 정보 수정</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
 
@@ -76,7 +84,7 @@
           <v-list>
             <v-list-tile router :to="{name: 'mypage'}">
               <v-list-tile-title>My Page</v-list-tile-title>
-            </v-list-tile>
+            </v-list-tile> -->
             <!-- store.action 참조하는 방법 -->
             <!-- store.mutation 참조하는 방법-->
             <!-- @click="$store.commit('loginSuccess')" -->
@@ -84,7 +92,7 @@
               <v-list-tile-title>Log Out</v-list-tile-title>
             </v-list-tile>
           </v-list>
-        </v-menu>
+        </v-menu> -->
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
         <v-btn v-else @click.stop="dialog = true">log in</v-btn>
