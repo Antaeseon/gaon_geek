@@ -84,7 +84,7 @@
           <v-list>
             <v-list-tile router :to="{name: 'mypage'}">
               <v-list-tile-title>My Page</v-list-tile-title>
-            </v-list-tile> -->
+            </v-list-tile>
             <!-- store.action 참조하는 방법 -->
             <!-- store.mutation 참조하는 방법-->
             <!-- @click="$store.commit('loginSuccess')" -->

@@ -92,6 +92,7 @@ export default new Vuex.Store({
         },
         signOut({ commit }) {
             commit('signOut')
+            router.push({ name: "home" });
         },
         // Seller 등록 신청
         requestEnrollSeller({ commit }, form) {
