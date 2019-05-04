@@ -7,10 +7,21 @@ import { STATES } from 'mongoose';
 Vue.use(Router);
 
 const checkSeller = (to, from, next) => {
+    if (store.state.Token === false) {
+        // 로그인이 안된 유저니까.
+        alert('판매자 수정 페이지에 접속하려면 로그인이 필요합니다.');
+        next('/');
+    } else {
+        if (store.state.isSeller === true) {
+            store.dispatch('getSellerInfo', { id: store.state.id });
+            next();
+        } else {
+            // 판매자가 아니니까.
+            alert('판매자 수정 페이지에 접속하려면 판매자 권환이어야 합니다.');
+            next('/');
+        }
+    }
 
-    store.dispatch('getSellerInfo', {id: 'temp'});
-    next();  
-    
 }
 
 

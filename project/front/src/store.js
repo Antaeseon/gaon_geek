@@ -11,6 +11,7 @@ export default new Vuex.Store({
     state: {
         id: sessionStorage.getItem('id'),
         Token: sessionStorage.getItem('Token'),
+        isSeller: (sessionStorage.getItem('isSeller') == 'true'),
         //teamName:sessionStorage.getItem('teamName')
         isSubmitted: false,
         isSubmitDup: false,
@@ -23,20 +24,30 @@ export default new Vuex.Store({
     getters: {
         id: state => state.id,
         Token: state => state.Token,
-        //teamName: state => state.teamName
+        isSeller: state => state.isSeller
+            //teamName: state => state.teamName
     },
     mutations: {
-        login(state, { id, Token }) {
+        login(state, { id, Token, isSeller }) {
             state.id = id
             state.Token = Token
+            state.isSeller = isSeller
             sessionStorage.setItem('Token', Token)
             sessionStorage.setItem('id', id)
+            sessionStorage.setItem('isSeller', isSeller)
         },
         signOut(state) {
             state.Token = null
             state.id = ''
-            localStorage.removeItem('Token')
-            localStorage.removeItem('id')
+            state.isSeller = false
+            state.sellerInfo = null
+            sessionStorage.removeItem('Token')
+            sessionStorage.removeItem('id')
+            sessionStorage.removeItem('isSeller')
+                // localStorage로 하면 F5누를때, 다시 로그인 상태로 됨...
+                // localStorage.removeItem('Token')
+                // localStorage.removeItem('id')
+                // localStorage.removeItem('isSeller')
 
             console.log('token 삭제')
         },
@@ -78,12 +89,16 @@ export default new Vuex.Store({
             return new Promise((resolve, reject) => {
                 axios.post(`http://localhost:3000/user/login`, { id: id, pwd: pwd })
                     .then(res => {
-                        const Token = res.data.Token
-                        console.log(res)
-                        console.log(id, Token)
-                        console.log(`${Token} 저장됨...`)
-                        commit('login', { id, Token })
-                        resolve(res)
+                        axios.post(`http://localhost:3000/user/isSeller`, { id: id })
+                            .then(resS => {
+                                const Token = res.data.Token
+                                const isSeller = resS.data.isSeller
+                                console.log(res)
+                                console.log(id, Token)
+                                console.log(`${Token} 저장됨...`)
+                                commit('login', { id, Token, isSeller })
+                                resolve(res)
+                            })
                     })
                     .catch(err => {
                         console.log("여기서 에러....")
@@ -105,10 +120,12 @@ export default new Vuex.Store({
                         commit('enrollDup');
                     } else if (res.data.tag === "Already Seller") {
                         commit('alreadySellerState');
-                    } else {
+                    } else if (res.data.tag === "Success") {
                         alert("제출이 완료되었습니다!");
                         commit('enrollComplete');
                         router.push({ name: "home" });
+                    } else {
+                        console.log(res.data);
                     }
                 }).catch((err) => {
                     commit('enrollError');

@@ -230,6 +230,7 @@
     import { validationMixin } from 'vuelidate'
     import { required } from 'vuelidate/lib/validators'
     import { mapState, mapActions, mapMutations } from 'vuex'
+    import store from './../store'
 
     export default {
     mixins: [validationMixin],
@@ -326,7 +327,7 @@
             if(this.formBlankTest())
             {
                 if (!this.checkbox) {
-                alert("Please check category");
+                alert("약관에 동의해주세요");
                 return;
                 }
                 const google = await gmapsInit();
@@ -337,7 +338,7 @@
                     // throw new Error(status);
                     }
                     const formData = new FormData();
-                    formData.append('id', 'temp'); // this.id);
+                    formData.append('id', store.state.id);
                     formData.append('shop_name', this.name);
                     formData.append('location', this.location);
                     formData.append('about_us', this.about_us);

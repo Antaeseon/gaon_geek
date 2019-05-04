@@ -22,14 +22,6 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <!-- isLogin이 false인 경우에만 왼쪽 바에서 로그인 버튼이 출력된다. -->
-        <v-list-tile router :to="{name: 'login'}">
-          <v-list-tile-action>
-            <v-icon>contact_mail</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>로그인</v-list-tile-content>
-        </v-list-tile>
-
         <!-- mypage router로 지시 -->
         <v-list-tile router :to="{name: 'mypage'}" exact>
           <v-list-tile-action>
@@ -50,6 +42,7 @@
           </v-list-tile-content>
         </v-list-tile>
         <!-- router :to="{name: 'enrollSeller'}" -->
+        <!-- v-if="Token !== null" -->
         <v-list-tile @click='convert_login_status'>
           <v-list-tile-action>
             <v-icon>supervisor_account</v-icon>
@@ -58,7 +51,7 @@
             <v-list-tile-title>판매자 등록</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile router :to="{name: 'modifySeller'}">
+        <v-list-tile v-if="isSeller" router :to="{name: 'modifySeller'}">
           <v-list-tile-action>
             <v-icon>supervisor_account</v-icon>
           </v-list-tile-action>
@@ -157,6 +150,7 @@ export default {
     };
   },
   computed: {
+    ...mapState([ "isSeller", "Token"]),
     ...mapGetters({
       showId: "id",
       Token: "Token"

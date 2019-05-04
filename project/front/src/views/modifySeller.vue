@@ -138,7 +138,7 @@
                     // throw new Error(status);
                     }
                     const formData = new FormData();
-                    formData.append('id', store.state.sellerInfo.id);
+                    formData.append('id', store.state.id);
                     formData.append('shop_name', this.name);
                     formData.append('location', this.location);
                     formData.append('about_us', this.about_us);
