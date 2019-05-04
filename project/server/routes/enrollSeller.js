@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const enrollSeller = require('./../models/enrollSellerSchema');
+const enrollSeller = require('../models/enrollSellerSchema');
 const User = require('../models/userSchema');
 const Shop = require('../models/shopSchema');
 const cors = require('cors');
@@ -57,10 +57,10 @@ router.post('/', upload.array('img'), function(req, res, next) {
                     imageUrl: req.body.imageUrl
                 });
                 // 중복 제출 검사
-                enrollSeller.find({ id: req.body.id }, function(err, result) {
+                enrollSeller.find({ id: req.body.id }, function(err, resultDupCheck) {
                     if (err) {
                         res.status(500).send({ "Response": 500, "tag": err });
-                    } else if (result.length == 0) {
+                    } else if (resultDupCheck.length == 0) {
                         enroll_obj.save(function(err) {
                             if (err) {
                                 res.status(500).send({ "Response": 500, "tag": err });

@@ -14,6 +14,8 @@
       :error-messages="passErrors"
       label="Password"
       required
+      :append-icon="show1 ? 'visibility' : 'visibility_off'"
+      :type="show1 ? 'text' : 'password'"
       @input="$v.password.$touch()"
       @blur="$v.password.$touch()"
     ></v-text-field>

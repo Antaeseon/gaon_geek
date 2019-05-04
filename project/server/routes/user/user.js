@@ -8,7 +8,7 @@ const crypto = require('crypto')
 
 
 /* Get users listing.
-    GET /
+    GET /user/
 */
 router.get('/', function(req, res, next) {
     User.find().then(user => {
@@ -29,11 +29,6 @@ router.get('/', function(req, res, next) {
     
     }
 */
-
-
-
-
-
 router.post('/signup', function(req, res, next) {
     // req.body.signup_Date = Date.now();
     // crypto.randomBytes(64, (err, buf) => {
@@ -53,41 +48,30 @@ router.post('/signup', function(req, res, next) {
         email: req.body.email,
         signup_Date: Date.now(),
         point: 0, // empty array
-        isSeller : false
+        isSeller: false
     });
 
-    User.find({id:req.body.id},function(err,result){
-        if(err){
+    User.find({ id: req.body.id }, function(err, result) {
+        if (err) {
             console.log(err);
-            res.status(500).send({message: "database_fail1"});
-        }
-        else if(result.length==0){
-            user_obj.save(function(err){
+            res.status(500).send({ message: "database_fail1" });
+        } else if (result.length == 0) {
+            user_obj.save(function(err) {
                 if (err) {
-                    res.status(500).send({message: "database_fail2"});
+                    res.status(500).send({ message: "database_fail2" });
                     console.log(err)
-                }
-                else{
-                    res.send({message:"create"})
+                } else {
+                    res.send({ message: "create" })
                 }
             })
-        }else{
-            res.send({message:"already exist"})
+        } else {
+            res.send({ message: "already exist" })
         }
     })
-
-    // // create가 성공적이면, then 이후를 실행. 에러가 일어나면 catch가 실행.
-    // User.create(req.body).then(complete => {
-    //     res.send(complete);
-    // }).catch(next);
 });
-/*
 
-*/
 
-/* Update a user in the db */
-
-/*
+/* Update a user in the db
     POST /user/modify/
     {
         id
@@ -120,6 +104,27 @@ router.post('/delete', function(req, res, next) {
     }).catch(next);
 });
 
+
+/* Get users listing.
+    POST /user/isSeller
+*/
+router.post('/isSeller', function(req, res, next) {
+
+    // Error handling
+    const onError = function(error) {
+        console.log("-------------------------this", error.message)
+        res.status(405).json({
+            message: error.message
+        })
+    };
+
+    User.findOne({ id: req.body.id }).then(user => {
+        res.status(200).json({
+            isSeller: user.isSeller
+        })
+    }).catch(onError);
+});
+
 /*
     POST /user/login/
     {
@@ -127,66 +132,66 @@ router.post('/delete', function(req, res, next) {
         pwd
     }
 */
-router.post('/login', function (req, res, next) {
+router.post('/login', function(req, res, next) {
     const {
-      id,
-      pwd
+        id,
+        pwd
     } = req.body;
     const secret = req.app.get('jwt-secret');
     console.log("secrete : ", secret);
     console.log(id, pwd);
     // check exist user
-    const check = function (user) {
-      if (!user) { //유저 존재 안함
-        throw new Error('user not exist');
-      } else {
-        if (user.verify(pwd)) { //비밀번호 맞음
-          const p = new Promise((resolve, reject) => {
-            jwt.sign({
-                id: user.id
-              },
-              secret, {
-                expiresIn: '7d',
-              },
-              (err, token) => {
-                if (err) reject(err);
-                resolve(token);
-              }
-            )
-          });
-          return p;
-        } else { //비밀번호 틀림
-          throw new Error('incorrect password');
+    const check = function(user) {
+        if (!user) { //유저 존재 안함
+            throw new Error('user not exist');
+        } else {
+            if (user.verify(pwd)) { //비밀번호 맞음
+                const p = new Promise((resolve, reject) => {
+                    jwt.sign({
+                            id: user.id
+                        },
+                        secret, {
+                            expiresIn: '7d',
+                        },
+                        (err, token) => {
+                            if (err) reject(err);
+                            resolve(token);
+                        }
+                    )
+                });
+                return p;
+            } else { //비밀번호 틀림
+                throw new Error('incorrect password');
+            }
         }
-      }
     };
-  
+
     // return token
-    const respond = function (Token) {
-      console.log(Token)
-      res.json({
-        message: 'logged in successfully',
-        Token
-      });
+    const respond = function(Token) {
+        console.log(Token)
+        res.json({
+            message: 'logged in successfully',
+            Token
+        });
     };
-  
+
     // Error handling
-    const onError = function (error) {
-      console.log("-------------------------this", error.message)
-      res.status(405).json({
-        message: error.message
-      })
+    const onError = function(error) {
+        console.log("-------------------------this", error.message)
+        res.status(405).json({
+            message: error.message
+        })
     };
-  
+
     User.findOneById(id)
-      .then(check)
-      .then(respond)
-      .catch(onError);
-  });
+        .then(check)
+        .then(respond)
+        .catch(onError);
+});
 
 
 
-  function getToken(req, user) {
+function getToken(req, user) {
     const secret = req.app.get('jwt-secret');
     var token = jwt.sign({
             id: user.id,

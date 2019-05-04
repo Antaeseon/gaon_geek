@@ -7,12 +7,12 @@ import store from './store'
 import AccountKit from 'vue-facebook-account-kit'
 
 Vue.config.productionTip = false
-Vue.prototype.$http=axios
+Vue.prototype.$http = axios
 Vue.use(AccountKit)
 
 //fdfsdfes
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app')
