@@ -1,13 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from "./store"
+import App from "./App.vue"
+import { STATES } from 'mongoose';
 
 Vue.use(Router);
 
 const checkSeller = (to, from, next) => {
-    store.dispatch('getSellerInfo', { id: 'temp' }); // 로그인이랑 연동
-    next();
+
+    store.dispatch('getSellerInfo', {id: 'temp'});
+    next();  
+    
 }
+
 
 export default new Router({
     mode: 'history',
@@ -42,6 +47,8 @@ export default new Router({
         {
             path: '/enrollSeller',
             name: 'enrollSeller',
+            // enrollSeller 들어가기 전에 로그인 되어있는 지 확인하고, 안되있으면 로그인 페이지 표시.
+            // beforeEnter: islogin,
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/enrollSeller.vue')
         },

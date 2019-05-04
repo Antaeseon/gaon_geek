@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import router from "./router"
 
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -16,7 +17,8 @@ export default new Vuex.Store({
         isSubmitError: false,
         alreadySeller: false,
         modifySellerError: false,
-        sellerInfo: null
+        sellerInfo: null,
+        login_dialog: false
     },
     getters: {
         id: state => state.id,

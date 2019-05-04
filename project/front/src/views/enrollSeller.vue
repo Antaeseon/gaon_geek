@@ -358,6 +358,7 @@
         pickFile () {
             this.$refs.image.click ()
         },
+      
 		onFilePicked (e) {
             const files = e.target.files
             this.imageNum = files.length

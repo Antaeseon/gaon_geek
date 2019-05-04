@@ -49,8 +49,8 @@
             <v-list-tile-title>googleMap</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-
-        <v-list-tile router :to="{name: 'enrollSeller'}">
+        <!-- router :to="{name: 'enrollSeller'}" -->
+        <v-list-tile @click='convert_login_status'>
           <v-list-tile-action>
             <v-icon>supervisor_account</v-icon>
           </v-list-tile-action>
@@ -74,6 +74,7 @@
       <v-toolbar-title>Application</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
+        
         <!-- 로그인 되어있으면 welcome 표시 -->
         <v-menu offset-y v-if="showId">
           <template v-slot:activator="{ on }">
@@ -96,7 +97,7 @@
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
         <v-btn v-else @click.stop="dialog = true">log in</v-btn>
-        <v-dialog v-model="dialog" max-width="290">
+        <v-dialog v-model="dialog"  max-width="290">
           <v-card>
             <v-card-title class="headline">Log in</v-card-title>
             <v-form>
@@ -143,11 +144,13 @@
 
 <script>
 import { mapGetters } from "vuex";
+import store from './store'
+import router from './router'
 
 export default {
   data() {
     return {
-      dialog: false,
+      dialog: store.state.login_dialog,
       drawer: null,
       uid: "",
       pwd: ""
@@ -177,11 +180,23 @@ export default {
       this.clear();
     },
     logout() {
+
       this.$store.dispatch("signOut");
     },
     clear(){
+
       this.uid='';
       this.pwd='';
+    },
+    convert_login_status(){
+      // 로그인 안되어 있을 경우
+      if(store.state.Token === null){
+        this.dialog=true;
+      }
+      // 로그인 되있을 경우
+      else{
+        router.push({ name: "enrollSeller" });
+      }
     }
   }
 };
