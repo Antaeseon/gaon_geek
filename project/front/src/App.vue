@@ -79,16 +79,12 @@
             <v-list-tile router :to="{name: 'mypage'}">
               <v-list-tile-title>My Page</v-list-tile-title>
             </v-list-tile>
-            <!-- store.action 참조하는 방법 -->
-            <!-- store.mutation 참조하는 방법-->
-            <!-- @click="$store.commit('loginSuccess')" -->
             <v-list-tile @click="$store.dispatch('signOut')">
               <v-list-tile-title>Log Out</v-list-tile-title>
             </v-list-tile>
           </v-list>
         </v-menu>
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
-        <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
         <v-btn v-else @click.stop="dialog = true">log in</v-btn>
         <v-dialog v-model="dialog"  max-width="290">
           <v-card>
@@ -136,7 +132,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 import store from './store'
 import router from './router'
 

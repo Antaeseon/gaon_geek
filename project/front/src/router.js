@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from "./store"
-import App from "./App.vue"
-import { STATES } from 'mongoose';
 
 Vue.use(Router);
 
