@@ -87,7 +87,7 @@
         </v-menu>
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
-        <v-btn v-else @click.stop="dialog = true">log in</v-btn>
+        <v-btn color="light-blue darken-3" v-else @click.stop="dialog = true">log in</v-btn>
         <v-dialog v-model="dialog" max-width="290">
           <v-card>
             <v-card-title class="headline">Log in</v-card-title>
@@ -116,7 +116,8 @@
             </v-form>
 
             <v-card-actions>
-              <v-btn color="green darken-1" flat="flat" @click="login">submit</v-btn>
+              <v-btn color="green darken-1" flat="flat" @click="login">submit</v-btn>         
+              <v-btn color="red darken-1" flat="flat" @click="cancel">cancel</v-btn>         
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -170,6 +171,10 @@ export default {
     },
     logout() {
       this.$store.dispatch("signOut");
+    },
+    cancel(){
+      this.dialog=false;
+      this.clear();
     },
     clear(){
       this.uid='';

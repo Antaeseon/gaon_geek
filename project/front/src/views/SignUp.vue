@@ -1,94 +1,98 @@
 <template>
-  <form>
-    <v-text-field
-      v-model="id"
-      :error-messages="idErrors"
-      :counter="10"
-      label="ID"
-      required
-      @input="$v.id.$touch()"
-      @blur="$v.id.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="password"
-      :error-messages="passErrors"
-      label="Password"
-      required
-      @input="$v.password.$touch()"
-      @blur="$v.password.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="name"
-      :error-messages="nameErrors"
-      label="Name"
-      required
-      @input="$v.name.$touch()"
-      @blur="$v.name.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="nation"
-      :error-messages="nationErrors"
-      label="Nation"
-      required
-      @input="$v.nation.$touch()"
-      @blur="$v.nation.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="phone"
-      :error-messages="phoneErrors"
-      label="Phone"
-      required
-      @input="$v.phone.$touch()"
-      @blur="$v.phone.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="email"
-      :error-messages="emailErrors"
-      label="E-mail"
-      required
-      @input="$v.email.$touch()"
-      @blur="$v.email.$touch()"
-    ></v-text-field>
-     
-    <v-checkbox
-      v-model="checkbox"
-      :error-messages="checkboxErrors"
-      label="Do you agree?"
-      required
-      @change="$v.checkbox.$touch()"
-      @blur="$v.checkbox.$touch()"
-    ></v-checkbox>
-    <div id="app">
-    <facebook-account-kit ref="accountKit"
-      appId="287090742181038"
-      version="v1.0"
-      :fbAppEventsEnabled='true'
-      :debug='true'
-      :loginType='loginType'
-      state="somecrsf">
-      <v-btn block depressed color="blue-grey" class="white--text" @click="smsLogin">
-      핸드폰 인증하기
-      <v-icon right dark>phone_android</v-icon>
-    </v-btn> 
-    </facebook-account-kit>
-  </div>
+  <v-container grid-list-xs text-xs-center>
+    <form>
+      <v-text-field
+        v-model="id"
+        :error-messages="idErrors"
+        :counter="10"
+        label="ID"
+        required
+        @input="$v.id.$touch()"
+        @blur="$v.id.$touch()"
+      ></v-text-field>
+      <v-text-field
+        v-model="password"
+        :type="'password'"
+        :error-messages="passErrors"
+        label="Password"
+        required
+        @input="$v.password.$touch()"
+        @blur="$v.password.$touch()"
+      ></v-text-field>
+      <v-text-field
+        v-model="name"
+        :error-messages="nameErrors"
+        label="Name"
+        required
+        @input="$v.name.$touch()"
+        @blur="$v.name.$touch()"
+      ></v-text-field>
+      <v-text-field
+        v-model="nation"
+        :error-messages="nationErrors"
+        label="Nation"
+        required
+        @input="$v.nation.$touch()"
+        @blur="$v.nation.$touch()"
+      ></v-text-field>
+      <v-text-field
+        v-model="phone"
+        :error-messages="phoneErrors"
+        label="Phone"
+        required
+        @input="$v.phone.$touch()"
+        @blur="$v.phone.$touch()"
+      ></v-text-field>
+      <v-text-field
+        v-model="email"
+        :error-messages="emailErrors"
+        label="E-mail"
+        required
+        @input="$v.email.$touch()"
+        @blur="$v.email.$touch()"
+      ></v-text-field>
 
-    <v-btn @click="submit">submit</v-btn>
-    <v-btn @click="clear">clear</v-btn>
-  </form>
+      <v-flex xs2>
+        <facebook-account-kit
+          ref="accountKit"
+          appId="287090742181038"
+          version="v1.0"
+          :fbAppEventsEnabled="true"
+          :debug="true"
+          state="somecrsf"
+        >
+          <v-btn block depressed color="blue-grey" class="white--text" @click="smsLogin">
+            핸드폰 인증하기
+            <v-icon right dark>phone_android</v-icon>
+          </v-btn>
+        </facebook-account-kit>
+      </v-flex>
+      
+      <v-checkbox
+        v-model="checkbox"
+        :error-messages="checkboxErrors"
+        label="Do you agree?"
+        required
+        @change="$v.checkbox.$touch()"
+        @blur="$v.checkbox.$touch()"
+      ></v-checkbox>
+
+      <v-btn @click="submit">submit</v-btn>
+      <v-btn @click="clear">clear</v-btn>
+    </form>
+  </v-container>
 </template>
 
 
 <script>
 import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
-const axios = require('axios');
-
+const axios = require("axios");
 
 export default {
   mixins: [validationMixin],
 
-validations: {
+  validations: {
     id: { required },
     password: { required },
     name: { required },
@@ -104,11 +108,11 @@ validations: {
 
   data: () => ({
     creds: {
-        fbAppEventsEnabled: true,
-        redirect: 'http://localhost:8080',
-        display: 'popup',
-        debug: true
-    },   
+      fbAppEventsEnabled: true,
+      redirect: "http://localhost:8080",
+      display: "popup",
+      debug: true
+    },
     id: "",
     password: "",
     name: "",
@@ -116,7 +120,7 @@ validations: {
     phone: "",
     email: "",
     checkbox: false,
-
+    isAuthentificated: false
   }),
 
   computed: {
@@ -128,7 +132,6 @@ validations: {
     },
 
     methods: {
-
       async register() {
         if (this.id.length < 3) {
           alert("Please fill Id");
@@ -168,8 +171,8 @@ validations: {
       }
     },
     mounted() {
-    this.getSession();
-  },
+      this.getSession();
+    },
 
     //   selectErrors () {
     //     const errors = []
@@ -222,72 +225,80 @@ validations: {
   },
 
   methods: {
-        /**
-    * Facebook default init function
-    */
+    /**
+     * Facebook default init function
+     */
     AccountKit_OnInteractive() {
       AccountKit.init(this.creds);
     },
     /**
-    * callback after user submit otp
-    */
+     * callback after user submit otp
+     */
     loginCallback(response) {
       if (response.status === "PARTIALLY_AUTHENTICATED") {
         this.doLogin(response.code, response.state);
-      }
-      else if (response.status === "NOT_AUTHENTICATED") {
+        this.isAuthentificated = true;
+      } else if (response.status === "NOT_AUTHENTICATED") {
         // handle NOT_AUTHENTICATED error
-      }
-      else if (response.status === "BAD_PARAMS") {
+        this.isAuthentificated = false;
+      } else if (response.status === "BAD_PARAMS") {
         // handle BAD_PARAMS error
-      }
-      else {
+        this.isAuthentificated = false;
+      } else {
+        this.isAuthentificated = false;
+
         // handle unknown error
       }
     },
     /**
-    * Init account kit popup
-    */
+     * Init account kit popup
+     */
     smsLogin() {
       AccountKit.login(
-        'PHONE', 
-        { countryCode: '+880', phoneNumber: '' }, // will use default values if not specified
+        "PHONE",
+        { countryCode: "+82", phoneNumber: "" }, // will use default values if not specified
         this.loginCallback
       );
     },
     /**
-    * For server side verification
-    */
+     * For server side verification
+     */
     async doLogin(code, state) {
       try {
-        const response = await axios.post('http://localhost:3030/api/otp/success', { code, state });
+        const response = await axios.post(
+          "http://localhost:3030/api/otp/success",
+          { code, state }
+        );
         // server validation successful with response.data.phone
-      }
-      catch (err) {
+      } catch (err) {
         console.log(err.response || err);
       }
     },
     /**
-    * get the csrf token and account kit appid & version from server
-    */
+     * get the csrf token and account kit appid & version from server
+     */
     async getSession() {
       try {
-        const response = await axios.get(`http://localhost:3030/api/otp/session`);
+        const response = await axios.get(
+          `http://localhost:3030/api/otp/session`
+        );
         this.creds.state = response.data.csrf;
         this.creds.appId = response.data.appId;
         this.creds.version = response.data.version;
         this.loadAccountkitApi();
-      }
-      catch (err) {
+      } catch (err) {
         console.log(err.response || err);
       }
     },
     /**
-    * append the account kit script in head
-    */
+     * append the account kit script in head
+     */
     loadAccountkitApi() {
-      const accountkitScript = document.createElement('script');
-      accountkitScript.setAttribute('src',`https://sdk.accountkit.com/en_US/sdk.js`);
+      const accountkitScript = document.createElement("script");
+      accountkitScript.setAttribute(
+        "src",
+        `https://sdk.accountkit.com/en_US/sdk.js`
+      );
       accountkitScript.onload = () => {
         window.AccountKit_OnInteractive = this.AccountKit_OnInteractive;
       };
@@ -296,8 +307,13 @@ validations: {
     async submit() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        alert("Please Enter the Form");
+        //인증 안될때
       } else {
+        if (!this.isAuthentificated) {
+          alert("Please authentificate phone");
+          return;
+        }
+
         try {
           await this.$http.post(`http://localhost:3000/user/signup`, {
             id: this.id,
@@ -307,13 +323,14 @@ validations: {
             phoneNum: this.phone,
             email: this.email
           });
+          alert("회원가입이 완료되었습니다.")
         } catch (error) {
-        //   console.log(error.response.data.message);
-        //   alert(error.response.data.message);
+          //   console.log(error.response.data.message);
+          //   alert(error.response.data.message);
           return;
         }
-        console.log("정상적으로 완료")
-        this.clear()
+        console.log("정상적으로 완료");
+        this.clear();
       }
     },
     clear() {
