@@ -49,10 +49,7 @@
       @input="$v.email.$touch()"
       @blur="$v.email.$touch()"
     ></v-text-field>
-     <v-btn block depressed color="blue-grey" class="white--text" @click="smsLogin">
-      핸드폰 인증하기
-      <v-icon right dark>phone_android</v-icon>
-    </v-btn>
+     
     <v-checkbox
       v-model="checkbox"
       :error-messages="checkboxErrors"
@@ -61,6 +58,20 @@
       @change="$v.checkbox.$touch()"
       @blur="$v.checkbox.$touch()"
     ></v-checkbox>
+    <div id="app">
+    <facebook-account-kit ref="accountKit"
+      appId="287090742181038"
+      version="v1.0"
+      :fbAppEventsEnabled='true'
+      :debug='true'
+      :loginType='loginType'
+      state="somecrsf">
+      <v-btn block depressed color="blue-grey" class="white--text" @click="smsLogin">
+      핸드폰 인증하기
+      <v-icon right dark>phone_android</v-icon>
+    </v-btn> 
+    </facebook-account-kit>
+  </div>
 
     <v-btn @click="submit">submit</v-btn>
     <v-btn @click="clear">clear</v-btn>
