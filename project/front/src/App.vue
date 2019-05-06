@@ -41,13 +41,22 @@
             <v-list-tile-title>googleMap</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-
-        <v-list-tile router :to="{name: 'enrollSeller'}">
+        <!-- router :to="{name: 'enrollSeller'}" -->
+        <!-- v-if="Token !== null" -->
+        <v-list-tile @click='convert_login_status'>
           <v-list-tile-action>
             <v-icon>supervisor_account</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>판매자 등록</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-if="isSeller" router :to="{name: 'modifySeller'}">
+          <v-list-tile-action>
+            <v-icon>supervisor_account</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>판매자 정보 수정</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -58,6 +67,7 @@
       <v-toolbar-title>Application</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
+        
         <!-- 로그인 되어있으면 welcome 표시 -->
         <v-menu offset-y v-if="showId">
           <template v-slot:activator="{ on }">
@@ -69,18 +79,20 @@
             <v-list-tile router :to="{name: 'mypage'}">
               <v-list-tile-title>My Page</v-list-tile-title>
             </v-list-tile>
-            <!-- store.action 참조하는 방법 -->
-            <!-- store.mutation 참조하는 방법-->
-            <!-- @click="$store.commit('loginSuccess')" -->
             <v-list-tile @click="$store.dispatch('signOut')">
               <v-list-tile-title>Log Out</v-list-tile-title>
             </v-list-tile>
           </v-list>
         </v-menu>
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
+<<<<<<< HEAD
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
         <v-btn color="light-blue darken-3" v-else @click.stop="dialog = true">log in</v-btn>
         <v-dialog v-model="dialog" max-width="290">
+=======
+        <v-btn v-else @click.stop="dialog = true">log in</v-btn>
+        <v-dialog v-model="dialog"  max-width="290">
+>>>>>>> 53d49319d7f19edd723fb2e3dd910068b5d240c2
           <v-card>
             <v-card-title class="headline">Log in</v-card-title>
             <v-form>
@@ -127,18 +139,21 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
+import store from './store'
+import router from './router'
 
 export default {
   data() {
     return {
-      dialog: false,
+      dialog: store.state.login_dialog,
       drawer: null,
       uid: "",
       pwd: ""
     };
   },
   computed: {
+    ...mapState([ "isSeller", "Token"]),
     ...mapGetters({
       showId: "id",
       Token: "Token"
@@ -162,6 +177,7 @@ export default {
       this.clear();
     },
     logout() {
+
       this.$store.dispatch("signOut");
     },
     cancel(){
@@ -169,8 +185,19 @@ export default {
       this.clear();
     },
     clear(){
+
       this.uid='';
       this.pwd='';
+    },
+    convert_login_status(){
+      // 로그인 안되어 있을 경우
+      if(store.state.Token === null){
+        this.dialog=true;
+      }
+      // 로그인 되있을 경우
+      else{
+        router.push({ name: "enrollSeller" });
+      }
     }
   }
 };
