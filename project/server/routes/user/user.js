@@ -138,14 +138,14 @@ router.post('/isSeller', function(req, res, next) {
     }
 */
 router.post('/login', function(req, res, next) {
-    const {
+    let  cipher = crypto.createCipher('aes192', config.secret);
+    cipher.update(req.body.pwd,'utf8', 'base64');
+    let cipherPw = cipher.final('base64');
+    let {
         id,
         pwd
     } = req.body;
     
-    let  cipher = crypto.createCipher('aes192', config.secret);
-    cipher.update(req.body.pwd,'utf8', 'base64');
-    let cipherPw = cipher.final('base64');
     pwd=cipherPw
     const secret = req.app.get('jwt-secret');
     console.log("secrete : ", secret);
