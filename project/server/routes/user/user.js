@@ -30,10 +30,7 @@ router.get('/', function(req, res, next) {
     
     }
 */
-<<<<<<< HEAD
 
-=======
->>>>>>> 53d49319d7f19edd723fb2e3dd910068b5d240c2
 router.post('/signup', function(req, res, next) {
     // req.body.signup_Date = Date.now();
     // crypto.randomBytes(64, (err, buf) => {
@@ -140,17 +137,10 @@ router.post('/isSeller', function(req, res, next) {
         pwd
     }
 */
-<<<<<<< HEAD
-router.post('/login', function (req, res, next) {
-    let {
-      id,
-      pwd
-=======
 router.post('/login', function(req, res, next) {
     const {
         id,
         pwd
->>>>>>> 53d49319d7f19edd723fb2e3dd910068b5d240c2
     } = req.body;
     
     let  cipher = crypto.createCipher('aes192', config.secret);
