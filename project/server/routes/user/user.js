@@ -5,6 +5,7 @@ const cors = require('cors');
 const router = express.Router();
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
+const config = require('../../config')
 
 
 /* Get users listing.
@@ -30,10 +31,6 @@ router.get('/', function(req, res, next) {
     }
 */
 
-
-
-
-
 router.post('/signup', function(req, res, next) {
     // req.body.signup_Date = Date.now();
     // crypto.randomBytes(64, (err, buf) => {
@@ -42,12 +39,15 @@ router.post('/signup', function(req, res, next) {
     //       req.body.pwd=key.toString('base64')
     //     });
     //   });
-
+    let  cipher = crypto.createCipher('aes192', config.secret);
+    cipher.update(req.body.pwd,'utf8', 'base64');
+    let cipherPw = cipher.final('base64');
+  
     console.log(req.body)
     var user_obj = new User({
         id: req.body.id,
         name: req.body.name,
-        pwd: req.body.pwd,
+        pwd: cipherPw,
         nation: req.body.nation,
         phoneNum: req.body.phoneNum,
         email: req.body.email,
@@ -128,10 +128,15 @@ router.post('/delete', function(req, res, next) {
     }
 */
 router.post('/login', function (req, res, next) {
-    const {
+    let {
       id,
       pwd
     } = req.body;
+    
+    let  cipher = crypto.createCipher('aes192', config.secret);
+    cipher.update(req.body.pwd,'utf8', 'base64');
+    let cipherPw = cipher.final('base64');
+    pwd=cipherPw
     const secret = req.app.get('jwt-secret');
     console.log("secrete : ", secret);
     console.log(id, pwd);
