@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <v-container grid-list-xs text-xs-center>
     <form>
       <v-text-field
@@ -52,68 +51,6 @@
         @input="$v.email.$touch()"
         @blur="$v.email.$touch()"
       ></v-text-field>
-=======
-  <form>
-    <v-text-field
-      v-model="id"
-      :error-messages="idErrors"
-      :counter="10"
-      label="ID"
-      required
-      @input="$v.id.$touch()"
-      @blur="$v.id.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="password"
-      :error-messages="passErrors"
-      label="Password"
-      required
-      :append-icon="show1 ? 'visibility' : 'visibility_off'"
-      :type="show1 ? 'text' : 'password'"
-      @input="$v.password.$touch()"
-      @blur="$v.password.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="name"
-      :error-messages="nameErrors"
-      label="Name"
-      required
-      @input="$v.name.$touch()"
-      @blur="$v.name.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="nation"
-      :error-messages="nationErrors"
-      label="Nation"
-      required
-      @input="$v.nation.$touch()"
-      @blur="$v.nation.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="phone"
-      :error-messages="phoneErrors"
-      label="Phone"
-      required
-      @input="$v.phone.$touch()"
-      @blur="$v.phone.$touch()"
-    ></v-text-field>
-    <v-text-field
-      v-model="email"
-      :error-messages="emailErrors"
-      label="E-mail"
-      required
-      @input="$v.email.$touch()"
-      @blur="$v.email.$touch()"
-    ></v-text-field>
-    <v-checkbox
-      v-model="checkbox"
-      :error-messages="checkboxErrors"
-      label="Do you agree?"
-      required
-      @change="$v.checkbox.$touch()"
-      @blur="$v.checkbox.$touch()"
-    ></v-checkbox>
->>>>>>> 53d49319d7f19edd723fb2e3dd910068b5d240c2
 
       <v-flex xs2>
         <facebook-account-kit

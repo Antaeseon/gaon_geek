@@ -85,14 +85,9 @@
           </v-list>
         </v-menu>
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
-<<<<<<< HEAD
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
         <v-btn color="light-blue darken-3" v-else @click.stop="dialog = true">log in</v-btn>
         <v-dialog v-model="dialog" max-width="290">
-=======
-        <v-btn v-else @click.stop="dialog = true">log in</v-btn>
-        <v-dialog v-model="dialog"  max-width="290">
->>>>>>> 53d49319d7f19edd723fb2e3dd910068b5d240c2
           <v-card>
             <v-card-title class="headline">Log in</v-card-title>
             <v-form>
