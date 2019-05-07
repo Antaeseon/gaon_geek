@@ -67,7 +67,7 @@
           </v-btn>
         </facebook-account-kit>
       </v-flex>
-      
+
       <v-checkbox
         v-model="checkbox"
         :error-messages="checkboxErrors"
@@ -79,6 +79,7 @@
 
       <v-btn @click="submit">submit</v-btn>
       <v-btn @click="clear">clear</v-btn>
+      <v-btn @click="requestPay">결제하기</v-btn>
     </form>
   </v-container>
 </template>
@@ -86,7 +87,7 @@
 <script>
 import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
-import Vue from 'vue'
+import Vue from "vue";
 const axios = require("axios");
 
 export default {
@@ -129,46 +130,6 @@ export default {
       if (!this.$v.checkbox.$dirty) return errors;
       !this.$v.checkbox.checked && errors.push("You must agree to continue!");
       return errors;
-    },
-
-    methods: {
-      async register() {
-        if (this.id.length < 3) {
-          alert("Please fill Id");
-          return;
-        } else if (this.password.length < 8) {
-          alert("Please fill Password");
-          return;
-        } else if (!this.selected) {
-          alert("Please check category");
-          return;
-        }
-        console.log(this.id, this.password);
-        try {
-          await this.$http.post(`${config.uri}/register`, {
-            id: this.id,
-            password: this.password,
-            teamName: this.teamname,
-            position: this.position,
-            sportsCategory: this.selected,
-            isTeamLeader: this.teamLeader
-          });
-        } catch (error) {
-          console.log(error.response.data.message);
-          alert(error.response.data.message);
-          return;
-        }
-        try {
-          await this.$store.dispatch("login", {
-            id: this.id,
-            password: this.password
-          });
-        } catch (err) {
-          console.log(err.response.data.message);
-          alert(err.response.data.message);
-        }
-        this.$router.push("/");
-      }
     },
     mounted() {
       this.getSession();
@@ -323,7 +284,7 @@ export default {
             phoneNum: this.phone,
             email: this.email
           });
-          alert("회원가입이 완료되었습니다.")
+          alert("회원가입이 완료되었습니다.");
         } catch (error) {
           //   console.log(error.response.data.message);
           //   alert(error.response.data.message);
@@ -344,24 +305,29 @@ export default {
       this.select = null;
       this.checkbox = false;
     },
-    aaa() {
-      console.log("ggg");
-      Vue.IMP().certification(
+    requestPay: function() {
+      // IMP.request_pay(param, callback) 호출
+      IMP.request_pay(
         {
-          merchant_uid: "merchant_" + new Date().getTime() //본인인증과 연관된 가맹점 내부 주문번호가 있다면 넘겨주세요
+          // param
+          pg: "html5_inicis",
+          pay_method: "card",
+          merchant_uid: "ORD20180131-0000011",
+          name: "노르웨이 회전 의자",
+          amount: 100,
+          buyer_email: "gildong@gmail.com",
+          buyer_name: "홍길동",
+          buyer_tel: "010-4242-4242",
+          buyer_addr: "서울특별시 강남구 신사동",
+          buyer_postcode: "01181"
         },
-        result_success => {
-          // 인증성공
-          console.log(result_success.imp_uid);
-          console.log(result_success.merchant_uid);
-          // 이후 Business Logic 처리하시면 됩니다.
-        },
-        result_failure => {
-          //실패시 실행 될 콜백 함수
-          var msg = "인증에 실패하였습니다.";
-          msg += "에러내용 : " + rsp.error_msg;
-
-          alert(msg);
+        rsp => {
+          // callback
+          if (rsp.success) {
+            // 결제 성공 시 로직,
+          } else {
+            // 결제 실패 시 로직,
+          }
         }
       );
     }
