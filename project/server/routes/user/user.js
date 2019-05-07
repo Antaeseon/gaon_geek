@@ -70,7 +70,8 @@ router.post('/signup', function(req, res, next) {
                 }
             })
         } else {
-            res.send({ message: "already exist" })
+            console.log('이미 존재')
+            res.status(500).send({ message: "already exist" })
         }
     })
 });

@@ -284,10 +284,11 @@ export default {
             phoneNum: this.phone,
             email: this.email
           });
-          alert("회원가입이 완료되었습니다.");
+          this.$router.push('/');
+          alert("회원가입이 완료되었습니다.")
         } catch (error) {
-          //   console.log(error.response.data.message);
-          //   alert(error.response.data.message);
+          console.log(error.response.data.message);
+          alert(error.response.data.message);
           return;
         }
         console.log("정상적으로 완료");
