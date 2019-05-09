@@ -264,7 +264,7 @@ export default {
       this.select = null;
       this.checkbox = false;
     },
-    requestPay: function() {
+    requestPay: function() {    
       // IMP.request_pay(param, callback) 호출
       IMP.request_pay(
         {
