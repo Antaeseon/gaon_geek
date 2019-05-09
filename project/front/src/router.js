@@ -48,6 +48,12 @@ export default new Router({
                 import ( /* webpackChunkName: "about" */ './views/SignUp.vue')
         },
         {
+            path: '/payment',
+            name: 'payment',
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/Payment.vue')
+        },
+        {
             path: '/googlemap',
             name: 'googlemap',
             component: () =>

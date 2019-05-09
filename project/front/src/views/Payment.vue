@@ -1,0 +1,297 @@
+<template>
+  <v-container grid-list-xs text-xs-center>
+    <form>
+      <v-layout row wrap>
+    <v-flex xs12 sm6>
+      <v-date-picker
+        v-model="dates"
+        multiple
+      ></v-date-picker>
+    </v-flex>
+    <v-flex xs12 sm6>
+      <v-menu
+        ref="menu"
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        :return-value.sync="dates"
+        lazy
+        transition="scale-transition"
+        offset-y
+        full-width
+        min-width="290px"
+      >
+        <template v-slot:activator="{ on }">
+          <v-combobox
+            v-model="dates"
+            multiple
+            chips
+            small-chips
+            label="Multiple picker in menu"
+            prepend-icon="event"
+            readonly
+            v-on="on"
+          ></v-combobox>
+        </template>
+        <v-date-picker v-model="dates" multiple no-title scrollable>
+          <v-spacer></v-spacer>
+          <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+          <v-btn flat color="primary" @click="$refs.menu.save(dates)">OK</v-btn>
+        </v-date-picker>
+      </v-menu>
+    </v-flex>
+  </v-layout>
+
+      <v-btn @click="requestPay">결제하기</v-btn>
+    </form>
+  </v-container>
+</template>
+
+<script>
+import { validationMixin } from "vuelidate";
+import { required, maxLength, email } from "vuelidate/lib/validators";
+import Vue from "vue";
+const axios = require("axios");
+
+export default {
+  mixins: [validationMixin],
+
+  validations: {
+    id: { required },
+    password: { required },
+    name: { required },
+    nation: { required },
+    phone: { required },
+    email: { required },
+    checkbox: {
+      checked(val) {
+        return val;
+      }
+    }
+  },
+
+  data: () => ({
+    creds: {
+      fbAppEventsEnabled: true,
+      redirect: "http://localhost:8080",
+      display: "popup",
+      debug: true
+    },
+    dates: ['2018-09-15', '2018-09-20'],
+      menu: false
+  }),
+
+  computed: {
+    checkboxErrors() {
+      const errors = [];
+      if (!this.$v.checkbox.$dirty) return errors;
+      !this.$v.checkbox.checked && errors.push("You must agree to continue!");
+      return errors;
+    },
+    mounted() {
+      this.getSession();
+    },
+
+    //   selectErrors () {
+    //     const errors = []
+    //     if (!this.$v.select.$dirty) return errors
+    //     !this.$v.select.required && errors.push('Item is required')
+    //     return errors
+    //   },
+    idErrors() {
+      const errors = [];
+      if (!this.$v.id.$dirty) return errors;
+      // !this.$v.id.maxLength && errors.push('Id must be at most 10 characters long')
+      !this.$v.id.required && errors.push("Id is required.");
+      return errors;
+    },
+    passErrors() {
+      const errors = [];
+      if (!this.$v.password.$dirty) return errors;
+      // !this.$v.password.email && errors.push('Must be valid e-mail')
+      !this.$v.password.required && errors.push("Passord is required");
+      return errors;
+    },
+    nameErrors() {
+      const errors = [];
+      if (!this.$v.name.$dirty) return errors;
+      // !this.$v.name.email && errors.push('Must be valid e-mail')
+      !this.$v.name.required && errors.push("Name is required");
+      return errors;
+    },
+    nationErrors() {
+      const errors = [];
+      if (!this.$v.nation.$dirty) return errors;
+      // !this.$v.nation.email && errors.push('Must be valid e-mail')
+      !this.$v.nation.required && errors.push("Nation is required");
+      return errors;
+    },
+    phoneErrors() {
+      const errors = [];
+      if (!this.$v.phone.$dirty) return errors;
+      // !this.$v.phone.email && errors.push('Must be valid e-mail')
+      !this.$v.phone.required && errors.push("Phone Number is required");
+      return errors;
+    },
+    emailErrors() {
+      const errors = [];
+      if (!this.$v.email.$dirty) return errors;
+      // !this.$v.email.email && errors.push('Must be valid e-mail')
+      !this.$v.email.required && errors.push("E-mail is required");
+      return errors;
+    }
+  },
+
+  methods: {
+    /**
+     * Facebook default init function
+     */
+    AccountKit_OnInteractive() {
+      AccountKit.init(this.creds);
+    },
+    /**
+     * callback after user submit otp
+     */
+    allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0,
+    loginCallback(response) {
+      if (response.status === "PARTIALLY_AUTHENTICATED") {
+        this.doLogin(response.code, response.state);
+        this.isAuthentificated = true;
+      } else if (response.status === "NOT_AUTHENTICATED") {
+        // handle NOT_AUTHENTICATED error
+        this.isAuthentificated = false;
+      } else if (response.status === "BAD_PARAMS") {
+        // handle BAD_PARAMS error
+        this.isAuthentificated = false;
+      } else {
+        this.isAuthentificated = false;
+
+        // handle unknown error
+      }
+    },
+    /**
+     * Init account kit popup
+     */
+    smsLogin() {
+      AccountKit.login(
+        "PHONE",
+        { countryCode: "+82", phoneNumber: "" }, // will use default values if not specified
+        this.loginCallback
+      );
+    },
+    /**
+     * For server side verification
+     */
+    async doLogin(code, state) {
+      try {
+        const response = await axios.post(
+          "http://localhost:3030/api/otp/success",
+          { code, state }
+        );
+        // server validation successful with response.data.phone
+      } catch (err) {
+        console.log(err.response || err);
+      }
+    },
+    /**
+     * get the csrf token and account kit appid & version from server
+     */
+    async getSession() {
+      try {
+        const response = await axios.get(
+          `http://localhost:3030/api/otp/session`
+        );
+        this.creds.state = response.data.csrf;
+        this.creds.appId = response.data.appId;
+        this.creds.version = response.data.version;
+        this.loadAccountkitApi();
+      } catch (err) {
+        console.log(err.response || err);
+      }
+    },
+    /**
+     * append the account kit script in head
+     */
+    loadAccountkitApi() {
+      const accountkitScript = document.createElement("script");
+      accountkitScript.setAttribute(
+        "src",
+        `https://sdk.accountkit.com/en_US/sdk.js`
+      );
+      accountkitScript.onload = () => {
+        window.AccountKit_OnInteractive = this.AccountKit_OnInteractive;
+      };
+      document.head.appendChild(accountkitScript);
+    },
+    async submit() {
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        //인증 안될때
+      } else {
+        if (!this.isAuthentificated) {
+          alert("Please authentificate phone");
+          return;
+        }
+
+        try {
+          await this.$http.post(`http://localhost:3000/user/signup`, {
+            id: this.id,
+            pwd: this.password,
+            name: this.name,
+            nation: this.nation,
+            phoneNum: this.phone,
+            email: this.email
+          });
+          this.$router.push('/');
+          alert("회원가입이 완료되었습니다.")
+        } catch (error) {
+          console.log(error.response.data.message);
+          alert(error.response.data.message);
+          return;
+        }
+        console.log("정상적으로 완료");
+        this.clear();
+      }
+    },
+    clear() {
+      this.$v.$reset();
+      this.id = "";
+      this.password = "";
+      this.name = "";
+      this.nation = "";
+      this.phone = "";
+      this.email = "";
+      this.select = null;
+      this.checkbox = false;
+    },
+    requestPay: function() {
+      // IMP.request_pay(param, callback) 호출
+      IMP.request_pay(
+        {
+          // param
+          pg: "html5_inicis",
+          pay_method: "card",
+          merchant_uid: "ORD20180131-0000011",
+          name: "노르웨이 회전 의자",
+          amount: 100,
+          buyer_email: "gildong@gmail.com",
+          buyer_name: "홍길동",
+          buyer_tel: "010-4242-4242",
+          buyer_addr: "서울특별시 강남구 신사동",
+          buyer_postcode: "01181"
+        },
+        rsp => {
+          // callback
+          if (rsp.success) {
+            // 결제 성공 시 로직,
+          } else {
+            // 결제 실패 시 로직,
+          }
+        }
+      );
+    }
+  }
+};
+</script>
+<style>
+</style>
