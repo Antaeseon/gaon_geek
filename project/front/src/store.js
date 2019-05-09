@@ -82,7 +82,7 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        login({ commit }, { id, pwd }) {
+        login({ dispatch, commit }, { id, pwd }) {
             console.log('여기들어옴')
             console.log(id)
             console.log(pwd)
@@ -97,6 +97,9 @@ export default new Vuex.Store({
                                 console.log(id, Token)
                                 console.log(`${Token} 저장됨...`)
                                 commit('login', { id, Token, isSeller })
+                                if (isSeller === true) {
+                                    dispatch('getSellerInfo', { id: id });
+                                }
                                 resolve(res)
                             })
                     })
