@@ -74,11 +74,11 @@ export default new Router({
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/modifySeller.vue')
         },
-        // {
-        //     path: '/temp',
-        //     name: 'temp',
-        //     component: () =>
-        //         import ( /* webpackChunkName: "about" */ './views/temp.vue')
-        // },
+        {
+            path: '/myPage',
+            name: 'myPage',
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/myPage.vue')
+        },
     ]
 })
