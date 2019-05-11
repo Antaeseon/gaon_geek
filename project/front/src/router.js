@@ -22,6 +22,12 @@ const checkSeller = (to, from, next) => {
 
 }
 
+const enrollSellerInitial = (to, from, next) => {
+    store.state.isSubmitted = false
+    store.state.isSubmitDup = false;
+    store.state.isSubmitError = false;
+    next();
+}
 
 export default new Router({
     mode: 'history',
@@ -63,7 +69,7 @@ export default new Router({
             path: '/enrollSeller',
             name: 'enrollSeller',
             // enrollSeller 들어가기 전에 로그인 되어있는 지 확인하고, 안되있으면 로그인 페이지 표시.
-            // beforeEnter: islogin,
+            beforeEnter: enrollSellerInitial,
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/enrollSeller.vue')
         },

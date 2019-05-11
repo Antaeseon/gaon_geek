@@ -284,8 +284,8 @@ export default {
             phoneNum: this.phone,
             email: this.email
           });
-          this.$router.push('/');
-          alert("회원가입이 완료되었습니다.")
+          this.$router.push("/");
+          alert("회원가입이 완료되었습니다.");
         } catch (error) {
           console.log(error.response.data.message);
           alert(error.response.data.message);
@@ -308,27 +308,33 @@ export default {
     },
     requestPay: function() {
       // IMP.request_pay(param, callback) 호출
-      IMP.request_pay(
+      Vue.IMP().request_pay(
         {
-          // param
           pg: "html5_inicis",
           pay_method: "card",
-          merchant_uid: "ORD20180131-0000011",
-          name: "노르웨이 회전 의자",
-          amount: 100,
-          buyer_email: "gildong@gmail.com",
-          buyer_name: "홍길동",
-          buyer_tel: "010-4242-4242",
-          buyer_addr: "서울특별시 강남구 신사동",
-          buyer_postcode: "01181"
+          merchant_uid: "merchant_" + new Date().getTime(),
+          name: "주문명:결제테스트",
+          amount: 14000,
+          buyer_email: "iamport@siot.do",
+          buyer_name: "구매자이름",
+          buyer_tel: "010-1234-5678",
+          buyer_addr: "서울특별시 강남구 삼성동",
+          buyer_postcode: "123-456"
         },
-        rsp => {
-          // callback
-          if (rsp.success) {
-            // 결제 성공 시 로직,
-          } else {
-            // 결제 실패 시 로직,
-          }
+        result_success => {
+          //성공할 때 실행 될 콜백 함수
+          var msg = "결제가 완료되었습니다.";
+          msg += "고유ID : " + result_success.imp_uid;
+          msg += "상점 거래ID : " + result_success.merchant_uid;
+          msg += "결제 금액 : " + result_success.paid_amount;
+          msg += "카드 승인번호 : " + result_success.apply_num;
+          alert(msg);
+        },
+        result_failure => {
+          //실패시 실행 될 콜백 함수
+          var msg = "결제에 실패하였습니다.";
+          msg += "에러내용 : " + result_failure.error_msg;
+          alert(msg);
         }
       );
     }

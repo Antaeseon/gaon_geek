@@ -43,6 +43,13 @@
                     </v-alert>
                     <v-alert
                     class="mb-3"
+                    :value="islocationError"
+                    type="error"
+                    >
+                    위치 정보가 잘못되었습니다. 다시 입력해주세요.
+                    </v-alert>
+                    <v-alert
+                    class="mb-3"
                     :value="alreadySeller"
                     type="error"
                     >
@@ -263,6 +270,7 @@
         imageFile: [],
         imageNum: 0,
         checkbox: false,
+        islocationError: false,
         items: [
           {
             src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg'
@@ -334,8 +342,11 @@
                 const geocoder = new google.maps.Geocoder();
                 geocoder.geocode({ address: this.location }, (results, status) => {
                     if (status !== `OK` || !results[0]) {
-                        this.enrollError()
-                    // throw new Error(status);
+                        this.islocationError = true;
+                        store.state.isSubmitted = false;
+                        store.state.isSubmitDup = false;
+                        store.state.isSubmitError = false;
+                        return;
                     }
                     const formData = new FormData();
                     formData.append('id', store.state.id);
@@ -402,7 +413,11 @@
         this.imageUrl= [],
         this.imageFile= [],
         this.imageNum= 0,
-        this.checkbox= false
+        this.islocationError = false,
+        this.checkbox= false,
+        store.state.isSubmitted = false,
+        store.state.isSubmitDup = false,
+        store.state.isSubmitError = false
     }
     }
 </script>
