@@ -36,19 +36,12 @@ export default {
   data() {
     return {
       tabs: null,
-      text:
-        " exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
     };
   },
   components: {
       Buyer,
       Seller
   },
-  methods: {
-    aa() {
-      console.log(this.tabs);
-    }
-  }
 };
 </script>
 
