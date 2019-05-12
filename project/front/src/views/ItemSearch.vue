@@ -18,7 +18,7 @@
       ></v-text-field>
     </v-flex>
 
-    <div style="text-align:left; padding-left:10px;">
+    <div style="text-align:left; padding-left:70px;">
             제품 상태
     </div>
 
@@ -34,7 +34,7 @@
     </v-flex>
     
     
-    <div style="text-align:left; padding-top:20px;padding-left:10px;">
+    <div style="text-align:left; padding-top:20px;padding-left:80px;">
             사이즈
     </div>
 
@@ -54,7 +54,7 @@
             컬러
     </div> -->
 
-    <div style="text-align:left; padding-left:10px;">
+    <div style="text-align:left; padding-left:80px;">
             브랜드
     </div>    
 
