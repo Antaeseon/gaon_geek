@@ -189,7 +189,7 @@ export default {
       this.clear();
     },
     clear(){
-
+      
       this.uid='';
       this.pwd='';
     },
