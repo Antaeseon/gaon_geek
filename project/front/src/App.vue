@@ -68,6 +68,14 @@
             <v-list-tile-title>판매자 정보 수정</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile v-if="isSeller" router :to="{name: 'enrollItem'}">
+          <v-list-tile-action>
+            <v-icon>supervisor_account</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>물품 등록</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
 
@@ -137,7 +145,7 @@
     </v-content>
 
     <v-footer color="indigo" app>
-      <span class="white--text">&copy; 2017</span>
+      <span class="white--text">&copy; 2019</span>
     </v-footer>
   </v-app>
 </template>

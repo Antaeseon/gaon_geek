@@ -24,6 +24,10 @@ const ItemSchema = new Schema({
         type: String,
         required: [true, 'Category field is required']
     },
+    tag: {
+        type: [String],
+        required: [true, 'Tag field is required']
+    },
     detail: {
         type: String,
         required: [true, 'Detail field is required']
