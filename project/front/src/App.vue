@@ -23,7 +23,7 @@
         </v-list-tile>
 
         <!-- mypage router로 지시 -->
-        <v-list-tile router :to="{name: 'mypage'}" exact>
+        <v-list-tile router :to="{name: 'myPage'}" exact>
           <v-list-tile-action>
             <v-icon>contact_mail</v-icon>
           </v-list-tile-action>

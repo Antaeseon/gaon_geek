@@ -52,7 +52,6 @@ const ItemSchema = new Schema({
         type: Number,
         default: 0
     }
-
 });
 
 // Collection 이름 지정
