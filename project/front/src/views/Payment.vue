@@ -33,7 +33,7 @@
       <v-flex d-flex xs12>
         <v-layout row wrap>
           <v-flex d-flex>
-            <v-card color="indigo lighten-2" dark tile flat>
+            <v-card color="white" dark tile flat>
               <v-card-text>
                 <template>
                   <v-carousel>
@@ -63,11 +63,11 @@
                       light
                     >
                       <v-card-text>
-                        상품번호:{{변수}}1212121212<br><br>
+                        상품번호:1212121212<br><br>
                         <h2>다양한색깔의 맨투맨!</h2>
                         전상품 무료배송!<br><br>
 
-                        판매가 : {{변수}}10,000원<br><br>
+                        판매가 :  10,000원<br><br>
                         
                         
                         <v-select
@@ -78,6 +78,40 @@
                           :items="sizeitems"
                           label="사이즈"
                         ></v-select>
+                        
+                <v-flex xs12 sm6>
+                  <v-menu
+                    ref="menu"
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    :return-value.sync="dates"
+                    lazy
+                    transition="scale-transition"
+                    offset-y
+                    full-width
+                    min-width="290px"
+                  >
+                    <template v-slot:activator="{ on }">
+                      <v-combobox
+                        v-model="dates"
+                        multiple
+                        chips
+                        small-chips
+                        label="Multiple picker in menu"
+                        prepend-icon="event"
+                        readonly
+                        v-on="on"
+                      ></v-combobox>
+                    </template>
+                    <v-date-picker v-model="dates" multiple :allowed-dates="allowedDates" no-title scrollable>
+                      <v-spacer></v-spacer>
+                      <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
+                      <v-btn flat color="primary" @click="$refs.menu.save(dates)">OK</v-btn>
+                    </v-date-picker>
+                  </v-menu>
+                </v-flex>
+
                       </v-card-text>
 
                     </v-card>
@@ -115,8 +149,16 @@
         active: null,
         text: '상세 상세 상세에에에에 설명 상세 설며어어어엉쓰',
         coloritems: ['black shirt', 'white shirt'],
-        sizeitems: ['S','M','L']
+        sizeitems: ['S','M','L'],
+        dates: ['2018-09-15', '2018-09-20'],
+        menu: false,
+        
       }
+      
+    },
+
+    methods: {
+      allowedDates: val => parseInt(val.split('-')[2], 10) % 2 === 0
     }
   }
 </script>
