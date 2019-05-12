@@ -86,5 +86,11 @@ export default new Router({
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/myPage.vue')
         },
+        {
+            path: '/selectcountry',
+            name: 'selectcountry',
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/SelectCountry.vue')
+        },
     ]
 })
