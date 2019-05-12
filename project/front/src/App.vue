@@ -31,6 +31,15 @@
             <v-list-tile-title>마이페이지</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <!-- mypage router로 지시 -->
+        <v-list-tile router :to="{name: 'payment'}" exact>
+          <v-list-tile-action>
+            <v-icon>contact_mail</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>결제</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
 
         <!-- mypage router로 지시 -->
         <v-list-tile router :to="{name: 'googlemap'}" exact>
