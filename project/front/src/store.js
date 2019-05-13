@@ -19,6 +19,7 @@ export default new Vuex.Store({
         alreadySeller: false,
         modifySellerError: false,
         sellerInfo: null,
+        itemlist: [],
         login_dialog: false,
     },
     getters: {
@@ -41,6 +42,7 @@ export default new Vuex.Store({
             state.id = ''
             state.isSeller = false
             state.sellerInfo = null
+            state.itemlist = []
             sessionStorage.removeItem('Token')
             sessionStorage.removeItem('id')
             sessionStorage.removeItem('isSeller')
@@ -73,6 +75,9 @@ export default new Vuex.Store({
         },
         getSellerInfoSuccess(state, payload) {
             state.sellerInfo = payload;
+        },
+        getItemListSuccess(state, payload) {
+            state.itemlist = payload;
         },
         modifyError(state) {
             state.modifySellerError = true;
@@ -173,6 +178,16 @@ export default new Vuex.Store({
                     commit('modifyError');
                 });
         },
+        getItemList({ commit }, form) {
+            axios.post('http://localhost:3000/enrollItem/lists', form)
+                .then(res => {
+                    let result = res.data.body;
+                    console.log(res.data.body);
+                    commit('getItemListSuccess', result);
+                }).catch((err) => {
+                    console.log(err);
+                })
+        },
         enrollItem({ commit }, form) {
             axios.post('http://localhost:3000/enrollItem', form)
                 .then(res => {
@@ -186,5 +201,18 @@ export default new Vuex.Store({
                     commit('enrollError');
                 })
         },
+        // modifyItem({ commit }, form) {
+        //     axios.post('http://localhost:3000/enrollItem/modify', form)
+        //         .then(res => {
+        //             if (res.data.tag === "Success") {
+        //                 alert("제출이 완료되었습니다!");
+        //                 commit('enrollComplete');
+        //                 router.push({ name: "home" });
+        //             }
+        //         }).catch((err) => {
+        //             // 장애발생 메시지
+        //             commit('enrollError');
+        //         })
+        // }
     }
 })
