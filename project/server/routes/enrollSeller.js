@@ -8,17 +8,35 @@ var fs = require('fs');
 const router = express.Router();
 
 const multer = require("multer");
-const upload = multer({
-    storage: multer.diskStorage({
-        destination: function(req, file, cb) {
-            cb(null, 'resources/images/');
+let AWS = require("aws-sdk");
+AWS.config.loadFromPath(__dirname + "/../awsconfig.json");
+let s3 = new AWS.S3();
+let multerS3 = require("multer-s3");
+let path = require("path");
+
+let upload = multer({
+    storage : multerS3({
+        s3: s3,
+        bucket: "weareverstorage",
+        key: function (req, file, cb) {
+            let extension = path.extname(file.originalname);
+            cb(null, Date.now().toString() + extension);
         },
-        filename: function(req, file, cb) {
-            cb(null, file.originalname);
-        }
-    }),
-    limits: { fileSize: 10 * 1024 * 1024 },
+        acl: 'public-read-write',
+    })
 });
+
+// const upload = multer({
+//     storage: multer.diskStorage({
+//         destination: function(req, file, cb) {
+//             cb(null, 'resources/images/');
+//         },
+//         filename: function(req, file, cb) {
+//             cb(null, file.originalname);
+//         }
+//     }),
+//     limits: { fileSize: 10 * 1024 * 1024 },
+// });
 
 /* Add a new enrollSeller to the db */
 /*
@@ -35,8 +53,9 @@ const upload = multer({
         imageUrl
     }
 */
-router.post('/', upload.array('img'), function(req, res, next) {
+router.post('/', upload.single('img'), function(req, res, next) {
     // 이미 제출했는지 검사
+    console.log(req.file)
     User.find({ id: req.body.id }, function(err, result) {
         if (err) {
             res.status(500).send({ "Response": 500, "tag": err });
@@ -54,7 +73,7 @@ router.post('/', upload.array('img'), function(req, res, next) {
                     lat: req.body.lat,
                     lon: req.body.lon,
                     imageNum: req.body.imageNum,
-                    imageUrl: req.body.imageUrl
+                    imageUrl: req.file.key
                 });
                 // 중복 제출 검사
                 enrollSeller.find({ id: req.body.id }, function(err, resultDupCheck) {
