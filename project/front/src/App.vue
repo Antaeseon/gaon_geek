@@ -70,13 +70,11 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-
     <v-toolbar color="indigo" dark fixed app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title>Application</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
-        
         <!-- 로그인 되어있으면 welcome 표시 -->
         <v-menu offset-y v-if="showId">
           <template v-slot:activator="{ on }">
@@ -122,7 +120,6 @@
                 </v-layout>
               </v-container>
             </v-form>
-
             <v-card-actions>
               <v-btn color="green darken-1" flat="flat" @click="login">submit</v-btn>         
               <v-btn color="red darken-1" flat="flat" @click="cancel">cancel</v-btn>         
@@ -131,7 +128,7 @@
         </v-dialog>
       </v-toolbar-items>
     </v-toolbar>
-
+    <!-- <img src= "https://s3.ap-northeast-2.amazonaws.com/weareverstorage/1557662747517.png"/> -->
     <v-content>
       <router-view></router-view>
     </v-content>
