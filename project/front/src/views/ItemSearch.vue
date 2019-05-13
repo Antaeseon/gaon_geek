@@ -36,40 +36,39 @@
             <v-card-text style="text-align:center; padding-top:0px;">
             <p style="text-align:center">제품 상태</p>
             <v-btn-toggle>
-              <v-btn block outline large  @click="change_state(false)">
+              <v-btn block outline large  @click="change_itemstate(false)">
                 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;대여 중&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 
               </v-btn>
             
-              <v-btn block outline large   @click="change_state(true)">
+              <v-btn block outline large   @click="change_itemstate(true)">
                 <span >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용 가능&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
               </v-btn>
             </v-btn-toggle>
             </v-card-text>
+
           </v-card>
 
           <v-card tile flat color="grey lighten-5">
             <p style="text-align:center ">사이즈</p>
             <v-card-text style="text-align:center; padding-top:0px;">
-            <v-radio-group row>
-                <v-radio
-                v-for="(colorValue, i) in ['XL', 'L', 'M', 'S']"
-                :key="i"
-                :color="colorValue"
-                :label="colorValue"
-                :value="colorValue"
-                ></v-radio>
+            <v-radio-group v-model="size" color="red" row :prepend-icon-cb="change_size(size)">
+              <v-radio label="XL" value="XL" ></v-radio>
+              <v-radio label="L" value="L" ></v-radio>
+              <v-radio label="M" value="M"  ></v-radio>
+              <v-radio label="S" value="S"  ></v-radio>
             </v-radio-group>
             </v-card-text>
           </v-card>
 
         
         <v-select
-            v-model="e7"
+            v-model="brand"
             :items="states"
             label="Select brand"
             multiple
             chips
             persistent-hint
+            :prepend-icon-cb="change_pickbrand(brand)"
         ></v-select>
 
 
@@ -401,11 +400,12 @@
 
       return {
         seller:"",
+        size:"",
         e6: [],
-        e7: [],
+        brand: [],
         // 브랜드 명
         states: [
-          'A','B','C'
+          'GUCCI','HERMES','LOUIS VUITTON', 'CHANEL', 'PRADA', 'GIVENCHY', 'BOTTENGA VENETA','CELINE', 'SAINT LAURENT'
         ]
       }
     },
@@ -421,9 +421,17 @@
       store.state.seller=this.seller;
       console.log(store.state.seller);
     },
-    change_state(available){
+    change_itemstate(available){
       store.state.itemAvailable=available;
       console.log(store.state.itemAvailable);
+    },
+    change_size(size){
+      store.state.size=this.size;
+      console.log(store.state.size);
+    },
+    change_pickbrand(brand){
+      store.state.brand=this.brand
+      console.log(store.state.brand);
     }
   }
 }
