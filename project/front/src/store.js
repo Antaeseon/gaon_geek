@@ -19,7 +19,7 @@ export default new Vuex.Store({
         alreadySeller: false,
         modifySellerError: false,
         sellerInfo: null,
-        login_dialog: false
+        login_dialog: false,
     },
     getters: {
         id: state => state.id,
@@ -172,6 +172,19 @@ export default new Vuex.Store({
                 }).catch((err) => {
                     commit('modifyError');
                 });
+        },
+        enrollItem({ commit }, form) {
+            axios.post('http://localhost:3000/enrollItem', form)
+                .then(res => {
+                    if (res.data.tag === "Success") {
+                        alert("제출이 완료되었습니다!");
+                        commit('enrollComplete');
+                        router.push({ name: "home" });
+                    }
+                }).catch((err) => {
+                    // 장애발생 메시지
+                    commit('enrollError');
+                })
         },
     }
 })

@@ -13,6 +13,13 @@
     </v-layout>
   </v-parallax>
     <v-container grid-list-xs text-xs-center>
+    <v-alert
+    class="mb-3"
+    :value="isSubmitError"
+    type="error"
+    >
+    장애가 발생했습니다. 잠시만 기다려주세요.
+    </v-alert>
     <form>
       <v-text-field
         v-model="item_name"
@@ -157,8 +164,10 @@
 import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
 import Vue from "vue";
+import { mapState, mapActions, mapMutations } from 'vuex' 
 import attribute from "./../attribute";
 const axios = require("axios");
+import store from './../store'
 
 export default {
   mixins: [validationMixin],
@@ -183,6 +192,7 @@ export default {
   },
 
   data: () => ({
+    ...mapState(['isSubmitError']),
     item_name: "",
     brand: "",
     color: "",
@@ -281,42 +291,37 @@ export default {
   },
 
   methods: {
+    ...mapActions(['enrollItem']),
     submit ()
     {
       this.$v.$touch()
       if(this.formBlankTest())
       {
-          // if (!this.checkbox) {
-          // alert("약관에 동의해주세요");
-          // return;
-          // }
-          // const google = await gmapsInit();
-          // const geocoder = new google.maps.Geocoder();
-          // geocoder.geocode({ address: this.location }, (results, status) => {
-          //     if (status !== `OK` || !results[0]) {
-          //         this.islocationError = true;
-          //         store.state.isSubmitted = false;
-          //         store.state.isSubmitDup = false;
-          //         store.state.isSubmitError = false;
-          //         return;
-          //     }
-          //     const formData = new FormData();
-          //     formData.append('id', store.state.id);
-          //     formData.append('shop_name', this.name);
-          //     formData.append('location', this.location);
-          //     formData.append('about_us', this.about_us);
-          //     formData.append('tag', this.tag);
-          //     formData.append('imageNum', this.imageNum);
-          //     formData.append('lat', results[0].geometry.location.lat());
-          //     formData.append('lon', results[0].geometry.location.lng());
-          //     for (var i = 0; i < this.imageNum; i++)
-          //     {
-          //         var tempfileUrl = 'resources/images/' + this.imageName[i];
-          //         formData.append('img', this.imageFile[i]);
-          //         formData.append('imageUrl', tempfileUrl);
-          //     }
-          //     this.requestEnrollSeller(formData)
-          // });
+          if (!this.checkbox) {
+          alert("약관에 동의해주세요");
+          return;
+          }
+              const formData = new FormData();
+              formData.append('shop_id', store.state.id);
+              formData.append('item_name', this.item_name);
+              formData.append('brand', this.brand);
+              formData.append('color', this.color);
+              formData.append('detail', this.detail);
+              formData.append('precautious', this.precautious);
+              formData.append('price', this.price);
+              formData.append('category', this.selected_category);
+              formData.append('size', this.selected_size);
+              formData.append('tag', this.selected_tag);
+              formData.append('imageNum',this.imageNum + 1);
+              for (var i = 0; i < this.imageNum; i++)
+              {
+                  formData.append('img', this.imageFile[i]);
+                  formData.append('imageUrl', this.imageName[i]);
+              }
+              formData.append('img',this.certificateFile);
+              formData.append('certificateUrl',this.certificateUrl);
+              formData.append('certificateName',this.certificateName);
+              this.enrollItem(formData);
       }
     },
     pickFile ()
@@ -392,7 +397,6 @@ export default {
       this.detail = "";
       this.precautious = "";
       this.price = "";
-      this.select = null;
       this.checkbox = false;
       this.selected_category= "";
       this.selected_size= "";
@@ -404,6 +408,7 @@ export default {
       this.certificateName= '';
       this.certificateUrl= '';
       this.certificateFile= null;
+      store.state.isSubmitError = false;
     },
   }
 };

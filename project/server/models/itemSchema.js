@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 // create user Schema & model
 const ItemSchema = new Schema({
-    id: {
+    shop_id: {
         type: String,
         required: [true, 'User id(Shop id) field is required'],
         unique: true
@@ -24,6 +24,10 @@ const ItemSchema = new Schema({
         type: String,
         required: [true, 'Category field is required']
     },
+    size: {
+        type: String,
+        required: [true, 'Size field is required']
+    },
     tag: {
         type: [String],
         required: [true, 'Tag field is required']
@@ -40,21 +44,21 @@ const ItemSchema = new Schema({
         type: Number,
         required: [true, 'Price field is required']
     },
-    size: {
-        type: String,
-        required: [true, 'Size field is required']
-    },
-    picture: {
-        type: [String],
-        required: [true, 'Image URL field is required']
-    },
-    certificate: {
-        type: String,
-        required: [true, 'Certificate field is required']
-    },
     status: {
         type: Number,
         default: 0
+    },
+    imageNum: {
+        type: Number,
+        required: [true, 'image Number field is required']
+    },
+    imageUrl: {
+        type: [String],
+        required: [true, 'Image URL field is required']
+    },
+    certificateUrl: {
+        type: String,
+        required: [true, 'Certificate field is required']
     }
 });
 
