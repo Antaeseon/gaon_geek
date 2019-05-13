@@ -93,7 +93,7 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-tile router :to="{name: 'mypage'}">
+            <v-list-tile router :to="{name: 'myPage'}">
               <v-list-tile-title>My Page</v-list-tile-title>
             </v-list-tile>
             <v-list-tile @click="$store.dispatch('signOut')">
