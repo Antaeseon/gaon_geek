@@ -13,7 +13,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
-
+      @click ="change_nation('한국')"
     >
     <div style="padding-top:10px"></div>
 
@@ -41,6 +41,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
+      @click ="change_nation('이탈리아')"
 
     >
     <div style="padding-top:10px"></div>
@@ -67,7 +68,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
-
+      @click ="change_nation('일본')"
     >
     <div style="padding-top:10px"></div>
 
@@ -93,7 +94,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
-
+      @click ="change_nation('호주')"
     >
     <div style="padding-top:10px"></div>
 
@@ -121,7 +122,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
-
+      @click ="change_nation('영국')"
     >
     <div style="padding-top:10px"></div>
 
@@ -147,7 +148,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
-
+      @click ="change_nation('미국')"
     >
     <div style="padding-top:10px"></div>
 
@@ -173,7 +174,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
-
+      @click ="change_nation('프랑스')"
     >
     <div style="padding-top:10px"></div>
 
@@ -200,7 +201,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
-
+      @click ="change_nation('중국')"
     >
     <div style="padding-top:10px"></div>
 
@@ -227,7 +228,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
-
+      @click ="change_nation('독일')"
     >
     <div style="padding-top:10px"></div>
 
@@ -246,7 +247,7 @@
     </v-hover>
     </v-flex>
 
-    <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
+    <v-flex xs12 sm6 md4 lg3 xl2 >
       <v-hover>
         
     <v-card
@@ -254,7 +255,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
-
+      @click ="change_nation('인도')"
     >
     <div style="padding-top:10px"></div>
 
@@ -263,7 +264,7 @@
         src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_India.svg/338px-Flag_of_India.svg.png"
       ></v-img>
 
-      <div style="font-weight:bold;">
+      <div style="text-align:center; font-weight:bold;">
           <h2>
             인도
           </h2>
@@ -279,3 +280,22 @@
 
 
 </template>
+<script>
+import store from './../store.js'
+import router from './../router.js'
+
+export default {
+  // data: () => {},
+  // computed: {
+  //   ...mapState([]),
+  //   ...mapGetters()
+  // },
+  methods: {
+    change_nation(nationInfo){
+      store.state.nation=nationInfo;
+      console.log(store.state.nation);
+      router.push({ name: "itemsearch"});
+    }
+  }
+}
+</script>
