@@ -62,6 +62,17 @@
           </v-list-tile-content>
         </v-list-tile>
 
+         <!-- mypage router로 지시 -->
+        <v-list-tile router :to="{name: 'itemsearch'}" exact>
+          <v-list-tile-action>
+            <v-icon>shopping_basket
+            </v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Item Search</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
         <!-- router :to="{name: 'enrollSeller'}" -->
         <!-- v-if="Token !== null" -->
         <v-list-tile @click='convert_login_status'>
