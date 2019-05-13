@@ -36,9 +36,9 @@ const ItemSchema = new Schema({
         type: String,
         required: [true, 'Detail field is required']
     },
-    precautions: {
+    precautious: {
         type: String,
-        required: [true, 'Precautions field is required']
+        required: [true, 'Precautious field is required']
     },
     price: {
         type: Number,

@@ -192,7 +192,6 @@ export default {
   },
 
   data: () => ({
-    ...mapState(['isSubmitError']),
     item_name: "",
     brand: "",
     color: "",
@@ -216,6 +215,7 @@ export default {
   }),
 
   computed: {
+    ...mapState(["isSubmitError"]),
     checkboxErrors() {
       const errors = [];
       if (!this.$v.checkbox.$dirty) return errors;

@@ -9,7 +9,7 @@
           <v-icon>face</v-icon>
         </v-tab>
 
-        <v-tab href="#tab-2">
+        <v-tab href="#tab-2" v-if="isSeller">
           Seller
           <v-icon>work</v-icon>
         </v-tab>
@@ -31,6 +31,7 @@
 <script>
 import Buyer from '../components/BuyerPage'
 import Seller from '../components/SellerPage'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   data() {
@@ -41,6 +42,9 @@ export default {
   components: {
       Buyer,
       Seller
+  },
+  computed: {
+    ...mapState([ "isSeller"]),
   },
 };
 </script>
