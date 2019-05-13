@@ -86,12 +86,12 @@ export default new Router({
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/myPage.vue')
         },
-        // {
-        //     path: '/enrollItem',
-        //     name: 'enrollItem',
-        //     beforeEnter: checkSeller,
-        //     component: () =>
-        //         import ( /* webpackChunkName: "about" */ './views/enrollItem.vue')
-        // },
+        {
+            path: '/enrollItem',
+            name: 'enrollItem',
+            beforeEnter: checkSeller,
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/enrollItem.vue')
+        },
     ]
 })

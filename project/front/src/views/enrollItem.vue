@@ -99,6 +99,44 @@
         ></v-select>
     </v-flex>
 
+    <v-text-field
+    readonly
+    label="Select Item Images"
+    v-model="imageName"
+    prepend-icon='attach_file'
+    required
+    @click='pickFile'
+    @input="$v.imageName.$touch()"
+    @blur="$v.imageName.$touch()"
+    :error-messages="ImageErrors"
+    ></v-text-field>
+    <input
+        multiple
+        type="file"
+        style="display: none"
+        ref="image"
+        @change="onFilePicked"
+        accept="image/*"
+    >
+
+    <v-text-field
+    readonly
+    label="Select guarantee of item"
+    v-model="certificateName"
+    prepend-icon='attach_file'
+    required
+    @click='pickCertificateFile'
+    @input="$v.certificateName.$touch()"
+    @blur="$v.certificateName.$touch()"
+    :error-messages="CertificateErrors"
+    ></v-text-field>
+    <input
+        type="file"
+        style="display: none"
+        ref="certificate"
+        @change="onCertificatePicked"
+        accept="certificate/*"
+    >
       <v-checkbox
         v-model="checkbox"
         :error-messages="checkboxErrors"
@@ -135,6 +173,8 @@ export default {
     selected_category: { required },
     selected_size: { required },
     selected_tag: { required },
+    imageName: { required },
+    certificateName: { required },
     checkbox: {
       checked(val) {
         return val;
@@ -153,6 +193,13 @@ export default {
     selected_size: "",
     category: attribute.category,
     selected_category: "",
+    imageName: [],
+    imageUrl: [],
+    imageFile: [],
+    certificateName: '',
+    certificateUrl: '',
+    certificateFile: null,
+    imageNum: 0,
     tag: attribute.tag,
     selected_tag: [],
     checkbox: false,
@@ -213,6 +260,18 @@ export default {
       !this.$v.selected_size.required && errors.push("Size is required");
       return errors;
     },
+    ImageErrors () {
+    const errors = []
+    if (!this.$v.imageName.$dirty) return errors
+    !this.$v.imageName.required && errors.push('Item Image is required')
+    return errors
+    },
+    CertificateErrors () {
+    const errors = []
+    if (!this.$v.certificateName.$dirty) return errors
+    !this.$v.certificateName.required && errors.push('Guarantee Image is required')
+    return errors
+    },
     tagErrors() {
       const errors = [];
       if (!this.$v.selected_tag.$dirty) return errors;
@@ -222,7 +281,110 @@ export default {
   },
 
   methods: {
-    clear() {
+    submit ()
+    {
+      this.$v.$touch()
+      if(this.formBlankTest())
+      {
+          // if (!this.checkbox) {
+          // alert("약관에 동의해주세요");
+          // return;
+          // }
+          // const google = await gmapsInit();
+          // const geocoder = new google.maps.Geocoder();
+          // geocoder.geocode({ address: this.location }, (results, status) => {
+          //     if (status !== `OK` || !results[0]) {
+          //         this.islocationError = true;
+          //         store.state.isSubmitted = false;
+          //         store.state.isSubmitDup = false;
+          //         store.state.isSubmitError = false;
+          //         return;
+          //     }
+          //     const formData = new FormData();
+          //     formData.append('id', store.state.id);
+          //     formData.append('shop_name', this.name);
+          //     formData.append('location', this.location);
+          //     formData.append('about_us', this.about_us);
+          //     formData.append('tag', this.tag);
+          //     formData.append('imageNum', this.imageNum);
+          //     formData.append('lat', results[0].geometry.location.lat());
+          //     formData.append('lon', results[0].geometry.location.lng());
+          //     for (var i = 0; i < this.imageNum; i++)
+          //     {
+          //         var tempfileUrl = 'resources/images/' + this.imageName[i];
+          //         formData.append('img', this.imageFile[i]);
+          //         formData.append('imageUrl', tempfileUrl);
+          //     }
+          //     this.requestEnrollSeller(formData)
+          // });
+      }
+    },
+    pickFile ()
+    {
+      this.$refs.image.click();
+    },
+    pickCertificateFile ()
+    {
+      this.$refs.certificate.click();
+    },
+    onFilePicked (e)
+    {
+      const files = e.target.files
+      this.imageNum = files.length
+      for(var i = 0; i < this.imageNum; i++)
+      {
+          const fileElement = files[i];
+          if(fileElement !== undefined) {
+              this.imageName.push(fileElement.name)
+              if(this.imageName[i].lastIndexOf('.') <= 0) {
+                  return
+              }
+              const fr = new FileReader ()
+              fr.readAsDataURL(fileElement)
+              fr.addEventListener('load', () => {
+                  this.imageUrl.push(fr.result)
+                  this.imageFile.push(fileElement) // this is an image file that can be sent to server...
+              })
+          } else {
+              this.imageName = []
+              this.imageFile = []
+              this.imageUrl = []
+          }
+      }
+    },
+    onCertificatePicked (e)
+    {
+      const files = e.target.files;
+      const fileElement = files[0];
+      if(fileElement !== undefined)
+      {
+        this.certificateName = fileElement.name;
+        if(this.certificateName.lastIndexOf('.') <= 0)
+        {
+          return
+        }
+        const fr = new FileReader ();
+        fr.readAsDataURL(fileElement)
+        fr.addEventListener('load', () => {
+          this.certificateUrl = fr.result;
+          this.certificateFile = fileElement; // this is an image file that can be sent to server...
+        })
+      }
+      else
+      {
+        this.certificateName= '';
+        this.certificateUrl= '';
+        this.certificateFile= null;
+      }
+    },
+    formBlankTest()
+    {
+        return this.item_name !== '' && this.brand !== '' && this.color !== '' && this.detail !== '' && this.precautious !== '' && 
+          this.price !== '' && this.selected_category !== '' && this.selected_size !== '' && this.selected_tag !== [] && this.imageName !== []
+          && this.certificateName !== [];
+    },
+    clear()
+    {
       this.$v.$reset();
       this.item_name = "";
       this.brand = "";
@@ -235,6 +397,13 @@ export default {
       this.selected_category= "";
       this.selected_size= "";
       this.selected_tag= [];
+      this.imageName= [];
+      this.imageUrl= [];
+      this.imageFile= [];
+      this.imageNum= 0;
+      this.certificateName= '';
+      this.certificateUrl= '';
+      this.certificateFile= null;
     },
   }
 };
