@@ -8,24 +8,28 @@
               v-model="active"
               color="blue lighten-5"
               light
-              slider-color="yellow"
+              slider-color="blue"
             >
-              <v-tab
-                v-for="n in 3"
-                :key="n"
-                ripple
-              >
-                Item {{ n }}
-
-              </v-tab>
-              <v-tab-item
-                v-for="n in 3"
-                :key="n"
-              >
+              <v-tab ripple>상세설명</v-tab>
+              <v-tab ripple>판매문의</v-tab>
+              <v-tab ripple>리뷰</v-tab>
+              
+              <v-tab-item>
                 <v-card flat>
-                 <v-card-text>{{ text }}</v-card-text>
+                 <v-card-text>{{ detailinfo }}</v-card-text>
                 </v-card>
               </v-tab-item>
+              <v-tab-item>
+                <v-card flat>
+                 <v-card-text>{{ qna }}</v-card-text>
+                </v-card>
+              </v-tab-item>
+              <v-tab-item>
+                <v-card flat>
+                 <v-card-text>{{ review }}</v-card-text>
+                </v-card>
+              </v-tab-item>
+
             </v-tabs>
           </v-flex>          
         </v-layout>
@@ -59,7 +63,7 @@
                     
                   >
                     <v-card
-                      color="teal lighten-4"
+                      color="grey lighten-4"
                       light
                     >
                       <v-card-text>
@@ -68,18 +72,16 @@
                         전상품 무료배송!<br><br>
 
                         판매가 :  10,000원<br><br>
-                        
-                        
-                        <v-select
-                          :items="coloritems"
-                          label="색깔"
-                        ></v-select>
-                        <v-select
-                          :items="sizeitems"
-                          label="사이즈"
-                        ></v-select>
-                        
+
                 <v-flex xs12 sm6>
+                  <v-select
+                   :items="coloritems"
+                   label="색깔"
+                  ></v-select>
+                  <v-select
+                   :items="sizeitems"
+                   label="사이즈"
+                  ></v-select>
                   <v-menu
                     ref="menu"
                     v-model="menu"
@@ -111,7 +113,8 @@
                     </v-date-picker>
                   </v-menu>
                 </v-flex>
-
+                      <v-btn>결제하기</v-btn>
+                      <v-btn>찜하기</v-btn>
                       </v-card-text>
 
                     </v-card>
@@ -147,7 +150,9 @@
           
         ],
         active: null,
-        text: '상세 상세 상세에에에에 설명 상세 설며어어어엉쓰',
+        detailinfo: '상세 상세 상세에에에에 설명 상세 설며어어어엉쓰',
+        qna:'판매문의입니다아',
+        review:'리뷰입니다아',
         coloritems: ['black shirt', 'white shirt'],
         sizeitems: ['S','M','L'],
         dates: ['2018-09-15', '2018-09-20'],
