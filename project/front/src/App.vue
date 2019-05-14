@@ -23,7 +23,7 @@
         </v-list-tile>
 
         <!-- mypage router로 지시 -->
-        <v-list-tile router :to="{name: 'myPage'}" exact>
+        <v-list-tile @click='convert_login_status_for_mypage'>
           <v-list-tile-action>
             <v-icon>contact_mail</v-icon>
           </v-list-tile-action>
@@ -209,6 +209,16 @@ export default {
       // 로그인 되있을 경우
       else{
         router.push({ name: "enrollSeller" });
+      }
+    },
+    convert_login_status_for_mypage(){
+      // 로그인 안되어 있을 경우
+      if(store.state.Token === null){
+        this.dialog=true;
+      }
+      // 로그인 되있을 경우
+      else{
+        router.push({ name: "myPage" });
       }
     }
   }

@@ -17,108 +17,109 @@
             
         </v-layout>
         </v-parallax>
+
         <v-subheader>Item Lists</v-subheader>
-        <v-list three-line>
-          <template v-for="(item, index) in items">
-            <v-divider
-              v-if="item.divider"
-              :key="index"
-              :inset="item.inset"
-            ></v-divider>
-
-            <v-list-tile
-              v-else
+        <v-container grid-list-lg grid-list-xs text-xs-center column>
+        <v-layout wrap justify-space-around align-center> 
+            <v-flex xs6 
               :key="item.item_name"
-              avatar
-            >
-              <v-list-tile-avatar :size="50">
-                <img :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + item.imageUrl[0]">
-              </v-list-tile-avatar>
+              v-for="(item, index) in itemlist">
+            <v-card class="inner_card" height="100%">
+                <v-layout align-center row>
+                <v-flex xs12 sm12>
+                  <v-img
+                    :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + item.imageUrl[0]"
+                    contain
+                    aspect-ratio="1.1"
+                  ></v-img>
 
-              <v-list-tile-content>
-                <v-list-tile-title v-html="item.item_name"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="item.category"></v-list-tile-sub-title>
-                <template v-for="(tagcom, idx) in item.tag">
-                    <v-list-tile-sub-title v-html="tagcom" :key="idx"></v-list-tile-sub-title>
-                </template>
-                <v-list-tile-sub-title v-html="item.size"></v-list-tile-sub-title>
-                <v-list-tile-sub-title v-if="item.status == 0">대여 가능</v-list-tile-sub-title>
-                <v-list-tile-sub-title v-else-if="item.status == 1">대여 중</v-list-tile-sub-title>
-                <v-list-tile-sub-title v-else-if="item.status == 2">세탁 중</v-list-tile-sub-title>
-                <v-list-tile-sub-title v-else-if="item.status == 3">배송 중</v-list-tile-sub-title>
-              </v-list-tile-content>
-                <v-layout row justify-center>
-                    <v-dialog v-model="dialog" persistent max-width="600px">
-                    <template v-slot:activator="{ on }">
-                        <v-btn color="primary" dark v-on="on" large depressed>상세보기</v-btn>
-                    </template>
-                    <v-card>
-                        <v-card-title>
-                        <span class="headline">물건 상세 정보</span>
-                        </v-card-title>
-                        <v-card-text>
-                        <v-container grid-list-md>
-                            <v-layout wrap>
-                            <v-flex xs12>
-                                <v-text-field label="Item Name" v-model="item.item_name" required></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6>
-                                <v-text-field label="Brand" v-model="item.brand" required></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6>
-                                <v-text-field label="Color" v-model="item.color" required></v-text-field>
-                            </v-flex>
-                            <v-flex xs12>
-                                <v-text-field label="Detail" v-model="item.detail" required></v-text-field>
-                            </v-flex>
-                            <v-flex xs12>
-                                <v-text-field label="Precautious" v-model="item.precautious" required></v-text-field>
-                            </v-flex>
-                            <v-flex xs12 sm6>
-                                <v-select
-                                :items="category"
-                                label="Category"
-                                v-model="item.category"
-                                required
-                                ></v-select>
-                            </v-flex>
-                            <v-flex xs12 sm6>
-                                <v-select
-                                :items="size"
-                                label="Size"
-                                v-model="item.size"
-                                required
-                                ></v-select>
-                            </v-flex>
-                            <v-flex xs12 sm6>
-                                <v-autocomplete
-                                :items="tag"
-                                label="Tag"
-                                chips
-                                multiple
-                                ></v-autocomplete>
-                            </v-flex>
-                            <v-flex xs12 sm6>
-                                <v-select
-                                :items="status"
-                                label="Status"
-                                v-model="modified_status"
-                                ></v-select>
-                            </v-flex>
-                            </v-layout>
-                        </v-container>
-                        </v-card-text>
-                        <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-                        <v-btn color="blue darken-1" flat @click="submit">Save</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                    </v-dialog>
+                <div class="headline" v-html="item.item_name"></div>
+                <div v-html="item.category"></div>
+                <span :key="tagCom" v-for="tagCom in item.tag">
+                    <span v-html="tagCom + ' '"></span>
+                </span>
+                <div v-html="item.size"></div>
+                <div v-html="item.price + ' (원/일)'"></div>
+                <div v-if="item.status == 0">대여 가능</div>
+                <div v-else-if="item.status == 1">대여 중</div>
+                <div v-else-if="item.status == 2">세탁 중</div>
+                <div v-else-if="item.status == 3">배송 중</div>
+                <div v-else-if="item.status == 4">수리 중</div>
+                <v-btn color="primary" dark @click="item_detail(index)" large depressed> 상세보기 </v-btn>
+                </v-flex>
                 </v-layout>
-            </v-list-tile>
-          </template>
-        </v-list>
+            </v-card>
+            </v-flex>
+          </v-layout>
+            <v-dialog v-model="dialog" max-width="600px">
+            <v-card>
+                <v-card-title>
+                <span class="headline">물건 상세 정보</span>
+                </v-card-title>
+                <v-card-text>
+                <v-container grid-list-md>
+                    <v-layout wrap>
+                    <v-flex xs12>
+                        <v-text-field label="Item Name" v-model="item_name_copy" required></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                        <v-text-field label="Brand" v-model="brand_copy" required></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                        <v-text-field label="Color" v-model="color_copy" required></v-text-field>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-text-field label="Detail" v-model="detail_copy" required></v-text-field>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-text-field label="Precautious" v-model="precautious_copy" required></v-text-field>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-text-field label="Price" v-model="price_copy" required></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                        <v-select
+                        :items="category"
+                        label="Category"
+                        v-model="category_copy"
+                        required
+                        ></v-select>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                        <v-select
+                        :items="size"
+                        label="Size"
+                        v-model="size_copy"
+                        required
+                        ></v-select>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                        <v-autocomplete
+                        :items="tag"
+                        label="Tag"
+                        v-model="tag_copy"
+                        chips
+                        multiple
+                        ></v-autocomplete>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                        <v-select
+                        :items="status"
+                        label="Status"
+                        v-model="status_copy"
+                        ></v-select>
+                    </v-flex>
+                    </v-layout>
+                </v-container>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" flat @click.stop="close">Close</v-btn>
+                <v-btn color="blue darken-1" flat @click.stop="submit">Save</v-btn>
+                </v-card-actions>
+            </v-card>
+            </v-dialog>
+        </v-container>
     </div>
 </template>
 
@@ -128,29 +129,113 @@ import { required, maxLength, email } from "vuelidate/lib/validators";
 import Vue from "vue";
 import store from "./../store";
 import attribute from "./../attribute";
-// import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 const axios = require("axios");
 
 export default {
-  data: () => ({
-    dialog: false,
-    shop_name: store.state.sellerInfo.shop_name,
-    total_visit: store.state.sellerInfo.total_visit,
-    rating: store.state.sellerInfo.rating,
-    enroll_Date: store.state.sellerInfo.enroll_Date,
-    items: store.state.itemlist,
-    size : attribute.size,
-    category: attribute.category,
-    tag: attribute.tag,
-    status: attribute.status,
-    modified_status: ''
-  }),
+  data() {
+    return {
+        dialog: false,
+        splitStr: '&nbsp;&nbsp;',
+        shop_name: store.state.sellerInfo.shop_name,
+        total_visit: store.state.sellerInfo.total_visit,
+        rating: store.state.sellerInfo.rating,
+        enroll_Date: store.state.sellerInfo.enroll_Date,
+        items: store.state.itemlist,
+        size : attribute.size,
+        category: attribute.category,
+        tag: attribute.tag,
+        status: attribute.status,
+        id_copy: '',
+        item_name_copy: '',
+        brand_copy: '',
+        color_copy: '',
+        detail_copy: '',
+        precautious_copy: '',
+        category_copy: '',
+        size_copy: '',
+        price_copy: 0,
+        tag_copy: [],
+        status_copy: '',
+        index_copy: 0
+    }
+  },
   computed: {
+      ...mapState([ "itemlist" ]),
   },
   methods: {
-      submit()
+      ...mapActions(['modifyItem']),
+      async submit()
       {
-          this.dialog = false;
+        this.dialog = false;
+        const formData = new FormData();
+        formData.append('_id', this.id_copy);
+        formData.append('item_name', this.item_name_copy);
+        formData.append('brand', this.brand_copy);
+        formData.append('color', this.color_copy);
+        formData.append('detail', this.detail_copy);
+        formData.append('precautious', this.precautious_copy);
+        formData.append('price', this.price_copy);
+        formData.append('category', this.category_copy);
+        formData.append('size', this.size_copy);
+        formData.append('status',this.status.indexOf(this.status_copy));
+        formData.append('index',this.index_copy);
+        for (var j = 0; j < this.tag_copy.length; j++)
+        {
+            formData.append('tag', this.tag_copy[j]);
+        }
+        this.modifyItem(formData);
+        // .then((err) => {
+        //     if(err) console.log(err);
+        //     else {
+        //         this.items[this.index_copy].item_name = this.item_name_copy;
+        //         this.items[this.index_copy].brand = this.brand_copy;
+        //         this.items[this.index_copy].color = this.color_copy;
+        //         this.items[this.index_copy].detail = this.detail_copy;
+        //         this.items[this.index_copy].precautious = this.precautious_copy;
+        //         this.items[this.index_copy].price = this.price_copy;
+        //         this.items[this.index_copy].category = this.category_copy;
+        //         this.items[this.index_copy].size = this.size_copy;
+        //         this.items[this.index_copy].status = this.status.indexOf(this.status_copy);
+        //     }
+        // });
+        
+        this.clear();
+      },
+      close()
+      {
+        this.dialog = false;
+        this.clear();
+      },
+      item_detail(index)
+      {
+        this.index_copy = index;
+        this.dialog = true;
+        this.id_copy = this.items[index]._id.slice();
+        this.item_name_copy = this.items[index].item_name.slice();
+        this.brand_copy = this.items[index].brand.slice();
+        this.color_copy = this.items[index].color.slice();
+        this.detail_copy = this.items[index].detail.slice();
+        this.precautious_copy = this.items[index].precautious.slice();
+        this.category_copy = this.items[index].category.slice();
+        this.size_copy = this.items[index].size.slice();
+        this.status_copy = this.status[this.items[index].status];
+        this.price_copy= this.items[index].price;
+        this.tag_copy = this.items[index].tag.slice();
+      },
+      clear()
+      {
+        this.item_name_copy = '';
+        this.brand_copy = '';
+        this.color_copy = '';
+        this.detail_copy = '';
+        this.precautious_copy = '';
+        this.category_copy = '';
+        this.size_copy = '';
+        this.status_copy = '';
+        this.price_copy= 0;
+        this.tag_copy = [];
+        this.index_copy= 0;
       }
   },
 }
@@ -158,5 +243,11 @@ export default {
 </script>
 
 <style>
-
+    .avatar {
+        margin-left: 5%;
+        margin-right: 2%;
+    }
+    .inner_card {
+        padding-bottom: 1%;
+    }
 </style>

@@ -15,10 +15,10 @@ let multerS3 = require("multer-s3");
 let path = require("path");
 
 let upload = multer({
-    storage : multerS3({
+    storage: multerS3({
         s3: s3,
         bucket: "weareverstorage",
-        key: function (req, file, cb) {
+        key: function(req, file, cb) {
             let extension = path.extname(file.originalname);
             cb(null, Date.now().toString() + extension);
         },

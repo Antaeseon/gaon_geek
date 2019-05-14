@@ -84,6 +84,9 @@ export default new Vuex.Store({
         },
         modifyComplete(state) {
             state.modifySellerError = false;
+        },
+        changeItemInfo(state, payload) {
+            state.itemlist[payload.index] = payload.data;
         }
     },
     actions: {
@@ -182,7 +185,6 @@ export default new Vuex.Store({
             axios.post('http://localhost:3000/enrollItem/lists', form)
                 .then(res => {
                     let result = res.data.body;
-                    console.log(res.data.body);
                     commit('getItemListSuccess', result);
                 }).catch((err) => {
                     console.log(err);
@@ -201,18 +203,16 @@ export default new Vuex.Store({
                     commit('enrollError');
                 })
         },
-        // modifyItem({ commit }, form) {
-        //     axios.post('http://localhost:3000/enrollItem/modify', form)
-        //         .then(res => {
-        //             if (res.data.tag === "Success") {
-        //                 alert("제출이 완료되었습니다!");
-        //                 commit('enrollComplete');
-        //                 router.push({ name: "home" });
-        //             }
-        //         }).catch((err) => {
-        //             // 장애발생 메시지
-        //             commit('enrollError');
-        //         })
-        // }
+        modifyItem({ commit }, form) {
+            axios.post('http://localhost:3000/enrollItem/modify', form)
+                .then(res => {
+                    if (res.data.tag === "Success") {
+                        commit('changeItemInfo', { index: res.data.index, data: res.data.data });
+                    }
+                }).catch((err) => {
+                    // 장애발생 메시지
+                    commit('enrollError');
+                })
+        }
     }
 })

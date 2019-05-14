@@ -29,11 +29,12 @@ const checkmypage = (to, from, next) => {
         next('/');
     } else {
         if (store.state.isSeller === true) {
+            console.log(store.state.isSeller);
             store.dispatch('getSellerInfo', { id: store.state.id });
             store.dispatch('getItemList', { shop_id: store.state.id });
             next();
         } else {
-            next('');
+            next();
         }
     }
 }

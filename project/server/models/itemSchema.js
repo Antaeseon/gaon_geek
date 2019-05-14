@@ -6,7 +6,6 @@ const ItemSchema = new Schema({
     shop_id: {
         type: String,
         required: [true, 'User id(Shop id) field is required'],
-        unique: true
     },
     item_name: {
         type: String,

@@ -311,7 +311,10 @@ export default {
               formData.append('price', this.price);
               formData.append('category', this.selected_category);
               formData.append('size', this.selected_size);
-              formData.append('tag', this.selected_tag);
+              for (var j = 0; j < this.selected_tag.length; j++)
+              {
+                  formData.append('tag', this.selected_tag[j]);
+              }
               formData.append('imageNum',this.imageNum + 1);
               for (var i = 0; i < this.imageNum; i++)
               {
