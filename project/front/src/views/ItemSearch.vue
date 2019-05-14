@@ -3,25 +3,24 @@
 <template>
     <!-- xs:mobile, sm:tablet, md:notebook, lg:desktop -->
   <v-container fluid>
-      <v-layout row>
+ 
+      <v-layout justify-space-around>
         <v-flex md12 >
-          <v-card tile flat color="grey lighten-5">
-            <v-card-text style="text-align:center; font-size:30px; font-weight:bold">CLOTHING</v-card-text>
-          </v-card>
+            <div style="text-align:center; font-size:30px; font-weight:bold">CLOTHING</div>
         </v-flex>
       </v-layout>
  
-      
-      <v-layout row>
+      <v-layout>
         
+        <v-container>
         <!-- 왼쪽 리스트 -->
-       
-      <v-flex xs12 sm4 md4 lg4 xl4 text-xs-center>
+      <v-container grid-list-xl text-xs-center >
+      <v-layout row wrap>
+      
+        <v-flex >
         <!-- <v-flex md3> -->
-          <v-card tile flat color="grey lighten-5">
-            <v-card-text style="text-align:center;">TODAY'S EDITION</v-card-text>
-          </v-card>
-         
+          <div><h3>TODAY'S EDITION</h3></div>
+          
           <v-text-field 
             outline
             label="업체 검색"
@@ -31,11 +30,10 @@
           ></v-text-field>
 
 
-          <v-card tile flat color="grey lighten-5">
             
-            <v-card-text style="text-align:center; padding-top:0px;">
-            <p style="text-align:center">제품 상태</p>
-            <v-btn-toggle>
+            <div><h3>제품 상태</h3></div>
+            
+            <v-btn-toggle >
               <v-btn block outline large  @click="change_itemstate(false)">
                 <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;대여 중&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 
               </v-btn>
@@ -44,23 +42,20 @@
                 <span >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;사용 가능&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
               </v-btn>
             </v-btn-toggle>
-            </v-card-text>
+          
 
-          </v-card>
+            <div><h3>사이즈</h3></div>
+            
 
-          <v-card tile flat color="grey lighten-5">
-            <p style="text-align:center ">사이즈</p>
-            <v-card-text style="text-align:center; padding-top:0px;">
-            <v-radio-group v-model="size" color="red" row @click="change_size(size)">
+            <v-radio-group   class="justify-center" v-model="size" color="red" row @click="change_size(size)">
               <v-radio label="XL" value="XL" ></v-radio>
               <v-radio label="L" value="L" ></v-radio>
               <v-radio label="M" value="M"  ></v-radio>
               <v-radio label="S" value="S"  ></v-radio>
             </v-radio-group>
-            </v-card-text>
-          </v-card>
-
-        
+            
+          
+            <div><h3>브랜드 선택</h3></div>
         <v-select
             v-model="brand"
             :items="states"
@@ -73,326 +68,50 @@
 
 
         </v-flex>
+        </v-layout>
         
-        
-        
-        <!-- 오른쪽 리스트 -->
-        
-  <v-container fluid grid-list-md>
-  <v-layout row wrap>
-    
-    
-    <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
-        
-    <v-hover>
-    <!-- <v-flex xs12> -->
-    <!-- <v-container> -->
-    
-    <v-card
-     slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="mx-auto"
-      width="250"
-      height="300"
-
-    >
-    <!-- <img :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + item.imageUrl[0]"> -->
-    
-    <v-img
-      src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/'+'1557747351964.jpg'"
-    >
-    
-    </v-img>
-        <div style="font-weight:bold;">발렌시아가 트리플 S</div>
-      </v-card>
-     
-     <!-- </v-container> -->
-
-    <!-- </v-flex> -->
-    </v-hover>
-
-    </v-flex>
-   
-    
-    <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
-    <v-hover>
-        
-    <v-card
-      slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="mx-auto"
-      max-width="250"
-      max-height="300"
-    >
-      <!-- 가방 -->
-      
-
-      <v-img
-        src="https://post-phinf.pstatic.net/MjAxNzA0MjBfMjc5/MDAxNDkyNjU4MjIyNTgz.ZfLbmNlOhuaqn8TN3I1kH6JnKWr3gNMarBqbfrqknAUg.f24-NZo7jbh82s911RWhzOCJ8nz67gTenftlJ9T7NZQg.PNG/%EA%B5%AC%EC%B0%8C_%EC%8B%A4%EB%B9%84%EB%B0%B1-24.png?type=w1200"
-      >
-        <v-container
-          fill-height
-          fluid
-          pa-2
-        >
-
         </v-container>
-      </v-img>
-      <div style="font-weight:bold;">구찌 가방</div>
-     
 
-    </v-card>
-    </v-hover>
-    
-    </v-flex>
-    <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
-     <v-hover>
-        
-    <v-card
-      slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="mx-auto"
-      width="250"
-
-    >
-    <div style="padding-top:10px"></div>
-
-      <v-img
-        :aspect-ratio="16/9"
-        src="https://seoul-p-studio.bunjang.net/product/61404448_1_1476777762_w640.jpg"
-      ></v-img>
-
-      <div style="font-weight:bold;">
-          <h2>
-            일본
-          </h2>
-      </div>
-
-    </v-card>
-    </v-hover>
-    </v-flex>
-    <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
-      <v-hover>
-        
-    <v-card
-      slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="mx-auto"
-      width="250"
-
-    >
-    <div style="padding-top:10px"></div>
-
-      <v-img
-        :aspect-ratio="16/9"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Flag_of_Australia.svg/1920px-Flag_of_Australia.svg.png"
-      ></v-img>
-
-      <div style="font-weight:bold;">
-          <h2>
-            호주
-          </h2>
-      </div>
-
-    </v-card>
-    </v-hover>
-    </v-flex>
-
-
-    <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
-      <v-hover>
-        
-    <v-card
-      slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="mx-auto"
-      width="250"
-
-    >
-    <div style="padding-top:10px"></div>
-
-      <v-img
-        :aspect-ratio="16/9"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Flag_of_the_United_Kingdom.svg/450px-Flag_of_the_United_Kingdom.svg.png"
-      ></v-img>
-
-      <div style="font-weight:bold;">
-          <h2>
-            영국
-          </h2>
-      </div>
-
-    </v-card>
-    </v-hover>
-    </v-flex>
-   <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
-      <v-hover>
-        
-    <v-card
-      slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="mx-auto"
-      width="250"
-
-    >
-    <div style="padding-top:10px"></div>
-
-      <v-img
-        :aspect-ratio="16/9"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1920px-Flag_of_the_United_States.svg.png"
-      ></v-img>
-
-      <div style="font-weight:bold;">
-          <h2>
-            미국
-          </h2>
-      </div>
-
-    </v-card>
-    </v-hover>
-    </v-flex>
-    <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
-      <v-hover>
-        
-    <v-card
-      slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="mx-auto"
-      width="250"
-
-    >
-    <div style="padding-top:10px"></div>
-
-      <v-img
-        :aspect-ratio="16/9"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Flag_of_France.svg/338px-Flag_of_France.svg.png"
-      ></v-img>
-
-      <div style="font-weight:bold;">
-          <h2>
-            프랑스
-          </h2>
-      </div>
-
-    </v-card>
-    </v-hover>
-    </v-flex>
-
-    <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
-      <v-hover>
-        
-    <v-card
-      slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="mx-auto"
-      width="250"
-
-    >
-    <div style="padding-top:10px"></div>
-
-      <v-img
-        :aspect-ratio="16/9"
-        src="http://i.011st.com/ex_t/R/400x400/1/85/0/src/pd/17/4/3/0/2/4/1/126430241_B_1.jpg"
-      ></v-img>
-
-      <div style="font-weight:bold;">
-          <h2>
-            중국
-          </h2>
-      </div>
-
-    </v-card>
-    </v-hover>
-    </v-flex>
-
-    <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
-      <v-hover>
-        
-    <v-card
-      slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="mx-auto"
-      width="250"
-
-    >
-    <div style="padding-top:10px"></div>
-
-      <v-img
-        :aspect-ratio="16/9"
-        src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg"
-      ></v-img>
-
-      <div style="font-weight:bold;">
-          <h2>
-            독일
-          </h2>
-      </div>
-
-    </v-card>
-    </v-hover>
-    </v-flex>
-
-    <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
-      <v-hover>
-        
-    <v-card
-      slot-scope="{ hover }"
-      :class="`elevation-${hover ? 12 : 2}`"
-      class="mx-auto"
-      width="250"
-    >
-    <div style="padding-top:10px"></div>
-
-      <v-img
-        :aspect-ratio="16/9"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_India.svg/338px-Flag_of_India.svg.png"
-      ></v-img>
-
-      <div style="font-weight:bold;">
-          <h2>
-            인도
-          </h2>
-      </div>
-
-    </v-card>
-    </v-hover>
-    </v-flex>
-<v-card-text style="text-align:center">
-            <v-pagination
+        <!-- 오른쪽 리스트 -->
+        <v-container >
+        <v-layout justify-space-around>
+          <v-flex xs5>
+            <div class="title mb-1"></div>
+            <v-layout column>
+              <v-img src="http://visualshock.kr/web/product/big/201807/18752_shop1_15305994850023.jpg" aspect-ratio="1.7" contain></v-img>
+              <div class="subheading" style="text-align:center; font-weight:bold">구찌 가방 토드 크로스백‎ 퀸 마가렛 탑 핸들 스몰</div>
+              <div class="subheading" style="text-align:center; font-weight:bold">3,580,000원</div>              
               
-              :length="5"
-            ></v-pagination>
-          </v-card-text>
-  
-  </v-layout>
+              <v-img src="https://thumbnail12.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/images/2018/10/30/23/4/467b6d25-56ac-4dd0-9a1d-dd1a75ed4731.jpg" aspect-ratio="1.7" contain></v-img>
+              <div class="subheading" style="text-align:center; font-weight:bold">[에르메스]넥크리스 악세사리 레이디스 HERMES H147991FP 1B 오렌지 실버</div>
+              <div class="subheading" style="text-align:center; font-weight:bold">1,056,800원 </div>              
+
+              <v-img src="https://thumbnail12.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/images/2018/02/08/0/6/146990d9-6de7-4413-acad-fd43f078a719.jpg" aspect-ratio="1.7" contain></v-img>
+              <div class="subheading" style="text-align:center; font-weight:bold">LOUIS VUITTON 루이비통 몽테뉴 BB 모노그램 캔버스 (M41055)</div>
+              <div class="subheading" style="text-align:center; font-weight:bold">2,670,000원</div>              
+            </v-layout>
+          </v-flex>
+
+          <v-flex xs5>
+            <div class="title mb-1"></div>
+            <v-layout column>
+              <v-img src="https://cdn.reebonzkorea.co.kr/uploads/product_meta_info/201806/3398087/representative_CHANEL__EC_83_A4_EB_84_AC__EB_B3_B4_EC_9D_B4_ED_94_84_EB_A0_8C_EB_93_9C__ED_8A_B8_EC_9C_84_EB_93_9C__EC_8B_9C_EA_B3_84_120180615-23501-1ibire.jpg" aspect-ratio="1.7" contain></v-img>
+              <div class="subheading" style="text-align:center; font-weight:bold">샤넬 보이프렌드 트위드 시계</div>
+              <div class="subheading" style="text-align:center; font-weight:bold">4,032,000원</div>              
+
+              <v-img src="https://cdn.reebonzkorea.co.kr/uploads/product_meta_info/201812/5242430/representative_23500520181223-19565-9btf5d.jpg" aspect-ratio="1.7" contain></v-img>
+              <div class="subheading" style="text-align:center; font-weight:bold">프라다1BP006사피아노럭스 체인크로스백</div>
+              <div class="subheading" style="text-align:center; font-weight:bold">1,142,400원</div>              
+
+              <v-img src="https://cdn.reebonzkorea.co.kr/uploads/product_meta_info/201903/5912833/representative_eneta_19SS__EB_B3_B4_ED_85_8C_EA_B0_80_EB_B2_A0_EB_84_A4_ED_83_80__EC_9A_B0_EB_B8_90__EB_A0_88_EB_8D_94__ED_8C_94_EC_B0_8C_120190311-13757-1jn8lkt.jpg" aspect-ratio="1.7" contain></v-img>
+              <div class="subheading" style="text-align:center; font-weight:bold">보테가베네타 우븐 레더 팔찌</div>
+              <div class="subheading" style="text-align:center; font-weight:bold">288,800원</div>              
+              
+            </v-layout>
+          </v-flex>
+        </v-layout>
+      </v-container>
 </v-container>
-
-    
-
-          <!-- <v-flex md3>
-          <v-card dark tile flat color="pink darken-4">
-            <v-card-text>#1</v-card-text>
-          </v-card>
-          </v-flex>
-          <v-flex md3>
-          <v-card dark tile flat color="pink darken-4">
-            <v-card-text>#2</v-card-text>
-          </v-card>
-          </v-flex>
-          <v-flex md3>
-          <v-card dark tile flat color="pink darken-4">
-            <v-card-text>#3</v-card-text>
-          </v-card>
-          </v-flex> -->
-
-          <!-- <v-card-text style="text-align:center">
-            <v-pagination
-              v-model="page"
-              :length="5"
-            ></v-pagination>
-          </v-card-text>
-          
-        </v-flex> -->
 
          
         
