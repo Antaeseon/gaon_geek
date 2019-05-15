@@ -104,7 +104,7 @@
 
     <v-toolbar color="indigo" dark fixed app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title @click="home">Application</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items class="hidden-sm-and-down">
         
@@ -212,8 +212,10 @@ export default {
       this.clear();
     },
     logout() {
-
       this.$store.dispatch("signOut");
+    },
+    home() {
+      router.push({ name: "home" });
     },
     cancel(){
       this.dialog=false;

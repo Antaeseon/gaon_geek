@@ -66,7 +66,13 @@
                         <v-text-field label="Brand" v-model="brand_copy" required></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6>
-                        <v-text-field label="Color" v-model="color_copy" required></v-text-field>
+                        <v-select
+                        v-model="color_copy"
+                        :items="color"
+                        attach
+                        required
+                        label="Color"
+                        ></v-select>
                     </v-flex>
                     <v-flex xs12>
                         <v-text-field label="Detail" v-model="detail_copy" required></v-text-field>
@@ -162,6 +168,7 @@ export default {
         category: attribute.category,
         tag: attribute.tag,
         status: attribute.status,
+        color: attribute.color,
         id_copy: '',
         item_name_copy: '',
         brand_copy: '',

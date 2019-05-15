@@ -38,14 +38,15 @@
         @input="$v.brand.$touch()"
         @blur="$v.brand.$touch()"
       ></v-text-field>
-      <v-text-field
-        v-model="color"
-        :error-messages="colorErrors"
-        label="Color"
-        required
-        @input="$v.color.$touch()"
-        @blur="$v.color.$touch()"
-      ></v-text-field>
+      <v-select
+      v-model="color"
+      :items="color_list"
+      attach
+      label="Color"
+      :error-messages="colorErrors"
+      @input="$v.color.$touch()"
+      @blur="$v.color.$touch()"
+      ></v-select>
       <v-text-field
         v-model="detail"
         :error-messages="detailErrors"
@@ -194,6 +195,7 @@ export default {
   data: () => ({
     item_name: "",
     brand: "",
+    color_list: attribute.color,
     color: "",
     detail: "",
     precautious: "",
