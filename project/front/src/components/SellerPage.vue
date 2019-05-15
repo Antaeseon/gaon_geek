@@ -109,6 +109,20 @@
                         v-model="status_copy"
                         ></v-select>
                     </v-flex>
+                    <v-flex :key="imgUrl" v-for="imgUrl in imageUrl_copy" xs12 sm6>
+                        <v-img
+                            :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + imgUrl"
+                            contain
+                            aspect-ratio="1.1"
+                        ></v-img>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                        <v-img
+                            :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + certificateUrl_copy"
+                            contain
+                            aspect-ratio="1.1"
+                        ></v-img>
+                    </v-flex>
                     </v-layout>
                 </v-container>
                 </v-card-text>
@@ -156,6 +170,8 @@ export default {
         size_copy: '',
         price_copy: 0,
         tag_copy: [],
+        certificateUrl_copy: '',
+        imageUrl_copy: [],
         status_copy: '',
         index_copy: 0
     }
@@ -222,6 +238,8 @@ export default {
         this.status_copy = this.status[this.items[index].status];
         this.price_copy= this.items[index].price;
         this.tag_copy = this.items[index].tag.slice();
+        this.certificateUrl_copy = this.items[index].certificateUrl.slice();
+        this.imageUrl_copy = this.items[index].imageUrl.slice();
       },
       clear()
       {
@@ -236,6 +254,8 @@ export default {
         this.price_copy= 0;
         this.tag_copy = [];
         this.index_copy= 0;
+        this.certificateUrl_copy = '';
+        this.imageUrl_copy = [];
       }
   },
 }
