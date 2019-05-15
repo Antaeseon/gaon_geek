@@ -20,15 +20,15 @@ export default new Vuex.Store({
         modifySellerError: false,
         sellerInfo: null,
         login_dialog: false,
-        
+
         // Item_Search State
         nation: null,
         seller: null,
         itemAvailable: false,
         size: null,
-        brand: []
-
-
+        brand: [],
+        // Item list for Seller Mypage
+        itemlist: [],
     },
     getters: {
         id: state => state.id,
@@ -50,6 +50,7 @@ export default new Vuex.Store({
             state.id = ''
             state.isSeller = false
             state.sellerInfo = null
+            state.itemlist = []
             sessionStorage.removeItem('Token')
             sessionStorage.removeItem('id')
             sessionStorage.removeItem('isSeller')
@@ -83,11 +84,17 @@ export default new Vuex.Store({
         getSellerInfoSuccess(state, payload) {
             state.sellerInfo = payload;
         },
+        getItemListSuccess(state, payload) {
+            state.itemlist = payload;
+        },
         modifyError(state) {
             state.modifySellerError = true;
         },
         modifyComplete(state) {
             state.modifySellerError = false;
+        },
+        changeItemInfo(state, payload) {
+            state.itemlist[payload.index] = payload.data;
         }
     },
     actions: {
@@ -182,5 +189,38 @@ export default new Vuex.Store({
                     commit('modifyError');
                 });
         },
+        getItemList({ commit }, form) {
+            axios.post('http://localhost:3000/enrollItem/lists', form)
+                .then(res => {
+                    let result = res.data.body;
+                    commit('getItemListSuccess', result);
+                }).catch((err) => {
+                    console.log(err);
+                })
+        },
+        enrollItem({ commit }, form) {
+            axios.post('http://localhost:3000/enrollItem', form)
+                .then(res => {
+                    if (res.data.tag === "Success") {
+                        alert("제출이 완료되었습니다!");
+                        commit('enrollComplete');
+                        router.push({ name: "home" });
+                    }
+                }).catch((err) => {
+                    // 장애발생 메시지
+                    commit('enrollError');
+                })
+        },
+        modifyItem({ commit }, form) {
+            axios.post('http://localhost:3000/enrollItem/modify', form)
+                .then(res => {
+                    if (res.data.tag === "Success") {
+                        commit('changeItemInfo', { index: res.data.index, data: res.data.data });
+                    }
+                }).catch((err) => {
+                    // 장애발생 메시지
+                    commit('enrollError');
+                })
+        }
     }
 })

@@ -23,7 +23,7 @@
         </v-list-tile>
 
         <!-- mypage router로 지시 -->
-        <v-list-tile router :to="{name: 'myPage'}" exact>
+        <v-list-tile @click='convert_login_status_for_mypage'>
           <v-list-tile-action>
             <v-icon>contact_mail</v-icon>
           </v-list-tile-action>
@@ -89,6 +89,14 @@
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>판매자 정보 수정</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile v-if="isSeller" router :to="{name: 'enrollItem'}">
+          <v-list-tile-action>
+            <v-icon>supervisor_account</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>물품 등록</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -160,7 +168,7 @@
     </v-content>
 
     <v-footer color="indigo" app>
-      <span class="white--text">&copy; 2017</span>
+      <span class="white--text">&copy; 2019</span>
     </v-footer>
   </v-app>
 </template>
@@ -224,6 +232,16 @@ export default {
       // 로그인 되있을 경우
       else{
         router.push({ name: "enrollSeller" });
+      }
+    },
+    convert_login_status_for_mypage(){
+      // 로그인 안되어 있을 경우
+      if(store.state.Token === null){
+        this.dialog=true;
+      }
+      // 로그인 되있을 경우
+      else{
+        router.push({ name: "myPage" });
       }
     }
   }

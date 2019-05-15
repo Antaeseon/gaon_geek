@@ -4,9 +4,8 @@
 
 <script>
 import MarkerClusterer from '@google/markerclusterer';
-
+import store from './../store'
 import gmapsInit from './../utils/gmaps';
-// import data from './enrollSeller';
 
 const locations = [
   {
@@ -55,8 +54,12 @@ export default {
       const google = await gmapsInit();
       const geocoder = new google.maps.Geocoder();
       const map = new google.maps.Map(this.$el);
-      // var jong = data.location
-      geocoder.geocode({ address: 'Korea' }, (results, status) => {
+      var loc = "";
+      if(store.state.alreadySeller === true)
+        loc = store.state.sellerInfo.location;
+      else
+        loc = 'Korea';
+      geocoder.geocode({ address: loc }, (results, status) => {
         if (status !== `OK` || !results[0]) {
           throw new Error(status);
         }
