@@ -19,7 +19,6 @@ const checkSeller = (to, from, next) => {
             next('/');
         }
     }
-
 }
 
 const enrollSellerInitial = (to, from, next) => {
@@ -86,6 +85,13 @@ export default new Router({
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/myPage.vue')
         },
+        {
+            path: '/admin',
+            name: 'admin',
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/Admin.vue')
+        },
+
         // {
         //     path: '/enrollItem',
         //     name: 'enrollItem',
