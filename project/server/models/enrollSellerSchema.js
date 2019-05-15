@@ -16,6 +16,10 @@ const enrollSellerSchema = new Schema({
         type: String,
         required: [true, 'Location field is required']
     },
+    nation: {
+        type: String,
+        required: [true, 'Nation field is required']
+    },
     about_us: {
         type: String,
         required: [true, 'About us field is required']

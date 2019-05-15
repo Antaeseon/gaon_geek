@@ -119,7 +119,7 @@ export default {
     phone: "",
     email: "",
     checkbox: false,
-    isAuthentificated: false
+    isAuthentificated: true
   }),
 
   computed: {

@@ -23,13 +23,15 @@ export default new Vuex.Store({
 
         // Item_Search State
         nation: null,
-        
+
         seller: null,
         itemAvailable: null,
         size: null,
         brand: [],
         category: [],
         tag: [],
+        searchItemlist: [],
+
         // Item list for Seller Mypage
         itemlist: [],
     },
@@ -98,6 +100,10 @@ export default new Vuex.Store({
         },
         changeItemInfo(state, payload) {
             state.itemlist[payload.index] = payload.data;
+        },
+        searchItemlistinsert(state, payload) {
+            state.searchItemlist = payload;
+            router.push({ name: "itemsearch" });
         }
     },
     actions: {
@@ -163,6 +169,7 @@ export default new Vuex.Store({
                         location: res.data.body[0].location,
                         shop_name: res.data.body[0].shop_name,
                         about_us: res.data.body[0].about_us,
+                        nation: res.data.body[0].nation,
                         tag: res.data.body[0].tag,
                         lat: res.data.body[0].lat,
                         lon: res.data.body[0].lon,
@@ -223,6 +230,14 @@ export default new Vuex.Store({
                 }).catch((err) => {
                     // 장애발생 메시지
                     commit('enrollError');
+                })
+        },
+        getNationItemlist({ commit }, form) {
+            axios.post('http://localhost:3000/search/getNationItemlist', form)
+                .then(res => {
+                    commit('searchItemlistinsert', res.data.data);
+                }).catch((err) => {
+                    console.log(err);
                 })
         }
     }

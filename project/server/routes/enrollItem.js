@@ -48,8 +48,9 @@ let upload = multer({
 //[{ name: 'img' }, { name: 'certificateFile' }]
 router.post('/', upload.array('img'), function(req, res, next) {
     var imagelist = [];
-    for (var i = 0; i < req.body.imageNum - 1; i++)
+    for (var i = 0; i < req.body.imageNum - 1; i++) {
         imagelist.push(req.files[i].key);
+    }
     var certificate = req.files[req.body.imageNum - 1].key;
     var item_obj = new item({
         shop_id: req.body.shop_id,

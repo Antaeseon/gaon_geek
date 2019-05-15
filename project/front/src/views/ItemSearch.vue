@@ -181,7 +181,8 @@
       brand: attribute.brand,
       tag: attribute.tag,
       category: attribute.category,
-        // 브랜드 명
+      nation: store.state.nation,
+      itemlist: store.state.searchItemlist,
     }),
 
   methods: {

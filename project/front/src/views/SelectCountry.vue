@@ -13,7 +13,7 @@
       :class="`elevation-${hover ? 12 : 2}`"
       class="mx-auto"
       width="250"
-      @click ="change_nation('한국')"
+      @click ="change_nation('대한민국')"
     >
     <div style="padding-top:10px"></div>
 
@@ -283,6 +283,7 @@
 <script>
 import store from './../store.js'
 import router from './../router.js'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   // data: () => {},
@@ -291,10 +292,10 @@ export default {
   //   ...mapGetters()
   // },
   methods: {
+    ...mapActions(['getNationItemlist']),
     change_nation(nationInfo){
       store.state.nation=nationInfo;
-      console.log(store.state.nation);
-      router.push({ name: "itemsearch"});
+      this.getNationItemlist({ nation: nationInfo.slice()})
     }
   }
 }
