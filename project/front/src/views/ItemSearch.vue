@@ -68,8 +68,8 @@
             v-model="selected_brand"
             :items="brand"
             label="Select brand"
-            multiple
             chips
+            multiple
             persistent-hint
              :prepend-icon-cb="change_pickbrand(selected_brand)"
         ></v-select>
@@ -83,17 +83,6 @@
             chips
             persistent-hint
              :prepend-icon-cb="change_pickcategory(selected_category)"
-        ></v-select>
-
-        <div><h3>#태그</h3></div>
-        <v-select
-            v-model="selected_tag"
-            :items="tag"
-            label="Select Tag"
-            multiple
-            chips
-            persistent-hint
-            :prepend-icon-cb="change_picktag(selected_tag)"
         ></v-select>
 
 
