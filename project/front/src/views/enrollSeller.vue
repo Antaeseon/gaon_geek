@@ -96,11 +96,20 @@
                               @blur="$v.name.$touch()"
                           >
                           </v-text-field>
+                          <v-select
+                          v-model="nation"
+                          :items="nation_lists"
+                          attach
+                          label="서비스 국가를 선택하세요."
+                          :error-messages="nationErrors"
+                          @input="$v.nation.$touch()"
+                          @blur="$v.nation.$touch()"
+                          ></v-select>
                           <v-text-field
                               v-model="location"
                               :error-messages="locationErrors"
                               required
-                              label="업체 위치를 입력하세요."
+                              label="업체의 정확한 위치를 입력하세요."
                               @input="$v.location.$touch()"
                               @blur="$v.location.$touch()"
                           >
@@ -238,6 +247,7 @@
     import { required } from 'vuelidate/lib/validators'
     import { mapState, mapActions, mapMutations } from 'vuex'
     import store from './../store'
+    import attribute from './../attribute'
 
     export default {
     mixins: [validationMixin],
@@ -245,6 +255,7 @@
     validations: {
         name: { required },
         location: { required },
+        nation: { required },
         about_us: { required },
         tag: { required },
         imageName: { required },
@@ -265,8 +276,10 @@
         tag: '',
         lat: 0.0,
         lon: 0.0,
-		imageName: [],
-		imageUrl: [],
+        nation: '',
+        nation_lists : attribute.nation,
+        imageName: [],
+        imageUrl: [],
         imageFile: [],
         imageNum: 0,
         checkbox: false,
@@ -326,6 +339,12 @@
             !this.$v.checkbox.checked && errors.push("You must agree to continue!");
             return errors;
         },
+        nationErrors() {
+          const errors = []
+          if (!this.$v.nation.$dirty) return errors
+          !this.$v.nation.required && errors.push('Nation Field is required')
+          return errors
+        },
     },
 
     methods: {
@@ -352,6 +371,7 @@
                     formData.append('id', store.state.id);
                     formData.append('shop_name', this.name);
                     formData.append('location', this.location);
+                    formData.append('nation', this.nation);
                     formData.append('about_us', this.about_us);
                     formData.append('tag', this.tag);
                     formData.append('imageNum', this.imageNum);
@@ -397,7 +417,7 @@
         },
         formBlankTest()
         {
-            return this.name !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== [];
+            return this.name !== '' && this.nation !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== [];
         }
     },
     clear() {
@@ -407,6 +427,7 @@
         this.dialog= false,
         this.name= '',
         this.location= '',
+        this.nation= '',
         this.about_us= '',
         this.tag= '',
         this.imageName= [],

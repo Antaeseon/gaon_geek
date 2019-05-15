@@ -153,8 +153,6 @@
   
   export default {
     data () {
-
-
       return {
         seller:"",
         size:"",
@@ -163,11 +161,13 @@
         // 브랜드 명
         states: [
           'GUCCI','HERMES','LOUIS VUITTON', 'CHANEL', 'PRADA', 'GIVENCHY', 'BOTTENGA VENETA','CELINE', 'SAINT LAURENT'
-        ]
+        ],
+        nation: store.state.nation,
+        itemlist: store.state.searchItemlist,
       }
     },
   mounted () {
-   
+  
   },
 
   computed: {

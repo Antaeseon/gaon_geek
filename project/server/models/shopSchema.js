@@ -12,6 +12,10 @@ const ShopSchema = new Schema({
         type: String,
         required: [true, 'Location field is required']
     },
+    nation: {
+        type: String,
+        required: [true, 'Nation field is required']
+    },
     shop_name: {
         type: String,
         required: [true, 'Shop_name field is required']

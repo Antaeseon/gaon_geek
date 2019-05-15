@@ -25,6 +25,15 @@
                         @blur="$v.name.$touch()"
                     >
                     </v-text-field>
+                    <v-select
+                    v-model="nation"
+                    :items="nation_lists"
+                    attach
+                    label="서비스 국가를 선택하세요."
+                    :error-messages="nationErrors"
+                    @input="$v.nation.$touch()"
+                    @blur="$v.nation.$touch()"
+                    ></v-select>
                     <v-text-field
                         v-model="location"
                         :error-messages="locationErrors"
@@ -75,6 +84,7 @@
     import { required } from 'vuelidate/lib/validators'
     import { mapState, mapActions, mapMutations } from 'vuex'
     import store from './../store'
+    import attribute from './../attribute'
 
     export default {
     mixins: [validationMixin],
@@ -82,6 +92,7 @@
     validations: {
         name: { required },
         location: { required },
+        nation: { required },
         about_us: { required },
         tag: { required }
     },
@@ -90,6 +101,8 @@
         dialog: false,
         name: store.state.sellerInfo.shop_name,
         location: store.state.sellerInfo.location,
+        nation: store.state.sellerInfo.nation,
+        nation_lists : attribute.nation,
         about_us: store.state.sellerInfo.about_us,
         tag: store.state.sellerInfo.tag,
         lat: 0.0,
@@ -121,7 +134,13 @@
         if (!this.$v.tag.$dirty) return errors
         !this.$v.tag.required && errors.push('Tag info is required')
         return errors
-        }
+        },
+        nationErrors() {
+          const errors = []
+          if (!this.$v.nation.$dirty) return errors
+          !this.$v.nation.required && errors.push('Nation Field is required')
+          return errors
+        },
     },
 
     methods: {
@@ -141,6 +160,7 @@
                     formData.append('id', store.state.id);
                     formData.append('shop_name', this.name);
                     formData.append('location', this.location);
+                    formData.append('nation', this.nation);
                     formData.append('about_us', this.about_us);
                     formData.append('tag', this.tag);
                     formData.append('lat', results[0].geometry.location.lat());
@@ -151,7 +171,7 @@
         },
         formBlankTest()
         {
-            return this.name !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '';
+            return this.name !== '' && this.location !== '' && this.nation !== '' && this.about_us !== '' && this.tag !== '';
         }
     }
     }

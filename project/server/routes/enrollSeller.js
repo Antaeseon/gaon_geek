@@ -45,6 +45,7 @@ let upload = multer({
         id
         shop_name
         location
+        nation
         about_us
         tag
         lat
@@ -55,7 +56,7 @@ let upload = multer({
 */
 router.post('/', upload.single('img'), function(req, res, next) {
     // 이미 제출했는지 검사
-    console.log(req.file)
+    // console.log(req.file)
     User.find({ id: req.body.id }, function(err, result) {
         if (err) {
             res.status(500).send({ "Response": 500, "tag": err });
@@ -68,6 +69,7 @@ router.post('/', upload.single('img'), function(req, res, next) {
                     id: req.body.id,
                     shop_name: req.body.shop_name,
                     location: req.body.location,
+                    nation: req.body.nation,
                     about_us: req.body.about_us,
                     tag: req.body.tag,
                     lat: req.body.lat,
@@ -126,10 +128,11 @@ router.post('/accept', function(req, res, next) {
         if (err) {
             res.status(500).send({ "Response": 500, "tag": err });
         } else {
-            console.log(result);
+            // console.log(result);
             var shop_obj = new Shop({
                 id: result[0].id,
                 location: result[0].location,
+                nation: result[0].nation,
                 shop_name: result[0].shop_name,
                 about_us: result[0].about_us,
                 tag: result[0].tag,
@@ -228,6 +231,7 @@ router.post('/getSellerInfo', function(req, res, next) {
 router.post('/modifySellerInfo', upload.array('img'), function(req, res, next) {
     Shop.findOneAndUpdate({ id: req.body.id }, {
         location: req.body.location,
+        nation: req.body.nation,
         shop_name: req.body.shop_name,
         about_us: req.body.about_us,
         tag: req.body.tag,
