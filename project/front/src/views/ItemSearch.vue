@@ -25,29 +25,37 @@
             outline
             label="업체 검색"
             append-icon="search"
-            :prepend-icon-cb="search(seller)"
             v-model="seller"
+             :prepend-icon-cb="search(seller)"
+            
           ></v-text-field>
 
 
             
             <div><h3>제품 상태</h3></div>
             
-            <v-btn-toggle >
-              <v-btn block outline large  @click="change_itemstate(false)">
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;대여 중&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 
-              </v-btn>
-            
-              <v-btn block outline large   @click="change_itemstate(true)">
-                <span >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;대여 가능&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-              </v-btn>
-            </v-btn-toggle>
-          
+            <v-radio-group   
+            class="justify-center" 
+            v-model="state" 
+            color="red" 
+            row 
+             :prepend-icon-cb="change_itemstate(state)">
+           
+              <v-radio label="대여 중" value="대여 중" ></v-radio>
+              <v-radio label="대여 가능" value="대여 가능" ></v-radio>
+
+            </v-radio-group>
 
             <div><h3>사이즈</h3></div>
             
 
-            <v-radio-group   class="justify-center" v-model="size" color="red" row @click="change_size(size)">
+            <v-radio-group   
+            class="justify-center" 
+            v-model="size" 
+            color="red" 
+            row 
+             :prepend-icon-cb="change_size(size)">
+           
               <v-radio label="XL" value="XL" ></v-radio>
               <v-radio label="L" value="L" ></v-radio>
               <v-radio label="M" value="M"  ></v-radio>
@@ -57,13 +65,35 @@
           
             <div><h3>브랜드 선택</h3></div>
         <v-select
-            v-model="brand"
-            :items="states"
+            v-model="selected_brand"
+            :items="brand"
             label="Select brand"
             multiple
             chips
             persistent-hint
-            :prepend-icon-cb="change_pickbrand(brand)"
+             :prepend-icon-cb="change_pickbrand(selected_brand)"
+        ></v-select>
+
+          <div><h3>카테고리</h3></div>
+        <v-select
+            v-model="selected_category"
+            :items="category"
+            label="Select Category"
+            multiple
+            chips
+            persistent-hint
+             :prepend-icon-cb="change_pickcategory(selected_category)"
+        ></v-select>
+
+        <div><h3>#태그</h3></div>
+        <v-select
+            v-model="selected_tag"
+            :items="tag"
+            label="Select Tag"
+            multiple
+            chips
+            persistent-hint
+            :prepend-icon-cb="change_picktag(selected_tag)"
         ></v-select>
 
 
@@ -136,10 +166,8 @@
           </v-flex>
         </v-layout>
       </v-container>
-</v-container>
+      </v-container>
 
-         
-        
       </v-layout>
 
     </v-container>
@@ -150,46 +178,48 @@
 
 <script>
   import store from './../store.js'
-  
+  import attribute from './../attribute.js'
+
   export default {
-    data () {
-
-
-      return {
-        seller:"",
-        size:"",
-        e6: [],
-        brand: [],
+    data: () => ({
+      seller:"",
+      e6: [],
+      selected_category: [],
+      selected_brand: [],
+      selected_tag: [],
+      size:"",
+      state:"",
+      brand: attribute.brand,
+      tag: attribute.tag,
+      category: attribute.category,
         // 브랜드 명
-        states: [
-          'GUCCI','HERMES','LOUIS VUITTON', 'CHANEL', 'PRADA', 'GIVENCHY', 'BOTTENGA VENETA','CELINE', 'SAINT LAURENT'
-        ]
-      }
-    },
-  mounted () {
-   
-  },
+    }),
 
-  computed: {
-    
-  },
   methods: {
     search(seller){
       store.state.seller=this.seller;
       console.log(store.state.seller);
     },
-    change_itemstate(available){
-      store.state.itemAvailable=available;
+    change_itemstate(state){
+      store.state.itemAvailable=this.state;
       console.log(store.state.itemAvailable);
     },
     change_size(size){
       store.state.size=this.size;
       console.log(store.state.size);
     },
-    change_pickbrand(brand){
-      store.state.brand=this.brand
+    change_pickbrand(selected_brand){
+      store.state.brand=this.selected_brand
       console.log(store.state.brand);
-    }
+    },
+    change_pickcategory(selected_category){
+      store.state.category=this.selected_category
+      console.log(store.state.category);
+    },
+    change_picktag(selected_tag){
+      store.state.tag=this.selected_tag
+      console.log(store.state.tag);
+    },
   }
 }
 </script>

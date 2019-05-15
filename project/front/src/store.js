@@ -23,10 +23,13 @@ export default new Vuex.Store({
 
         // Item_Search State
         nation: null,
+        
         seller: null,
-        itemAvailable: false,
+        itemAvailable: null,
         size: null,
         brand: [],
+        category: [],
+        tag: [],
         // Item list for Seller Mypage
         itemlist: [],
     },
