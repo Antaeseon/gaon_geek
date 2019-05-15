@@ -19,7 +19,16 @@ export default new Vuex.Store({
         alreadySeller: false,
         modifySellerError: false,
         sellerInfo: null,
-        login_dialog: false
+        login_dialog: false,
+        
+        // Item_Search State
+        nation: null,
+        seller: null,
+        itemAvailable: false,
+        size: null,
+        brand: []
+
+
     },
     getters: {
         id: state => state.id,
