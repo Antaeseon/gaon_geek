@@ -63,8 +63,7 @@ export default new Vuex.Store({
                 // localStorage.removeItem('Token')
                 // localStorage.removeItem('id')
                 // localStorage.removeItem('isSeller')
-
-            console.log('token 삭제')
+                // console.log('token 삭제')
         },
         enrollDup(state) {
             state.isSubmitDup = true;
@@ -108,7 +107,7 @@ export default new Vuex.Store({
     },
     actions: {
         login({ dispatch, commit }, { id, pwd }) {
-            console.log('여기들어옴')
+            // console.log('여기들어옴')
             console.log(id)
             console.log(pwd)
             return new Promise((resolve, reject) => {
@@ -129,7 +128,7 @@ export default new Vuex.Store({
                             })
                     })
                     .catch(err => {
-                        console.log("여기서 에러....")
+                        // console.log("여기서 에러....")
                         localStorage.removeItem('Token')
                         reject(err)
                     })

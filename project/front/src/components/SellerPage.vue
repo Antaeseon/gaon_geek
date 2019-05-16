@@ -63,34 +63,48 @@
                         <v-text-field label="Item Name" v-model="item_name_copy" required></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6>
-                        <v-text-field label="Brand" v-model="brand_copy" required></v-text-field>
+                        <v-autocomplete
+                        v-model="brand_copy"
+                        :items="brand"
+                        attach
+                        required
+                        label="Brand"
+                        ></v-autocomplete>
                     </v-flex>
                     <v-flex xs12 sm6>
-                        <v-select
+                        <v-autocomplete
                         v-model="color_copy"
                         :items="color"
                         attach
                         required
                         label="Color"
-                        ></v-select>
+                        ></v-autocomplete>
                     </v-flex>
                     <v-flex xs12>
-                        <v-text-field label="Detail" v-model="detail_copy" required></v-text-field>
-                    </v-flex>
-                    <v-flex xs12>
-                        <v-text-field label="Precautious" v-model="precautious_copy" required></v-text-field>
+                        <v-textarea label="Detail" v-model="detail_copy" required></v-textarea>
                     </v-flex>
                     <v-flex xs12>
                         <v-text-field label="Price" v-model="price_copy" required></v-text-field>
                     </v-flex>
+                    <v-flex xs12>
+                        <v-text-field label="Material" v-model="material_copy" required></v-text-field>
+                    </v-flex>
                     <v-flex xs12 sm6>
+                        <v-select
+                        :items="state"
+                        label="State"
+                        v-model="state_copy"
+                        required
+                        ></v-select>
+                    </v-flex>
+                    <v-autocomplete xs12 sm6>
                         <v-select
                         :items="category"
                         label="Category"
                         v-model="category_copy"
                         required
                         ></v-select>
-                    </v-flex>
+                    </v-autocomplete>
                     <v-flex xs12 sm6>
                         <v-select
                         :items="size"
@@ -108,29 +122,27 @@
                         multiple
                         ></v-autocomplete>
                     </v-flex>
-                    <v-flex xs12 sm6>
+                    <v-flex xs12>
                         <v-select
                         :items="status"
                         label="Status"
                         v-model="status_copy"
                         ></v-select>
                     </v-flex>
-                    <v-layout v-if="imageUrl_copy !== ''" >
-                        <v-flex :key="imgUrl" v-for="imgUrl in imageUrl_copy" xs12 sm6>
-                            <v-img
-                                :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + imgUrl"
-                                contain
-                                aspect-ratio="1.1"
-                            ></v-img>
-                        </v-flex>
-                        <v-flex xs12 sm6>
-                            <v-img
-                                :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + certificateUrl_copy"
-                                contain
-                                aspect-ratio="1.1"
-                            ></v-img>
-                        </v-flex>
-                    </v-layout>
+                    <v-flex :key="imgUrl" v-for="imgUrl in imageUrl_copy" xs12 sm6>
+                        <v-img
+                            :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + imgUrl"
+                            contain
+                            aspect-ratio="1.1"
+                        ></v-img>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                        <v-img
+                            :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + certificateUrl_copy"
+                            contain
+                            aspect-ratio="1.1"
+                        ></v-img>
+                    </v-flex>
                     </v-layout>
                 </v-container>
                 </v-card-text>
@@ -169,12 +181,15 @@ export default {
         tag: attribute.tag,
         status: attribute.status,
         color: attribute.color,
+        brand: attribute.brand,
+        state: attribute.state,
         id_copy: '',
         item_name_copy: '',
         brand_copy: '',
         color_copy: '',
         detail_copy: '',
-        precautious_copy: '',
+        material_copy: '',
+        state_copy: '',
         category_copy: '',
         size_copy: '',
         price_copy: 0,
@@ -199,7 +214,8 @@ export default {
         formData.append('brand', this.brand_copy);
         formData.append('color', this.color_copy);
         formData.append('detail', this.detail_copy);
-        formData.append('precautious', this.precautious_copy);
+        formData.append('state', this.state_copy);
+        formData.append('material',this.material_copy);
         formData.append('price', this.price_copy);
         formData.append('category', this.category_copy);
         formData.append('size', this.size_copy);
@@ -217,7 +233,8 @@ export default {
         //         this.items[this.index_copy].brand = this.brand_copy;
         //         this.items[this.index_copy].color = this.color_copy;
         //         this.items[this.index_copy].detail = this.detail_copy;
-        //         this.items[this.index_copy].precautious = this.precautious_copy;
+        //         this.items[this.index_copy].state = this.state_copy;
+        //         this.items[this.index_copy].material = this.material_copy;
         //         this.items[this.index_copy].price = this.price_copy;
         //         this.items[this.index_copy].category = this.category_copy;
         //         this.items[this.index_copy].size = this.size_copy;
@@ -241,7 +258,8 @@ export default {
         this.brand_copy = this.items[index].brand.slice();
         this.color_copy = this.items[index].color.slice();
         this.detail_copy = this.items[index].detail.slice();
-        this.precautious_copy = this.items[index].precautious.slice();
+        this.state_copy = this.items[index].state.slice();
+        this.material_copy = this.items[index].material.slice();
         this.category_copy = this.items[index].category.slice();
         this.size_copy = this.items[index].size.slice();
         this.status_copy = this.status[this.items[index].status];
@@ -256,7 +274,8 @@ export default {
         this.brand_copy = '';
         this.color_copy = '';
         this.detail_copy = '';
-        this.precautious_copy = '';
+        this.state_copy = '';
+        this.material_copy = '';
         this.category_copy = '';
         this.size_copy = '';
         this.status_copy = '';

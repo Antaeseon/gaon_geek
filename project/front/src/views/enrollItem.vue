@@ -30,15 +30,17 @@
         @input="$v.item_name.$touch()"
         @blur="$v.item_name.$touch()"
       ></v-text-field>
-      <v-text-field
-        v-model="brand"
-        :error-messages="brandErrors"
-        label="Brand"
-        required
-        @input="$v.brand.$touch()"
-        @blur="$v.brand.$touch()"
-      ></v-text-field>
-      <v-select
+      <v-autocomplete
+      v-model="brand"
+      :items="brand_list"
+      attach
+      label="Brand"
+      required
+      :error-messages="brandErrors"
+      @input="$v.brand.$touch()"
+      @blur="$v.brand.$touch()"
+      ></v-autocomplete>
+      <v-autocomplete
       v-model="color"
       :items="color_list"
       attach
@@ -46,23 +48,15 @@
       :error-messages="colorErrors"
       @input="$v.color.$touch()"
       @blur="$v.color.$touch()"
-      ></v-select>
-      <v-text-field
+      ></v-autocomplete>
+      <v-textarea
         v-model="detail"
         :error-messages="detailErrors"
         label="Detail"
         required
         @input="$v.detail.$touch()"
         @blur="$v.detail.$touch()"
-      ></v-text-field>
-      <v-text-field
-        v-model="precautious"
-        :error-messages="precautiousErrors"
-        label="Precautious"
-        required
-        @input="$v.precautious.$touch()"
-        @blur="$v.precautious.$touch()"
-      ></v-text-field>
+      ></v-textarea>
       <v-text-field
         v-model="price"
         :error-messages="priceErrors"
@@ -71,8 +65,27 @@
         @input="$v.price.$touch()"
         @blur="$v.price.$touch()"
       ></v-text-field>
+      <v-text-field
+        v-model="material"
+        :error-messages="materialErrors"
+        label="Material"
+        required
+        @input="$v.material.$touch()"
+        @blur="$v.material.$touch()"
+      ></v-text-field>
     <v-flex xs12 sm6>
         <v-select
+        v-model="state"
+        :items="state_list"
+        attach
+        label="State"
+        :error-messages="stateErrors"
+        @input="$v.state.$touch()"
+        @blur="$v.state.$touch()"
+        ></v-select>
+    </v-flex>
+    <v-flex xs12 sm6>
+        <v-autocomplete
         v-model="selected_category"
         :items="category"
         attach
@@ -80,7 +93,7 @@
         :error-messages="categoryErrors"
         @input="$v.selected_category.$touch()"
         @blur="$v.selected_category.$touch()"
-        ></v-select>
+        ></v-autocomplete>
     </v-flex>
     <v-flex xs12 sm6>
         <v-select
@@ -178,7 +191,8 @@ export default {
     brand: { required },
     color: { required },
     detail: { required },
-    precautious: { required },
+    state: { required },
+    material: { required },
     price: { required },
     selected_category: { required },
     selected_size: { required },
@@ -194,11 +208,14 @@ export default {
 
   data: () => ({
     item_name: "",
+    brand_list: attribute.brand,
     brand: "",
     color_list: attribute.color,
     color: "",
     detail: "",
-    precautious: "",
+    state: "",
+    state_list: attribute.state,
+    material: "",
     price: "",
     size: attribute.size,
     selected_size: "",
@@ -248,10 +265,16 @@ export default {
       !this.$v.detail.required && errors.push("Detail is required");
       return errors;
     },
-    precautiousErrors() {
+    stateErrors() {
       const errors = [];
-      if (!this.$v.precautious.$dirty) return errors;
-      !this.$v.precautious.required && errors.push("Precautious is required");
+      if (!this.$v.state.$dirty) return errors;
+      !this.$v.state.required && errors.push("State is required");
+      return errors;
+    },
+    materialErrors() {
+      const errors = [];
+      if (!this.$v.material.$dirty) return errors;
+      !this.$v.material.required && errors.push("Material is required");
       return errors;
     },
     priceErrors() {
@@ -309,7 +332,8 @@ export default {
               formData.append('brand', this.brand);
               formData.append('color', this.color);
               formData.append('detail', this.detail);
-              formData.append('precautious', this.precautious);
+              formData.append('state', this.state);
+              formData.append('material',this.material);
               formData.append('price', this.price);
               formData.append('category', this.selected_category);
               formData.append('size', this.selected_size);
@@ -389,7 +413,7 @@ export default {
     },
     formBlankTest()
     {
-        return this.item_name !== '' && this.brand !== '' && this.color !== '' && this.detail !== '' && this.precautious !== '' && 
+        return this.item_name !== '' && this.brand !== '' && this.color !== '' && this.detail !== '' && this.state !== '' && this.material !== '' &&
           this.price !== '' && this.selected_category !== '' && this.selected_size !== '' && this.selected_tag !== [] && this.imageName !== []
           && this.certificateName !== [];
     },
@@ -400,7 +424,8 @@ export default {
       this.brand = "";
       this.color = "";
       this.detail = "";
-      this.precautious = "";
+      this.state = "";
+      this.material = "";
       this.price = "";
       this.checkbox = false;
       this.selected_category= "";
