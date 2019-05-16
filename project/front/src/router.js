@@ -7,7 +7,7 @@ Vue.use(Router);
 const checkSeller = (to, from, next) => {
     if (store.state.Token === false) {
         // 로그인이 안된 유저니까.
-        alert('판매자 수정 페이지에 접속하려면 로그인이 필요합니다.');
+        alert('로그인이 필요합니다.');
         next('/');
     } else {
         if (store.state.isSeller === true) {
@@ -15,8 +15,24 @@ const checkSeller = (to, from, next) => {
             next();
         } else {
             // 판매자가 아니니까.
-            alert('판매자 수정 페이지에 접속하려면 판매자 권환이어야 합니다.');
+            alert('판매자 권환이어야 합니다.');
             next('/');
+        }
+    }
+}
+
+const checkmypage = (to, from, next) => {
+    if (store.state.Token === false) {
+        // 로그인이 안된 유저니까.
+        alert('로그인이 필요합니다.');
+        next('/');
+    } else {
+        if (store.state.isSeller === true) {
+            store.dispatch('getSellerInfo', { id: store.state.id });
+            store.dispatch('getItemList', { shop_id: store.state.id });
+            next();
+        } else {
+            next();
         }
     }
 }
@@ -82,22 +98,28 @@ export default new Router({
         {
             path: '/myPage',
             name: 'myPage',
+            beforeEnter: checkmypage,
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/myPage.vue')
         },
         {
-            path: '/admin',
-            name: 'admin',
+            path: '/selectcountry',
+            name: 'selectcountry',
             component: () =>
-                import ( /* webpackChunkName: "about" */ './views/Admin.vue')
+                import ( /* webpackChunkName: "about" */ './views/SelectCountry.vue')
         },
-
-        // {
-        //     path: '/enrollItem',
-        //     name: 'enrollItem',
-        //     beforeEnter: checkSeller,
-        //     component: () =>
-        //         import ( /* webpackChunkName: "about" */ './views/enrollItem.vue')
-        // },
+        {
+            path: '/itemsearch',
+            name: 'itemsearch',
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/ItemSearch.vue')
+        },
+        {
+            path: '/enrollItem',
+            name: 'enrollItem',
+            beforeEnter: checkSeller,
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/enrollItem.vue')
+        },
     ]
 })
