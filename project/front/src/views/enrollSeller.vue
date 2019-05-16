@@ -156,9 +156,7 @@
                       >
                         <template v-if="imageNum >= 1">
                             <div class="img-wrapper">
-                                <div class="img-container" v-for="(url, index) in imageUrl" :key="index">
-                                <img :src="url" height="150" />
-                                </div>
+                              <img :src="imageUrl" height="150" />
                             </div>
                         </template>
                         <v-text-field
@@ -200,15 +198,11 @@
                     class="mb-5"
                     height="100%"
                     >
-                        <v-container class="scroll-y" style="max-height: 200px" tabindex=0 fluid grid-list-md>
-                          <v-layout v-scroll>
-                            <v-textarea
-                            box
-                            readonly
+                        <v-container class="scroll-y"  style="max-height: 200px" tabindex=0 fluid grid-list-md>
+                          <v-layout v-scroll
                             label="약관"
-                            auto-grow
-                            v-model="userTerms"
-                            ></v-textarea>
+                            class="grey lighten-4"
+                             > {{userTerms}}
                           </v-layout>
                         </v-container>
                     <v-checkbox
@@ -272,7 +266,6 @@
 
     data: () => ({
         e1: 0,
-        title: "Image Upload",
         dialog: false,
         name: '',
         location: '',
@@ -282,9 +275,9 @@
         lon: 0.0,
         nation: '',
         nation_lists : attribute.nation,
-        imageName: [],
-        imageUrl: [],
-        imageFile: [],
+        imageName: '',
+        imageUrl: '',
+        imageFile: null,
         imageNum: 0,
         checkbox: false,
         islocationError: false,
@@ -379,12 +372,9 @@
                     formData.append('imageNum', this.imageNum);
                     formData.append('lat', results[0].geometry.location.lat());
                     formData.append('lon', results[0].geometry.location.lng());
-                    for (var i = 0; i < this.imageNum; i++)
-                    {
-                        var tempfileUrl = 'resources/images/' + this.imageName[i];
-                        formData.append('img', this.imageFile[i]);
-                        formData.append('imageUrl', tempfileUrl);
-                    }
+                    var tempfileUrl = 'resources/images/' + this.imageName;
+                    formData.append('img', this.imageFile);
+                    formData.append('imageUrl', tempfileUrl);
                     this.requestEnrollSeller(formData)
                 });
             }
@@ -400,20 +390,20 @@
             {
                 const fileElement = files[i];
                 if(fileElement !== undefined) {
-                    this.imageName.push(fileElement.name)
-                    if(this.imageName[i].lastIndexOf('.') <= 0) {
+                    this.imageName = fileElement.name
+                    if(this.imageName.lastIndexOf('.') <= 0) {
                         return
                     }
                     const fr = new FileReader ()
                     fr.readAsDataURL(fileElement)
                     fr.addEventListener('load', () => {
-                        this.imageUrl.push(fr.result)
-                        this.imageFile.push(fileElement) // this is an image file that can be sent to server...
+                        this.imageUrl = fr.result
+                        this.imageFile = fileElement; // this is an image file that can be sent to server...
                     })
                 } else {
-                    this.imageName = []
-                    this.imageFile = []
-                    this.imageUrl = []
+                    this.imageName = '';
+                    this.imageFile = null;
+                    this.imageUrl = '';
                 }
             }
         },
@@ -425,16 +415,15 @@
     clear() {
         this.$v.$reset();
         this.e1= 1,
-        this.title= "Image Upload",
         this.dialog= false,
         this.name= '',
         this.location= '',
         this.nation= '',
         this.about_us= '',
         this.tag= '',
-        this.imageName= [],
-        this.imageUrl= [],
-        this.imageFile= [],
+        this.imageName= '',
+        this.imageUrl= '',
+        this.imageFile= null,
         this.imageNum= 0,
         this.islocationError = false,
         this.checkbox= false,

@@ -1,9 +1,9 @@
 export default {
-    category: ['bag', 'belt', 'blouse', 'briefcase', 'cap', 'cardigan', 'chinos', 'coat', 'dress', 'dress Shirt', 'dolphin shorts', 'earring',
-        'footwear', 'glove', 'ground jumper', 'gown', 'hoody', 'jacket', 'jean', 'jumper', 'leggings', 'messenger bag', 'muffler', 'mustang',
-        'necklace', 'necktie', 'onepiece dress', 'outdoor', 'pants', 'purse', 'rider jacket', 'ring', 'scarf', 'shorts', 'skinny Jean', 'skirt',
-        'slacks', 'suits', 'sunglasses', 'sports wear', 'sweater', 'tailored Jacket', 'turtle Neck', 'trousers', 'vest', 'wallet', 'watch',
-        'windbreaker'
+    category: ['bag', 'backpack', 'belt', 'blouse', 'boots', 'briefcase', 'canvas', 'cap', 'cardigan', 'chinos', 'coat', 'dress', 'dress Shirt',
+        'dress shoes', 'dolphin shorts', 'earring', 'footwear', 'glove', 'ground jumper', 'gown', 'high-heel', 'hoody', 'jacket', 'jean', 'jumper', 'leggings',
+        'messenger bag', 'muffler', 'mustang', 'necklace', 'necktie', 'onepiece dress', 'outdoor', 'pants', 'purse', 'rider jacket', 'ring',
+        'scarf', 'shorts', 'skinny Jean', 'skirt', 'slacks', 'slip on', 'slipper', 'sneakers', 'sunglasses', 'sports wear', 'sweater', 'tailored Jacket',
+        'turtle Neck', 'trousers', 'vest', 'wallet', 'watch', 'windbreaker'
     ],
     brand: ['GUCCI', 'HERMES', 'LOUIS VUITTON', 'CHANEL', 'PRADA', 'GIVENCHY', 'BOTTENGA VENETA', 'CELINE', 'SAINT LAURENT'],
     size: ['NONE', 'S', 'M', 'L', 'XL', 'XXL'],
