@@ -67,6 +67,7 @@
                             v-for="(item,i) in items"
                             :key="i"
                             :src="item.src"
+                            aspect-ratio="1.1"
                         ></v-carousel-item>
                         </v-carousel>
                       </v-card>
@@ -199,14 +200,16 @@
                     class="mb-5"
                     height="100%"
                     >
-                        <v-container fluid grid-list-md>
+                        <v-container class="scroll-y" style="max-height: 200px" tabindex=0 fluid grid-list-md>
+                          <layoout v-scroll>
                             <v-textarea
                             box
                             readonly
                             label="약관"
                             auto-grow
-                            value="제1조(목적) 이 약관은 OO(이하 “회사”)가 제공하는 쇼핑몰형 구매대행 관련 서비스(이하 “서비스”)를 이용함에 있어 회사와 이용자 간의 권리·의무, 책임사항 및 절차 등을 규정함을 목적으로 합니다."
+                            v-model="userTerms"
                             ></v-textarea>
+                          </layoout>
                         </v-container>
                     <v-checkbox
                     v-model="checkbox"
@@ -248,6 +251,7 @@
     import { mapState, mapActions, mapMutations } from 'vuex'
     import store from './../store'
     import attribute from './../attribute'
+    import terms from './../terms'
 
     export default {
     mixins: [validationMixin],
@@ -284,18 +288,16 @@
         imageNum: 0,
         checkbox: false,
         islocationError: false,
+        userTerms: terms.userTerms,
         items: [
           {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg'
+            src: 'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/share1.PNG'
           },
           {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg'
+            src: 'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/share2.PNG'
           },
           {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg'
-          },
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg'
+            src: 'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/share3.PNG'
           }
         ]
     }),

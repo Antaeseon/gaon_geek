@@ -38,7 +38,8 @@ let upload = multer({
         size
         tag
         detail
-        precautious
+        state
+        material
         price
         status
         imageNum
@@ -61,7 +62,8 @@ router.post('/', upload.array('img'), function(req, res, next) {
         size: req.body.size,
         tag: req.body.tag,
         detail: req.body.detail,
-        precautious: req.body.precautious,
+        state: req.body.state,
+        material: req.body.material,
         price: req.body.price,
         status: 0,
         imageNum: req.body.imageNum,
@@ -108,7 +110,8 @@ router.post('/lists', function(req, res, next) {
         size
         tag
         detail
-        precautious
+        state
+        material
         price
         status
     }
@@ -122,7 +125,8 @@ router.post('/modify', upload.array('img'), function(req, res, next) {
         size: req.body.size,
         tag: req.body.tag,
         detail: req.body.detail,
-        precautious: req.body.precautious,
+        state: req.body.state,
+        material: req.body.material,
         price: req.body.price,
         status: req.body.status
     }, function(err, result) {
