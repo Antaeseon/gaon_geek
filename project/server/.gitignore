@@ -1,4 +1,4 @@
 node_modules
 auth
 config.js
-awsconfig.js
+awsconfig.json
