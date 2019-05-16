@@ -98,7 +98,7 @@
                           </v-menu>
                         </v-flex>
                         <v-btn @click="requestPay">결제하기</v-btn>
-                        <v-btn>찜하기</v-btn>
+                        <v-btn @click="sendsms">찜하기</v-btn>
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -113,6 +113,7 @@
 </template>
 <script>
 import Vue from "vue";
+import axios from "axios";
 
 export default {
   data() {
@@ -148,6 +149,27 @@ export default {
 
   methods: {
     allowedDates: val => parseInt(val.split("-")[2], 10) % 2 === 0,
+    sendsms: function() {
+      axios
+        .post(
+          "https://api-sens.ncloud.com/v1/sms/services/ncp:sms:kr:255920239534:wearever/messages",
+          {
+            type: "sms",
+            contentType: "COMM",
+            countryCode: "82",
+            from: "01052817702",
+            to: ["01052817702"],
+            content: "성공!"
+          }
+        )
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+                  
+        });
+    },
 
     requestPay: function() {
       // IMP.request_pay(param, callback) 호출
