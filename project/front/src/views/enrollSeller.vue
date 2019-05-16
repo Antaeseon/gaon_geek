@@ -201,7 +201,7 @@
                     height="100%"
                     >
                         <v-container class="scroll-y" style="max-height: 200px" tabindex=0 fluid grid-list-md>
-                          <layoout v-scroll>
+                          <v-layout v-scroll>
                             <v-textarea
                             box
                             readonly
@@ -209,7 +209,7 @@
                             auto-grow
                             v-model="userTerms"
                             ></v-textarea>
-                          </layoout>
+                          </v-layout>
                         </v-container>
                     <v-checkbox
                     v-model="checkbox"
