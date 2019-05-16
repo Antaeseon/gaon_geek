@@ -67,6 +67,7 @@
                             v-for="(item,i) in items"
                             :key="i"
                             :src="item.src"
+                            aspect-ratio="1.1"
                         ></v-carousel-item>
                         </v-carousel>
                       </v-card>
@@ -96,11 +97,20 @@
                               @blur="$v.name.$touch()"
                           >
                           </v-text-field>
+                          <v-select
+                          v-model="nation"
+                          :items="nation_lists"
+                          attach
+                          label="서비스 국가를 선택하세요."
+                          :error-messages="nationErrors"
+                          @input="$v.nation.$touch()"
+                          @blur="$v.nation.$touch()"
+                          ></v-select>
                           <v-text-field
                               v-model="location"
                               :error-messages="locationErrors"
                               required
-                              label="업체 위치를 입력하세요."
+                              label="업체의 정확한 위치를 입력하세요."
                               @input="$v.location.$touch()"
                               @blur="$v.location.$touch()"
                           >
@@ -190,14 +200,16 @@
                     class="mb-5"
                     height="100%"
                     >
-                        <v-container fluid grid-list-md>
+                        <v-container class="scroll-y" style="max-height: 200px" tabindex=0 fluid grid-list-md>
+                          <layoout v-scroll>
                             <v-textarea
                             box
                             readonly
                             label="약관"
                             auto-grow
-                            value="제1조(목적) 이 약관은 OO(이하 “회사”)가 제공하는 쇼핑몰형 구매대행 관련 서비스(이하 “서비스”)를 이용함에 있어 회사와 이용자 간의 권리·의무, 책임사항 및 절차 등을 규정함을 목적으로 합니다."
+                            v-model="userTerms"
                             ></v-textarea>
+                          </layoout>
                         </v-container>
                     <v-checkbox
                     v-model="checkbox"
@@ -238,6 +250,8 @@
     import { required } from 'vuelidate/lib/validators'
     import { mapState, mapActions, mapMutations } from 'vuex'
     import store from './../store'
+    import attribute from './../attribute'
+    import terms from './../terms'
 
     export default {
     mixins: [validationMixin],
@@ -245,6 +259,7 @@
     validations: {
         name: { required },
         location: { required },
+        nation: { required },
         about_us: { required },
         tag: { required },
         imageName: { required },
@@ -265,24 +280,24 @@
         tag: '',
         lat: 0.0,
         lon: 0.0,
-		imageName: [],
-		imageUrl: [],
+        nation: '',
+        nation_lists : attribute.nation,
+        imageName: [],
+        imageUrl: [],
         imageFile: [],
         imageNum: 0,
         checkbox: false,
         islocationError: false,
+        userTerms: terms.userTerms,
         items: [
           {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg'
+            src: 'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/share1.PNG'
           },
           {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/sky.jpg'
+            src: 'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/share2.PNG'
           },
           {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/bird.jpg'
-          },
-          {
-            src: 'https://cdn.vuetifyjs.com/images/carousel/planet.jpg'
+            src: 'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/share3.PNG'
           }
         ]
     }),
@@ -326,6 +341,12 @@
             !this.$v.checkbox.checked && errors.push("You must agree to continue!");
             return errors;
         },
+        nationErrors() {
+          const errors = []
+          if (!this.$v.nation.$dirty) return errors
+          !this.$v.nation.required && errors.push('Nation Field is required')
+          return errors
+        },
     },
 
     methods: {
@@ -352,6 +373,7 @@
                     formData.append('id', store.state.id);
                     formData.append('shop_name', this.name);
                     formData.append('location', this.location);
+                    formData.append('nation', this.nation);
                     formData.append('about_us', this.about_us);
                     formData.append('tag', this.tag);
                     formData.append('imageNum', this.imageNum);
@@ -397,7 +419,7 @@
         },
         formBlankTest()
         {
-            return this.name !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== [];
+            return this.name !== '' && this.nation !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== [];
         }
     },
     clear() {
@@ -407,6 +429,7 @@
         this.dialog= false,
         this.name= '',
         this.location= '',
+        this.nation= '',
         this.about_us= '',
         this.tag= '',
         this.imageName= [],

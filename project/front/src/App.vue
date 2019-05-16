@@ -23,7 +23,7 @@
         </v-list-tile>
 
         <!-- mypage router로 지시 -->
-        <v-list-tile router :to="{name: 'myPage'}" exact>
+        <v-list-tile @click='convert_login_status_for_mypage'>
           <v-list-tile-action>
             <v-icon>contact_mail</v-icon>
           </v-list-tile-action>
@@ -50,6 +50,29 @@
             <v-list-tile-title>googleMap</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+
+        <!-- mypage router로 지시 -->
+        <v-list-tile router :to="{name: 'selectcountry'}" exact>
+          <v-list-tile-action>
+            <v-icon>shopping_basket
+            </v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>shopping</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+         <!-- mypage router로 지시 -->
+        <v-list-tile router :to="{name: 'itemsearch'}" exact>
+          <v-list-tile-action>
+            <v-icon>shopping_basket
+            </v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Item Search</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
         <!-- router :to="{name: 'enrollSeller'}" -->
         <!-- v-if="Token !== null" -->
         <v-list-tile @click='convert_login_status'>
@@ -68,15 +91,25 @@
             <v-list-tile-title>판매자 정보 수정</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile v-if="isSeller" router :to="{name: 'enrollItem'}">
+          <v-list-tile-action>
+            <v-icon>supervisor_account</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>물품 등록</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-
     <v-toolbar color="indigo" dark fixed app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title>Wearever</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
+<<<<<<< HEAD
         
+=======
+>>>>>>> 2318573adc2a71eaac5a92c3a079abf90b280bbd
         <!-- 로그인 되어있으면 welcome 표시 -->
         <v-menu offset-y v-if="showId">
           <template v-slot:activator="{ on }">
@@ -122,7 +155,6 @@
                 </v-layout>
               </v-container>
             </v-form>
-
             <v-card-actions>
               <v-btn color="green darken-1" flat="flat" @click="login">submit</v-btn>         
               <v-btn color="red darken-1" flat="flat" @click="cancel">cancel</v-btn>         
@@ -131,13 +163,12 @@
         </v-dialog>
       </v-toolbar-items>
     </v-toolbar>
-
+    <!-- <img src= "https://s3.ap-northeast-2.amazonaws.com/weareverstorage/1557662747517.png"/> -->
     <v-content>
       <router-view></router-view>
     </v-content>
-
     <v-footer color="indigo" app>
-      <span class="white--text">&copy; 2017</span>
+      <span class="white--text">&copy; 2019</span>
     </v-footer>
   </v-app>
 </template>
@@ -181,15 +212,17 @@ export default {
       this.clear();
     },
     logout() {
-
       this.$store.dispatch("signOut");
+    },
+    home() {
+      router.push({ name: "home" });
     },
     cancel(){
       this.dialog=false;
       this.clear();
     },
     clear(){
-
+      
       this.uid='';
       this.pwd='';
     },
@@ -201,6 +234,16 @@ export default {
       // 로그인 되있을 경우
       else{
         router.push({ name: "enrollSeller" });
+      }
+    },
+    convert_login_status_for_mypage(){
+      // 로그인 안되어 있을 경우
+      if(store.state.Token === null){
+        this.dialog=true;
+      }
+      // 로그인 되있을 경우
+      else{
+        router.push({ name: "myPage" });
       }
     }
   }

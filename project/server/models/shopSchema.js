@@ -7,10 +7,14 @@ const ShopSchema = new Schema({
         type: String,
         required: [true, 'User id field is required'],
         unique: true
-    },
+    }, 
     location: {
         type: String,
         required: [true, 'Location field is required']
+    },
+    nation: {
+        type: String,
+        // required: [true, 'Nation field is required']
     },
     shop_name: {
         type: String,
@@ -49,8 +53,7 @@ const ShopSchema = new Schema({
     },
     total_visit: {
         type: Number,
-        default: 0,
-        required: [true, 'Total Visit field is required']
+        default: 0
     }
 
 });
