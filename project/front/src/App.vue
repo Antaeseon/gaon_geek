@@ -106,10 +106,6 @@
       <v-toolbar-title>Wearever</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-<<<<<<< HEAD
-        
-=======
->>>>>>> 2318573adc2a71eaac5a92c3a079abf90b280bbd
         <!-- 로그인 되어있으면 welcome 표시 -->
         <v-menu offset-y v-if="showId">
           <template v-slot:activator="{ on }">
