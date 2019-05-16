@@ -1,7 +1,7 @@
 export default {
     category: ['bag', 'belt', 'cap', 'coat', 'dress', 'footwear', 'gown',
         'jacket', 'jean', 'leggings', 'necklace', 'necktie',
-        'outdoor', 'pants', 'scarf', 'skirts', 'suits', 'sunglasses', 'sports wear', 'wallet', 'watch'
+        'outdoor', 'pants', 'scarf', 'skirts', 'suits', 'sunglasses', 'sports wear', 'wallet', 'watch', 'shoes'
     ],
     brand: ['GUCCI','HERMES','LOUIS VUITTON', 'CHANEL', 'PRADA', 'GIVENCHY', 'BOTTENGA VENETA','CELINE', 'SAINT LAURENT'],
     size: ['S', 'M', 'L', 'XL', 'XXL', ],

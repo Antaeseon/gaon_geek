@@ -31,6 +31,8 @@ export default new Vuex.Store({
         category: [],
         tag: [],
         searchItemlist: [],
+        all_info : [],
+        cnt_length: [],
 
         // Item list for Seller Mypage
         itemlist: [],
@@ -102,11 +104,52 @@ export default new Vuex.Store({
             state.itemlist[payload.index] = payload.data;
         },
         searchItemlistinsert(state, payload) {
+            // payload : item 리스트
             state.searchItemlist = payload;
+            //console.log(payload.length);
+            for(var i =0 ; i<payload.length; i++){
+                
+                
+                // console.log(payload[0].price);
+                var price = payload[i].price
+                price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                
+                state.cnt_length.push(i)
+
+                
+                
+                state.all_info[i] = { 
+                    item_name: payload[i].item_name,
+                    brand:payload[i].brand,
+                    price:price,
+                    size:payload[i].size,
+                    status:payload[i].status,
+                    imageUrl:payload[i].imageUrl,
+                    shop_id:payload[i].shop_id,
+                    category:payload[i].category,
+                };
+                
+
+                
+                // console.log("all_info:" + all_info[i]);
+            } 
+
+            // 정렬 및 중복 제거 
+            state.cnt_length = state.cnt_length.slice() // 정렬하기 전에 복사본을 만든다.
+            .sort(function(a,b){
+                return a - b;
+            })
+            .reduce(function(a,b){
+                if (a.slice(-1)[0] !== b) a.push(b); // slice(-1)[0] 을 통해 마지막 아이템을 가져온다.
+                return a;
+            },[]);
+            console.log(state.cnt_length)
             router.push({ name: "itemsearch" });
         }
     },
     actions: {
+        
+
         login({ dispatch, commit }, { id, pwd }) {
             console.log('여기들어옴')
             console.log(id)

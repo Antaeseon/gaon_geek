@@ -60,6 +60,7 @@
               <v-radio label="L" value="L" ></v-radio>
               <v-radio label="M" value="M"  ></v-radio>
               <v-radio label="S" value="S"  ></v-radio>
+              <v-radio label="NONE" value="NONE"  ></v-radio>
             </v-radio-group>
             
           
@@ -85,76 +86,42 @@
              :prepend-icon-cb="change_pickcategory(selected_category)"
         ></v-select>
 
+        <v-btn @click="check_itemlist()">
+           item_list
+        </v-btn>
 
         </v-flex>
         </v-layout>
         
         </v-container>
 
-        <!-- 오른쪽 리스트 -->
-        <v-container>
-        <v-layout justify-space-around>
-          <v-flex xs5>
-            <div class="title mb-1"></div>
-            <v-layout column>
-              <v-img src="http://visualshock.kr/web/product/big/201807/18752_shop1_15305994850023.jpg" 
+
+<!-- :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + item.imageUrl[0]" -->
+     <!-- <v-img :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/'+filter_map[0][4][0]" -->
+       <!-- <v-img src="http://visualshock.kr/web/product/big/201807/18752_shop1_15305994850023.jpg" 
               aspect-ratio="1.1"
               contain
-              ></v-img>
-              <div style="text-align:center; color:#808080" >대여 가능</div>              
-              <div style="text-align:center; font-weight:bold;">구찌 토드 크로스백‎ 퀸 마가렛 탑 핸들 스몰</div>
-              <div style="text-align:center">3,580,000원</div>              
-              
-              <v-img src="https://thumbnail12.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/images/2018/10/30/23/4/467b6d25-56ac-4dd0-9a1d-dd1a75ed4731.jpg" 
-              aspect-ratio="1.1" 
-              contain>
-              </v-img>
-              
-              <div style="text-align:center; color:#808080" >대여 중</div>
-              <div style="text-align:center; font-weight:bold;">[에르메스]넥크리스 악세사리 레이디스 HERMES H147991FP 1B 오렌지 실버</div>
-              <div style="text-align:center">1,056,800원 </div>              
+              ></v-img> -->
+       
+        <v-container fluid grid-list-sm>
+          <v-layout row wrap>
+            <v-flex v-for="i in this.uniq" :key="i" xs4  style="padding-bottom:80px">
+              <img :src="`https://s3.ap-northeast-2.amazonaws.com/weareverstorage/`+all_info[i].imageUrl[0]" class="image" alt="lorem" width="100%" height="100%">
+              <div style="text-align:center; color:#808080">{{status[all_info[i].status]}}</div>
+              <div style="text-align:center; font-weight:bold;">{{all_info[i].item_name}}</div>
+              <div style="text-align:center">{{all_info[i].price}}원</div>    
+            </v-flex>
+          </v-layout>
+        </v-container>
 
-              <v-img src="https://thumbnail12.coupangcdn.com/thumbnails/remote/230x230ex/image/vendor_inventory/images/2018/02/08/0/6/146990d9-6de7-4413-acad-fd43f078a719.jpg" 
-              aspect-ratio="1.1" 
-              contain>
-              </v-img>
-              <div style="text-align:center; color:#808080" >대여 가능</div>
-              <div style="text-align:center; font-weight:bold;">LOUIS VUITTON 루이비통 몽테뉴 BB 모노그램 캔버스 (M41055)</div>
-              <div style="text-align:center">2,670,000원</div>    
+      <!-- <div class="text-xs-center">
+        <v-pagination
+          v-model="page"
+          :length="5"
+          circle
+        ></v-pagination>
+      </div> -->
 
-            </v-layout>
-          </v-flex>
-
-          <v-flex xs5>
-            <div class="title mb-1"></div>
-            <v-layout column>
-              <v-img src="https://cdn.reebonzkorea.co.kr/uploads/product_meta_info/201806/3398087/representative_CHANEL__EC_83_A4_EB_84_AC__EB_B3_B4_EC_9D_B4_ED_94_84_EB_A0_8C_EB_93_9C__ED_8A_B8_EC_9C_84_EB_93_9C__EC_8B_9C_EA_B3_84_120180615-23501-1ibire.jpg"
-              aspect-ratio="1.1" 
-              contain></v-img>
-              <div style="text-align:center; color:#808080" >대여 가능</div>
-              <div style="text-align:center; font-weight:bold;">샤넬 보이프렌드 트위드 시계</div>
-              <div style="text-align:center">4,032,000원</div>              
-
-              <v-img src="https://cdn.reebonzkorea.co.kr/uploads/product_meta_info/201812/5242430/representative_23500520181223-19565-9btf5d.jpg" 
-              aspect-ratio="1.1" 
-              contain>
-              </v-img>
-              <div style="text-align:center; color:#808080" >대여 가능</div>
-              <div style="text-align:center; font-weight:bold;">프라다1BP006사피아노럭스 체인크로스백</div>
-              <div style="text-align:center">1,142,400원</div>              
-
-              <v-img src="https://cdn.reebonzkorea.co.kr/uploads/product_meta_info/201903/5912833/representative_eneta_19SS__EB_B3_B4_ED_85_8C_EA_B0_80_EB_B2_A0_EB_84_A4_ED_83_80__EC_9A_B0_EB_B8_90__EB_A0_88_EB_8D_94__ED_8C_94_EC_B0_8C_120190311-13757-1jn8lkt.jpg" 
-              aspect-ratio="1.1" 
-              contain>
-              </v-img>
-              <div style="text-align:center; color:#808080" >대여 중</div>
-              <div style="text-align:center; font-weight:bold;">보테가베네타 우븐 레더 팔찌</div>
-              <div style="text-align:center">288,800원</div>              
-              
-            </v-layout>
-          </v-flex>
-        </v-layout>
-      </v-container>
       </v-container>
 
       </v-layout>
@@ -170,6 +137,7 @@
   import attribute from './../attribute.js'
 
   export default {
+    name: 'paginated-list',
     data: () => ({
       seller:"",
       e6: [],
@@ -181,11 +149,20 @@
       brand: attribute.brand,
       tag: attribute.tag,
       category: attribute.category,
+      status: attribute.status,
       nation: store.state.nation,
       itemlist: store.state.searchItemlist,
+      all_info: store.state.all_info,
+      uniq: store.state.cnt_length,
+
     }),
 
+   
+  
+
   methods: {
+
+   
     search(seller){
       store.state.seller=this.seller;
       console.log(store.state.seller);
@@ -210,7 +187,93 @@
       store.state.tag=this.selected_tag
       console.log(store.state.tag);
     },
-  }
+    check_itemlist(){
+      // var char = this.itemlist[0].shopid
+      // console.log("all_info: "+ this.all_info.length);
+      const filter_map=[[],[]];
+      const picked_cnt=[];
+      // 2차원 배열 5 x N 화면 출력 개수
+      // item_name
+      // brand
+      // price
+      // status
+      // imageUrl
+      // console.log("all_info:" + this.all_info[0].imageUrl[0]);
+      
+      // console.log("cnt_length "+this.uniq)
+      // console.log("seller: "+store.state.seller);
+      // console.log("this.all_info[i]:"+this.all_info[0].shop_id)
+
+      console.log("store status: "+ store.state.category)
+      console.log("all_info status: "+ this.all_info[0].category)
+      for(var i=0; i<this.all_info.length; i++){
+        //  업체
+        if(store.state.seller === this.all_info[i].shop_id){
+          // 기존 i를 저장해놓는 배열 생성
+          // all_info[i]에 넣어놓기.
+          console.log("i: "+i);
+          picked_cnt.push(i);
+        } 
+        // 제품 상태
+        // string to number
+        
+        if((store.state.itemAvailable === "대여 중" && this.all_info[i].status === 1) || (store.state.itemAvailable === "대여 가능" && this.all_info[i].status === 0)  )
+        {
+          // console.log("??");
+          picked_cnt.push(i);
+        }
+        // 사이즈
+        if(store.state.size === this.all_info[i].size)
+        {
+          picked_cnt.push(i);
+        }
+        // 브랜드
+        if(store.state.brand.toString() === this.all_info[i].brand)
+        {
+          // console.log("HIHI");
+          // console.log("i:" + i);
+          picked_cnt.push(i);
+        }
+        // 카테고리
+        if(store.state.category.toString() === this.all_info[i].category)
+        {
+          picked_cnt.push(i);
+        }
+        
+      }
+      console.log("uniq1: "+this.uniq);
+      // 정렬 및 중복 제거 
+      this.uniq = picked_cnt.slice() // 정렬하기 전에 복사본을 만든다.
+      .sort(function(a,b){
+        return a - b;
+      })
+      .reduce(function(a,b){
+        if (a.slice(-1)[0] !== b) a.push(b); // slice(-1)[0] 을 통해 마지막 아이템을 가져온다.
+        return a;
+      },[]);
+      
+      console.log("uniq2: "+this.uniq);
+      
+      // console.log("filter_map: "+filter_map)
+
+      // console.log("shop_id: "+this.itemlist[0].shop_id);
+    
+      // console.log("item_name: "+this.itemlist[0].item_name);
+      // console.log("brand: "+this.itemlist[0].brand);
+      // console.log("color: "+this.itemlist[0].color);
+      // console.log("category: "+this.itemlist[0].cagtegory);
+      // console.log("size: "+this.itemlist[0].size);
+      // console.log("tag: "+this.itemlist[0].tag);
+      // console.log("detail: "+this.itemlist[0].detail);
+      // console.log("precautious: "+this.itemlist[0].precautious);
+      // console.log("price: "+this.itemlist[0].price);
+      // console.log("status: "+this.itemlist[0].status);
+      // console.log("imageNum: "+this.itemlist[0].imageNum);
+      // console.log("imageUrl: "+this.itemlist[0].imageUrl);    
+    },
+
+  },
+   
 }
 </script>
 
