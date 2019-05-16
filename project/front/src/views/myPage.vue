@@ -17,16 +17,13 @@
     </v-container>
 
     <v-container v-if="tabs=='tab-1'">
-    <Buyer/>
+        <Buyer/>
     </v-container>
-    <v-container v-else>
+    <v-container v-if="tabs=='tab-2'">
         <Seller/>
     </v-container>
   </div>
 </template>
-
-
-
 
 <script>
 import Buyer from '../components/BuyerPage'
