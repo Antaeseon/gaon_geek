@@ -104,10 +104,21 @@ export default new Vuex.Store({
             state.itemlist[payload.index] = payload.data;
         },
         searchItemlistinsert(state, payload) {
+            state.searchItemlist = [];
+            state.all_info = [];
+            state.cnt_length = [];
+            // console.log("START!");
+            // console.log("payload:"+typeof(payload));
+            // console.log("payload:"+payload);
+            // console.log("payload.len:"+payload.length);
+            
+            
             // payload : item 리스트
             state.searchItemlist = payload;
             //console.log(payload.length);
+            // console.log("A");
             for(var i =0 ; i<payload.length; i++){
+                // console.log("B");
                 
                 
                 // console.log(payload[0].price);
@@ -119,6 +130,7 @@ export default new Vuex.Store({
                 
                 
                 state.all_info[i] = { 
+                    
                     item_name: payload[i].item_name,
                     brand:payload[i].brand,
                     price:price,
@@ -129,10 +141,13 @@ export default new Vuex.Store({
                     category:payload[i].category,
                 };
                 
-
+                // console.log("C");
+           
                 
                 // console.log("all_info:" + all_info[i]);
             } 
+            // console.log("D");
+           
 
             // 정렬 및 중복 제거 
             state.cnt_length = state.cnt_length.slice() // 정렬하기 전에 복사본을 만든다.

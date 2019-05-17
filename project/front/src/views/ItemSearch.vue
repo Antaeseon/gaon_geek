@@ -106,7 +106,9 @@
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
             <v-flex v-for="i in this.uniq" :key="i" xs4  style="padding-bottom:80px">
-              <img :src="`https://s3.ap-northeast-2.amazonaws.com/weareverstorage/`+all_info[i].imageUrl[0]" class="image" alt="lorem" width="100%" height="100%">
+              <v-img :src="`https://s3.ap-northeast-2.amazonaws.com/weareverstorage/`+all_info[i].imageUrl[0]" class="image" alt="lorem" contain
+                    aspect-ratio="1.1">
+              </v-img>
               <div style="text-align:center; color:#808080">{{status[all_info[i].status]}}</div>
               <div style="text-align:center; font-weight:bold;">{{all_info[i].item_name}}</div>
               <div style="text-align:center">{{all_info[i].price}}원</div>    
@@ -192,6 +194,13 @@
       // console.log("all_info: "+ this.all_info.length);
       const filter_map=[[],[]];
       const picked_cnt=[];
+      
+      const use_cnt_state=[];
+      // const shop_id_cnt=[];
+      // const status_cnt=[];
+      // const size_cnt=[];
+      // const brand_cnt=[];
+      // const category_cnt=[];
       // 2차원 배열 5 x N 화면 출력 개수
       // item_name
       // brand
@@ -204,43 +213,106 @@
       // console.log("seller: "+store.state.seller);
       // console.log("this.all_info[i]:"+this.all_info[0].shop_id)
 
-      console.log("store status: "+ store.state.category)
-      console.log("all_info status: "+ this.all_info[0].category)
+      // console.log("store status: "+ store.state.category)
+      // console.log("all_info status: "+ this.all_info[0].category)
       for(var i=0; i<this.all_info.length; i++){
-        //  업체
-        if(store.state.seller === this.all_info[i].shop_id){
-          // 기존 i를 저장해놓는 배열 생성
-          // all_info[i]에 넣어놓기.
-          console.log("i: "+i);
-          picked_cnt.push(i);
-        } 
-        // 제품 상태
-        // string to number
-        
-        if((store.state.itemAvailable === "대여 중" && this.all_info[i].status === 1) || (store.state.itemAvailable === "대여 가능" && this.all_info[i].status === 0)  )
+        var use_cnt=1;
+        // console.log("store.state.seller :" + store.state.seller)
+        // console.log("null: " + null);
+        // 필터링 사용중인지 아닌지
+        if(store.state.seller !== '')
         {
-          // console.log("??");
-          picked_cnt.push(i);
+          if(store.state.seller !== this.all_info[i].shop_id){
+            use_cnt--;
+          }
         }
-        // 사이즈
-        if(store.state.size === this.all_info[i].size)
+
+        console.log("store.state.itemAvailable: "+ store.state.itemAvailable)
+        if(store.state.itemAvailable !== '')
         {
-          picked_cnt.push(i);
+         if((store.state.itemAvailable !== "대여 중" && this.all_info[i].status === 1) || (store.state.itemAvailable !== "대여 가능" && this.all_info[i].status === 0)  )
+          {
+            use_cnt--; 
+          }
         }
+        if(store.state.size !== '')
+        {
+          // 사이즈
+          if(store.state.size !== this.all_info[i].size)
+          {
+            use_cnt--;
+          }
+        }
+        if(store.state.brand.toString() !== '')
+        {
         // 브랜드
-        if(store.state.brand.toString() === this.all_info[i].brand)
-        {
-          // console.log("HIHI");
-          // console.log("i:" + i);
-          picked_cnt.push(i);
+          if(store.state.brand.toString() !== this.all_info[i].brand)
+          {
+            use_cnt--;
+          }
         }
+        if(store.state.category.toString() !== '')
+        {
+
         // 카테고리
-        if(store.state.category.toString() === this.all_info[i].category)
+          if(store.state.category.toString() !== this.all_info[i].category)
+          {
+            use_cnt--;
+          }
+        }   
+        console.log("i:"+ i);
+        console.log("use_cnt:"+ use_cnt);
+        if(use_cnt == 1)
         {
           picked_cnt.push(i);
         }
+        
+
+          
+        
+        
+
+
+        // //  업체
+        // if(store.state.seller === this.all_info[i].shop_id){
+        //   // 기존 i를 저장해놓는 배열 생성
+        //   // all_info[i]에 넣어놓기.
+        //     console.log("shop_id")
+            
+        //     picked_cnt.push(i);
+
+        // } 
+
+        // // 제품 상태
+        // // string to number
+        
+        // if((store.state.itemAvailable === "대여 중" && this.all_info[i].status === 1) || (store.state.itemAvailable === "대여 가능" && this.all_info[i].status === 0)  )
+        // {
+        //   // console.log("??");
+        //   console.log("status")
+        //     picked_cnt.push(i);
+        // }
+        // // 사이즈
+        // if(store.state.size === this.all_info[i].size)
+        // {
+        //   console.log("size")
+        //     picked_cnt.push(i);
+        // }
+        // // 브랜드
+        // if(store.state.brand.toString() === this.all_info[i].brand)
+        // {
+        //   console.log("brand")
+        //     picked_cnt.push(i);
+        // }
+        // // 카테고리
+        // if(store.state.category.toString() === this.all_info[i].category)
+        // {
+        //   console.log("category")
+        //     picked_cnt.push(i);
+        // }
         
       }
+
       console.log("uniq1: "+this.uniq);
       // 정렬 및 중복 제거 
       this.uniq = picked_cnt.slice() // 정렬하기 전에 복사본을 만든다.
