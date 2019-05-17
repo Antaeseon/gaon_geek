@@ -23,7 +23,7 @@
         </v-list-tile>
 
         <!-- mypage router로 지시 -->
-        <v-list-tile @click='convert_login_status_for_mypage'>
+        <v-list-tile @click="convert_login_status_for_mypage">
           <v-list-tile-action>
             <v-icon>contact_mail</v-icon>
           </v-list-tile-action>
@@ -54,19 +54,17 @@
         <!-- mypage router로 지시 -->
         <v-list-tile router :to="{name: 'selectcountry'}" exact>
           <v-list-tile-action>
-            <v-icon>shopping_basket
-            </v-icon>
+            <v-icon>shopping_basket</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>shopping</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
-         <!-- mypage router로 지시 -->
+        <!-- mypage router로 지시 -->
         <v-list-tile router :to="{name: 'itemsearch'}" exact>
           <v-list-tile-action>
-            <v-icon>shopping_basket
-            </v-icon>
+            <v-icon>shopping_basket</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Item Search</v-list-tile-title>
@@ -75,7 +73,7 @@
 
         <!-- router :to="{name: 'enrollSeller'}" -->
         <!-- v-if="Token !== null" -->
-        <v-list-tile @click='convert_login_status'>
+        <v-list-tile @click="convert_login_status">
           <v-list-tile-action>
             <v-icon>supervisor_account</v-icon>
           </v-list-tile-action>
@@ -107,6 +105,10 @@
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <!-- 로그인 되어있으면 welcome 표시 -->
+        <v-btn icon v-if="showId">
+          <v-icon>notifications</v-icon>
+        </v-btn>
+
         <v-menu offset-y v-if="showId">
           <template v-slot:activator="{ on }">
             <v-btn flat dark v-on="on" icon>
@@ -124,7 +126,12 @@
         </v-menu>
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
-        <v-btn color="light-blue darken-3" v-else @click.stop="dialog = true">log in</v-btn>
+        <v-btn icon v-if="!showId" @click.stop="dialog = true">
+          <v-icon>fingerprint</v-icon>
+        </v-btn>
+        <v-btn icon v-if="!showId" router :to="{name: 'SignUp'}">
+          <v-icon>face</v-icon>
+        </v-btn>
         <v-dialog v-model="dialog" max-width="290">
           <v-card>
             <v-card-title class="headline">Log in</v-card-title>
@@ -152,8 +159,8 @@
               </v-container>
             </v-form>
             <v-card-actions>
-              <v-btn color="green darken-1" flat="flat" @click="login">submit</v-btn>         
-              <v-btn color="red darken-1" flat="flat" @click="cancel">cancel</v-btn>         
+              <v-btn color="green darken-1" flat="flat" @click="login">submit</v-btn>
+              <v-btn color="red darken-1" flat="flat" @click="cancel">cancel</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -171,8 +178,8 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import store from './store'
-import router from './router'
+import store from "./store";
+import router from "./router";
 
 export default {
   data() {
@@ -184,7 +191,7 @@ export default {
     };
   },
   computed: {
-    ...mapState([ "isSeller", "Token"]),
+    ...mapState(["isSeller", "Token"]),
     ...mapGetters({
       showId: "id",
       Token: "Token"
@@ -196,11 +203,11 @@ export default {
         console.log("들어옴");
         console.log(this.uid, this.pwd);
         await this.$store.dispatch("login", {
-          id : this.uid,
-          pwd : this.pwd
+          id: this.uid,
+          pwd: this.pwd
         });
       } catch (err) {
-        console.log(err)
+        console.log(err);
         console.log(err.response.data.message);
         alert(err.response.data.message);
       }
@@ -213,32 +220,31 @@ export default {
     home() {
       router.push({ name: "home" });
     },
-    cancel(){
-      this.dialog=false;
+    cancel() {
+      this.dialog = false;
       this.clear();
     },
-    clear(){
-      
-      this.uid='';
-      this.pwd='';
+    clear() {
+      this.uid = "";
+      this.pwd = "";
     },
-    convert_login_status(){
+    convert_login_status() {
       // 로그인 안되어 있을 경우
-      if(store.state.Token === null){
-        this.dialog=true;
+      if (store.state.Token === null) {
+        this.dialog = true;
       }
       // 로그인 되있을 경우
-      else{
+      else {
         router.push({ name: "enrollSeller" });
       }
     },
-    convert_login_status_for_mypage(){
+    convert_login_status_for_mypage() {
       // 로그인 안되어 있을 경우
-      if(store.state.Token === null){
-        this.dialog=true;
+      if (store.state.Token === null) {
+        this.dialog = true;
       }
       // 로그인 되있을 경우
-      else{
+      else {
         router.push({ name: "myPage" });
       }
     }
