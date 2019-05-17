@@ -1,13 +1,16 @@
 <template>
     
 <v-container fluid grid-list-md>
+  <div style="text-align:center">
+    <h1>나라를 선택해주세요</h1>
+  </div>
   <v-layout row wrap>
     
 
     <v-flex xs12 sm6 md4 lg3 xl2 text-xs-center>
         
     <v-hover>
-        
+      
     <v-card
       slot-scope="{ hover }"
       :class="`elevation-${hover ? 12 : 2}`"

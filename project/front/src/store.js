@@ -32,7 +32,9 @@ export default new Vuex.Store({
         tag: [],
         searchItemlist: [],
         all_info : [],
+        object_id : [],
         cnt_length: [],
+        selected_item_id: '',
 
         // Item list for Seller Mypage
         itemlist: [],
@@ -139,6 +141,7 @@ export default new Vuex.Store({
                     imageUrl:payload[i].imageUrl,
                     shop_id:payload[i].shop_id,
                     category:payload[i].category,
+                    object_id:payload[i]._id
                 };
                 
                 // console.log("C");
@@ -158,8 +161,13 @@ export default new Vuex.Store({
                 if (a.slice(-1)[0] !== b) a.push(b); // slice(-1)[0] 을 통해 마지막 아이템을 가져온다.
                 return a;
             },[]);
-            console.log(state.cnt_length)
+            // console.log(state.cnt_length)
             router.push({ name: "itemsearch" });
+        },
+        select_item(state, payload) {
+            state.selected_item_id = payload.id;
+            // console.log(state.selected_item_id);
+            router.push({ name : 'detail' });
         }
     },
     actions: {
@@ -297,6 +305,10 @@ export default new Vuex.Store({
                 }).catch((err) => {
                     console.log(err);
                 })
+        },
+        pass_id( { commit }, id ) {
+            // console.log("AA:"+id);
+            commit('select_item',{id: id})
         }
     }
 })

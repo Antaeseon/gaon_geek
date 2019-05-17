@@ -87,7 +87,7 @@
         ></v-select>
 
         <v-btn @click="check_itemlist()">
-           item_list
+           조회하기
         </v-btn>
 
         </v-flex>
@@ -105,12 +105,12 @@
        
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
-            <v-flex v-for="i in this.uniq" :key="i" xs4  style="padding-bottom:80px">
+            <v-flex @click="pass_id(all_info[i].object_id)" v-for="i in this.uniq" :key="i" xs4  style="padding-bottom:80px">
               <v-img :src="`https://s3.ap-northeast-2.amazonaws.com/weareverstorage/`+all_info[i].imageUrl[0]" class="image" alt="lorem" contain
                     aspect-ratio="1.1">
               </v-img>
               <div style="text-align:center; color:#808080">{{status[all_info[i].status]}}</div>
-              <div style="text-align:center; font-weight:bold;">{{all_info[i].item_name}}</div>
+              <div style="text-align:center; font-weight:bold; width:250px; height:40px;  text-overflow:ellipsis; overflow:hidden;">{{all_info[i].item_name}}</div>
               <div style="text-align:center">{{all_info[i].price}}원</div>    
             </v-flex>
           </v-layout>
@@ -137,6 +137,7 @@
 <script>
   import store from './../store.js'
   import attribute from './../attribute.js'
+import { mapActions } from 'vuex';
 
   export default {
     name: 'paginated-list',
@@ -163,8 +164,7 @@
   
 
   methods: {
-
-   
+    ...mapActions(['pass_id']),
     search(seller){
       store.state.seller=this.seller;
       console.log(store.state.seller);
@@ -266,6 +266,7 @@
         {
           picked_cnt.push(i);
         }
+        console.log("all_info_id:"+this.all_info[0].object_id)
         
 
           
