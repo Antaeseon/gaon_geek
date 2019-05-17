@@ -31,7 +31,4 @@ router.post('/sendMessage', async function (req, res, next) {
 
 });
 
-
-
-
 module.exports = router;

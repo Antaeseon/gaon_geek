@@ -11,18 +11,7 @@
             <v-list-tile-title>Home</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-
-        <!-- 회원가입  -->
-        <v-list-tile router :to="{name: 'SignUp'}">
-          <v-list-tile-action>
-            <v-icon>assignment_ind</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>회원가입</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-
-        <!-- mypage router로 지시 -->
+        <!-- mypage router로 지시
         <v-list-tile @click="convert_login_status_for_mypage">
           <v-list-tile-action>
             <v-icon>contact_mail</v-icon>
@@ -30,7 +19,7 @@
           <v-list-tile-content>
             <v-list-tile-title>마이페이지</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile>
+        </v-list-tile> -->
         <!-- mypage router로 지시 -->
         <v-list-tile router :to="{name: 'detail'}" exact>
           <v-list-tile-action>

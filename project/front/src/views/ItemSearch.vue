@@ -9,9 +9,7 @@
             <div style="text-align:center; font-size:30px; font-weight:bold">CLOTHING</div>
         </v-flex>
       </v-layout>
- 
       <v-layout>
-        
         <v-container>
         <!-- 왼쪽 리스트 -->
       <v-container grid-list-xl text-xs-center >
@@ -105,7 +103,7 @@
        
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
-            <v-flex @click="pass_id(all_info[i].object_id)" v-for="i in this.uniq" :key="i" xs4  style="padding-bottom:80px">
+            <v-flex @click="pass_id(all_info[i].object_id)" v-for="i in this.uniq" :key="i" xs4  style="padding-bottom:80px" class="clickable">
               <v-img :src="`https://s3.ap-northeast-2.amazonaws.com/weareverstorage/`+all_info[i].imageUrl[0]" class="image" alt="lorem" contain
                     aspect-ratio="1.1">
               </v-img>
@@ -159,9 +157,6 @@ import { mapActions } from 'vuex';
       uniq: store.state.cnt_length,
 
     }),
-
-   
-  
 
   methods: {
     ...mapActions(['pass_id']),
@@ -350,3 +345,8 @@ import { mapActions } from 'vuex';
 }
 </script>
 
+<style>
+.clickable {
+  cursor: pointer;
+}
+</style>
