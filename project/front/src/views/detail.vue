@@ -150,6 +150,7 @@ export default {
   methods: {
     allowedDates: val => parseInt(val.split("-")[2], 10) % 2 === 0,
     sendsms: function() {
+
       axios
         .post(
           "https://api-sens.ncloud.com/v1/sms/services/ncp:sms:kr:255920239534:wearever/messages",
