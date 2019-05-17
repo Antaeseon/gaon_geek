@@ -20,7 +20,6 @@ router.get('/', function(req, res, next) {
 /* Add a new user to the db */
 /*
     POST /user/signup/
-    {
         id
         pwd
         name
