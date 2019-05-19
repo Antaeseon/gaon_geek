@@ -348,5 +348,6 @@ import { mapActions } from 'vuex';
 <style>
 .clickable {
   cursor: pointer;
+  border: 1px solid black;
 }
 </style>
