@@ -78,8 +78,6 @@
                       >
                         Continue
                       </v-btn>
-              
-                      <v-btn flat>Cancel</v-btn>
                     </v-stepper-content>
               
                     <v-stepper-content step="2">
@@ -148,7 +146,6 @@
                         Continue
                       </v-btn>
               
-                      <v-btn flat>Cancel</v-btn>
                     </v-stepper-content>
               
                     <v-stepper-content step="3">
@@ -226,7 +223,7 @@
                       >
                         Register
                       </v-btn>
-                      <v-btn flat>Cancel</v-btn>
+                      <v-btn @click="clear" flat>Cancel</v-btn>
                     </v-stepper-content>
                   </v-stepper-items>
                 </v-stepper>
@@ -244,6 +241,7 @@
     import { required } from 'vuelidate/lib/validators'
     import { mapState, mapActions, mapMutations } from 'vuex'
     import store from './../store'
+    import router from './../router'
     import attribute from './../attribute'
     import terms from './../terms'
 
@@ -410,8 +408,7 @@
         formBlankTest()
         {
             return this.name !== '' && this.nation !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== [];
-        }
-    },
+        },
     clear() {
         this.$v.$reset();
         this.e1= 1,
@@ -430,6 +427,8 @@
         store.state.isSubmitted = false,
         store.state.isSubmitDup = false,
         store.state.isSubmitError = false
+        router.push({name:"home"});
+    }
     }
     }
 </script>
