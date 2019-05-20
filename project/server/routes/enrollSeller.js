@@ -113,22 +113,22 @@ router.post('/accept', async function(req, res, next) {
     // DB에서 User의 판매권한 바꿈 -> User 구현이 완벽하지 않음.
     console.log(req.body.id)
     var user = await User.find({ id: req.body.id });
-    if(user.length==0)
-        res.status(500).send({message : "user not existed"});
+    if (user.length == 0)
+        res.status(500).send({ message: "user not existed" });
     else
-        console.log('dd',user)
-    //user 업데이트
-    user=user[0]
-    console.log('aaa',user)
-    await User.updateOne({id:user.id},{isSeller : true},(err,output)=>{
-        if(err){
-            res.status(500).json({message:"update fail"})
-        }
-        console.log(user)
-    })
-    //user 업데이트 완료
-    
-    
+        console.log('dd', user)
+        //user 업데이트
+    user = user[0]
+    console.log('aaa', user)
+    await User.updateOne({ id: user.id }, { isSeller: true }, (err, output) => {
+            if (err) {
+                res.status(500).json({ message: "update fail" })
+            }
+            console.log(user)
+        })
+        //user 업데이트 완료
+
+
 
 
     // DB에 Shop Schema 추가
@@ -150,7 +150,7 @@ router.post('/accept', async function(req, res, next) {
                 imageUrl: result[0].imageUrl,
                 enroll_Date: Date.now(),
             });
-            console.log('shop',shop_obj)
+            console.log('shop', shop_obj)
             await shop_obj.save(function(err) {
                 if (err) {
                     res.status(500).send({ "Response": 500, "tag": err });

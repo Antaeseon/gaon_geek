@@ -24,7 +24,6 @@
       <v-text-field
         v-model="item_name"
         :error-messages="item_nameErrors"
-        :counter="10"
         label="Item Name"
         required
         @input="$v.item_name.$touch()"
@@ -58,9 +57,17 @@
         @blur="$v.detail.$touch()"
       ></v-textarea>
       <v-text-field
+        v-model="rental"
+        :error-messages="rentalErrors"
+        label="Rental Fee/Day(Won)"
+        required
+        @input="$v.rental.$touch()"
+        @blur="$v.rental.$touch()"
+      ></v-text-field>
+      <v-text-field
         v-model="price"
         :error-messages="priceErrors"
-        label="Price/Day(Won)"
+        label="Selling Price(Won)"
         required
         @input="$v.price.$touch()"
         @blur="$v.price.$touch()"
@@ -127,17 +134,6 @@
         @blur="$v.selected_size.$touch()"
         ></v-select>
     </v-flex> -->
-
-      <v-text-field
-        v-model="selected_size"
-        :error-messages="sizeErrors"
-        label="Size"
-        required
-        @input="$v.selected_size.$touch()"
-        @blur="$v.selected_size.$touch()"
-      ></v-text-field>
-
-
     <v-text-field
     readonly
     label="Select Item Images"
@@ -211,6 +207,7 @@ export default {
     detail: { required },
     state: { required },
     material: { required },
+    rental: {required},
     price: { required },
     selected_category: { required },
     selected_size: { required },
@@ -234,8 +231,8 @@ export default {
     state: "",
     state_list: attribute.state,
     material: "",
+    rental: "",
     price: "",
-    size: attribute.size,
     selected_size: "",
     category: attribute.category,
     selected_category: "",
@@ -295,10 +292,16 @@ export default {
       !this.$v.material.required && errors.push("Material is required");
       return errors;
     },
+    rentalErrors() {
+      const errors = [];
+      if (!this.$v.rental.$dirty) return errors;
+      !this.$v.rental.required && errors.push("Rental Fee is required");
+      return errors;
+    },
     priceErrors() {
       const errors = [];
       if (!this.$v.price.$dirty) return errors;
-      !this.$v.price.required && errors.push("Price is required");
+      !this.$v.price.required && errors.push("Selling Price is required");
       return errors;
     },
     categoryErrors() {
@@ -352,6 +355,7 @@ export default {
               formData.append('detail', this.detail);
               formData.append('state', this.state);
               formData.append('material',this.material);
+              formData.append('rental',this.rental);
               formData.append('price', this.price);
               formData.append('category', this.selected_category);
               formData.append('size', this.selected_size);
@@ -432,7 +436,7 @@ export default {
     formBlankTest()
     {
         return this.item_name !== '' && this.brand !== '' && this.color !== '' && this.detail !== '' && this.state !== '' && this.material !== '' &&
-          this.price !== '' && this.selected_category !== '' && this.selected_size !== '' && this.selected_tag !== [] && this.imageName !== []
+          this.price !== '' && this.rental !== '' && this.selected_category !== '' && this.selected_size !== '' && this.selected_tag !== [] && this.imageName !== []
           && this.certificateName !== [];
     },
     clear()
@@ -444,6 +448,7 @@ export default {
       this.detail = "";
       this.state = "";
       this.material = "";
+      this.rental = "";
       this.price = "";
       this.checkbox = false;
       this.selected_category= "";
