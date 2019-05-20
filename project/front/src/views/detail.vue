@@ -35,11 +35,12 @@
               <v-card-text>
                 <template>
                   <v-carousel>
-                    <v-carousel-item
+                    <v-carousel-item 
                       v-for="(item,i) in items"
                       :key="i"
                       :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/'+item"
-                    ></v-carousel-item>
+                    >
+                    </v-carousel-item>
                   </v-carousel>
                 </template>
               </v-card-text>
@@ -71,7 +72,7 @@
                           <v-chip label color="pink" text-color="white">
                             <v-icon left>label</v-icon>Tags
                           </v-chip>
-                          <v-chip outline color="primary" v-for="(t,i) in mainItem.tag" :key="i">{{t}}</v-chip>
+                          <v-chip outline color="primary" v-for="(t,i) in mainItem.tag" :key="i">#{{t}}</v-chip>
                           </div>
                           <v-menu
                             ref="menu"
