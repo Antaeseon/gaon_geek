@@ -187,7 +187,6 @@ router.post('/reject', function(req, res, next) {
             res.status(202).send({ "Response": 202, "tag": "Success" });
         }
     });
-
 });
 
 /* List all of the enrollSellers */

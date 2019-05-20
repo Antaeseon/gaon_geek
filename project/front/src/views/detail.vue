@@ -11,7 +11,7 @@
 
               <v-tab-item>
                 <v-card flat>
-                  <v-card-text>{{ detailinfo }}</v-card-text>
+                  <v-card-text>{{ mainItem.detail }}</v-card-text>
                 </v-card>
               </v-tab-item>
               <v-tab-item>
@@ -35,7 +35,11 @@
               <v-card-text>
                 <template>
                   <v-carousel>
-                    <v-carousel-item v-for="(item,i) in items" :key="i" :src="item.src"></v-carousel-item>
+                    <v-carousel-item
+                      v-for="(item,i) in items"
+                      :key="i"
+                      :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/'+item"
+                    ></v-carousel-item>
                   </v-carousel>
                 </template>
               </v-card-text>
@@ -48,18 +52,27 @@
                   <v-flex d-flex xs12 order-lg2>
                     <v-card color="grey lighten-4" light>
                       <v-card-text>
-                        상품번호:1212121212
+                        <h2>상품명 : {{mainItem.item_name}}</h2>
                         <br>
                         <br>
-                        <h2>다양한색깔의 맨투맨!</h2>전상품 무료배송!
-                        <br>
-                        <br>판매가 : 10,000원
+                        1일당 : {{mainItem.price}}
                         <br>
                         <br>
-
                         <v-flex xs12 sm6>
-                          <v-select :items="coloritems" label="색깔"></v-select>
-                          <v-select :items="sizeitems" label="사이즈"></v-select>
+                          <br>
+                          색깔 : {{mainItem.color}}
+                          <br>
+                          사이즈 : {{mainItem.size}}
+                          <br>
+                          상태 : {{mainItem.state}}
+                          <br>
+                          소재 : {{mainItem.material}}
+                          <div>
+                          <v-chip label color="pink" text-color="white">
+                            <v-icon left>label</v-icon>Tags
+                          </v-chip>
+                          <v-chip outline color="primary" v-for="(t,i) in mainItem.tag" :key="i">{{t}}</v-chip>
+                          </div>
                           <v-menu
                             ref="menu"
                             v-model="menu"
@@ -98,7 +111,7 @@
                           </v-menu>
                         </v-flex>
                         <v-btn @click="requestPay">결제하기</v-btn>
-                        <v-btn @click="sendsms">찜하기</v-btn>
+                        <v-btn @click>찜하기</v-btn>
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -118,37 +131,50 @@ import axios from "axios";
 export default {
   data() {
     return {
-      items: [
-        {
-          src:
-            "http://post.phinf.naver.net/20150407_265/whtmdgml0926_1428380959893rD5PC_PNG/mug_obj_142838095863420428.jpg"
-        },
-        {
-          src:
-            "http://blogfiles.naver.net/MjAxODA1MDZfMTMx/MDAxNTI1NTc2OTg3NDg4.Z3T6dTsd13id8LiqOu4dYhd9SVqIctmBpO1PbgGeHdcg.8eACPA-6fS4NOTqaYiqe3TbJyHmUFgbUiM5Xq3TqOLIg.PNG.inys9713/26731411_1551787741607861_6320936988644832438_n.png"
-        },
-        {
-          src:
-            "http://kinimage.naver.net/20160424_39/1461508564664lpiMF_JPEG/1461508564349.jpeg"
-        },
-        {
-          src:
-            "https://search.pstatic.net/common/?src=http%3A%2F%2Fimg.phinf.pholar.net%2F20161110_215%2F1478747924937xpu71_JPEG%2Fp&type=b400"
-        }
-      ],
+      pagaItem: [],
+      mainItem: {},
+      items: [],
       active: null,
-      detailinfo: "상세 상세 상세에에에에 설명 상세 설며어어어엉쓰",
       qna: "판매문의입니다아",
       review: "리뷰입니다아",
-      coloritems: ["black shirt", "white shirt"],
-      sizeitems: ["S", "M", "L"],
       dates: [],
       menu: false
     };
   },
+  async created() {
+    console.log("여여여여", this.$route.params.id);
+    var res = await this.$http.get(
+      `http://localhost:3000/search/getOneItem/${this.$route.params.id}`
+    );
+    this.mainItem = res.data.response;
+    this.items = this.mainItem.imageUrl;
+    console.log("ddd", this.items);
+  },
 
   methods: {
-    allowedDates: val => parseInt(val.split("-")[2], 10) % 2 === 0,
+    allowedDates: val => {
+      if (
+        parseInt(val.substring(5, 7)) <
+        parseInt(new Date().toISOString().substring(5, 7))
+      )
+        return false;
+      else if (
+        parseInt(val.substring(5, 7)) >
+        parseInt(new Date().toISOString().substring(5, 7))
+      )
+        return true;
+      if (
+        parseInt(val.split("-")[2], 10) >
+        parseInt(
+          new Date()
+            .toISOString()
+            .substr(0, 10)
+            .split("-")[2],
+          10
+        )
+      )
+        return true;
+    },
     requestPay: function() {
       // IMP.request_pay(param, callback) 호출
       Vue.IMP().request_pay(
@@ -156,8 +182,8 @@ export default {
           pg: "html5_inicis",
           pay_method: "card",
           merchant_uid: "merchant_" + new Date().getTime(),
-          name: "주문명:결제테스트",
-          amount: 1,
+          name: this.mainItem.item_name,
+          amount: this.mainItem.price * this.dates.length,
           buyer_email: "iamport@siot.do",
           buyer_name: "구매자이름",
           buyer_tel: "010-1234-5678",

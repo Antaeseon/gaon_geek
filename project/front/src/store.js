@@ -166,7 +166,7 @@ export default new Vuex.Store({
         select_item(state, payload) {
             state.selected_item_id = payload.id;
             // console.log(state.selected_item_id);
-            router.push({ name : 'detail' });
+            router.push({ name : 'detail',params:{"id":payload.id}});
         }
     },
     actions: {

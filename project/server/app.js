@@ -14,6 +14,7 @@ var enrollSellerRouter = require('./routes/enrollSeller');
 var enrollItemRouter = require('./routes/enrollItem');
 var searchRouter = require('./routes/search');
 var adminRouter = require('./routes/admin/admin')
+var tradeRouter = require('./routes/trade')
 var sensRouter = require('./routes/api/sens')
 
 
@@ -46,6 +47,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 라우팅 설정. 세부 라우팅 설정은 /routes 폴더에 구현된다.
 app.use('/', indexRouter);
+app.use('/trade',tradeRouter)
 app.use('/user', usersRouter);
 app.use('/enrollSeller', enrollSellerRouter);
 app.use('/enrollItem', enrollItemRouter);

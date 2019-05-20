@@ -73,6 +73,14 @@
         @input="$v.material.$touch()"
         @blur="$v.material.$touch()"
       ></v-text-field>
+      <v-text-field
+        v-model="selected_size"
+        :error-messages="sizeErrors"
+        label="Size"
+        required
+        @input="$v.selected_size.$touch()"
+        @blur="$v.selected_size.$touch()"
+      ></v-text-field>
     <v-flex xs12 sm6>
         <v-select
         v-model="state"
@@ -108,7 +116,7 @@
         @blur="$v.selected_tag.$touch()"
         ></v-select>
     </v-flex>
-    <v-flex xs12 sm6>
+    <!-- <v-flex xs12 sm6>
         <v-select
         v-model="selected_size"
         :items="size"
@@ -118,7 +126,17 @@
         @input="$v.selected_size.$touch()"
         @blur="$v.selected_size.$touch()"
         ></v-select>
-    </v-flex>
+    </v-flex> -->
+
+      <v-text-field
+        v-model="selected_size"
+        :error-messages="sizeErrors"
+        label="Size"
+        required
+        @input="$v.selected_size.$touch()"
+        @blur="$v.selected_size.$touch()"
+      ></v-text-field>
+
 
     <v-text-field
     readonly

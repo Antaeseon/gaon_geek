@@ -197,6 +197,7 @@ export default {
       if (response.status === "PARTIALLY_AUTHENTICATED") {
         this.doLogin(response.code, response.state);
         this.isAuthentificated = true;
+        console.log('여기',response)
       } else if (response.status === "NOT_AUTHENTICATED") {
         // handle NOT_AUTHENTICATED error
         this.isAuthentificated = false;

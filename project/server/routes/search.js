@@ -1,9 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const item = require('../models/itemSchema');
+const mongoose = require('mongoose');
 const Shop = require('../models/shopSchema');
 const cors = require('cors');
 var fs = require('fs');
+const ObjectId = mongoose.Types.ObjectId;
 const router = express.Router();
 
 /* List all of the item in a country */
@@ -33,6 +35,21 @@ router.post('/getNationItemlist', function(req, res, next) {
         }
     });
 });
+
+
+/* List just one Item for using detail */
+/*
+    POST /search/getNationItemlist
+    {
+        nation
+    }
+*/
+
+router.get('/getOneItem/:id',async (req,res)=>{
+    let singleItem = await item.findOne({_id: ObjectId(req.params.id)})
+    console.log(singleItem)
+    res.json({response :singleItem})
+})
 
 // app.js로 모듈 연결
 module.exports = router;
