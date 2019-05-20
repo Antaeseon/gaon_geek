@@ -38,7 +38,7 @@
                     <v-carousel-item
                       v-for="(item,i) in items"
                       :key="i"
-                      :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/'+item"
+                      :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/'+item"
                     ></v-carousel-item>
                   </v-carousel>
                 </template>

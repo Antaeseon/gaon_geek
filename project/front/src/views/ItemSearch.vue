@@ -94,8 +94,8 @@
         </v-container>
 
 
-<!-- :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + item.imageUrl[0]" -->
-     <!-- <v-img :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/'+filter_map[0][4][0]" -->
+<!-- :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/' + item.imageUrl[0]" -->
+     <!-- <v-img :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/'+filter_map[0][4][0]" -->
        <!-- <v-img src="http://visualshock.kr/web/product/big/201807/18752_shop1_15305994850023.jpg" 
               aspect-ratio="1.1"
               contain

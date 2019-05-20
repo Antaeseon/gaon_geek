@@ -46,7 +46,11 @@ export default new Vuex.Store({
             //teamName: state => state.teamName
     },
     mutations: {
-        login(state, { id, Token, isSeller }) {
+        login(state, {
+            id,
+            Token,
+            isSeller
+        }) {
             state.id = id
             state.Token = Token
             state.isSeller = isSeller
@@ -161,7 +165,9 @@ export default new Vuex.Store({
                     return a;
                 }, []);
             // console.log(state.cnt_length)
-            router.push({ name: "itemsearch" });
+            router.push({
+                name: "itemsearch"
+            });
         },
         select_item(state, payload) {
             state.selected_item_id = payload.id;
@@ -170,25 +176,34 @@ export default new Vuex.Store({
         }
     },
     actions: {
-
-
         login({ dispatch, commit }, { id, pwd }) {
             // console.log('여기들어옴')
             console.log(id)
             console.log(pwd)
             return new Promise((resolve, reject) => {
-                axios.post(`http://localhost:3000/user/login`, { id: id, pwd: pwd })
+                axios.post(`http://localhost:3000/user/login`, {
+                        id: id,
+                        pwd: pwd
+                    })
                     .then(res => {
-                        axios.post(`http://localhost:3000/user/isSeller`, { id: id })
+                        axios.post(`http://localhost:3000/user/isSeller`, {
+                                id: id
+                            })
                             .then(resS => {
                                 const Token = res.data.Token
                                 const isSeller = resS.data.isSeller
                                 console.log(res)
                                 console.log(id, Token)
                                 console.log(`${Token} 저장됨...`)
-                                commit('login', { id, Token, isSeller })
+                                commit('login', {
+                                    id,
+                                    Token,
+                                    isSeller
+                                })
                                 if (isSeller === true) {
-                                    dispatch('getSellerInfo', { id: id });
+                                    dispatch('getSellerInfo', {
+                                        id: id
+                                    });
                                 }
                                 resolve(res)
                             })
@@ -200,12 +215,18 @@ export default new Vuex.Store({
                     })
             })
         },
-        signOut({ commit }) {
+        signOut({
+            commit
+        }) {
             commit('signOut')
-            router.push({ name: "home" });
+            router.push({
+                name: "home"
+            });
         },
         // Seller 등록 신청
-        requestEnrollSeller({ commit }, form) {
+        requestEnrollSeller({
+            commit
+        }, form) {
             // 아직 Seller가 아닐때 올림.
             axios.post('http://localhost:3000/enrollSeller', form)
                 .then(res => {
@@ -216,7 +237,9 @@ export default new Vuex.Store({
                     } else if (res.data.tag === "Success") {
                         alert("제출이 완료되었습니다!");
                         commit('enrollComplete');
-                        router.push({ name: "home" });
+                        router.push({
+                            name: "home"
+                        });
                     } else {
                         console.log(res.data);
                     }
@@ -225,7 +248,9 @@ export default new Vuex.Store({
                 })
         },
         // Seller 정보 받아오기
-        getSellerInfo({ commit }, form) {
+        getSellerInfo({
+            commit
+        }, form) {
             // 아직 Seller가 아닐때 올림.
             axios.post('http://localhost:3000/enrollSeller/getSellerInfo', form)
                 .then(res => {
@@ -248,7 +273,9 @@ export default new Vuex.Store({
                 })
         },
         // Seller 정보 수정
-        modifySellerInfo({ commit }, form) {
+        modifySellerInfo({
+            commit
+        }, form) {
             // 아직 Seller가 아닐때 올림.
             axios.post('http://localhost:3000/enrollSeller/modifySellerInfo', form)
                 .then(res => {
@@ -258,13 +285,17 @@ export default new Vuex.Store({
                         alert("수정이 완료되었습니다!");
                         commit('modifyComplete');
                         commit('getSellerInfoSuccess', res.data.data);
-                        router.push({ name: "home" });
+                        router.push({
+                            name: "home"
+                        });
                     }
                 }).catch((err) => {
                     commit('modifyError');
                 });
         },
-        getItemList({ commit }, form) {
+        getItemList({
+            commit
+        }, form) {
             axios.post('http://localhost:3000/enrollItem/lists', form)
                 .then(res => {
                     let result = res.data.body;
@@ -273,31 +304,42 @@ export default new Vuex.Store({
                     console.log(err);
                 })
         },
-        enrollItem({ commit }, form) {
+        enrollItem({
+            commit
+        }, form) {
             axios.post('http://localhost:3000/enrollItem', form)
                 .then(res => {
                     if (res.data.tag === "Success") {
                         alert("제출이 완료되었습니다!");
                         commit('enrollComplete');
-                        router.push({ name: "home" });
+                        router.push({
+                            name: "home"
+                        });
                     }
                 }).catch((err) => {
                     // 장애발생 메시지
                     commit('enrollError');
                 })
         },
-        modifyItem({ commit }, form) {
+        modifyItem({
+            commit
+        }, form) {
             axios.post('http://localhost:3000/enrollItem/modify', form)
                 .then(res => {
                     if (res.data.tag === "Success") {
-                        commit('changeItemInfo', { index: res.data.index, data: res.data.data });
+                        commit('changeItemInfo', {
+                            index: res.data.index,
+                            data: res.data.data
+                        });
                     }
                 }).catch((err) => {
                     // 장애발생 메시지
                     commit('enrollError');
                 })
         },
-        getNationItemlist({ commit }, form) {
+        getNationItemlist({
+            commit
+        }, form) {
             axios.post('http://localhost:3000/search/getNationItemlist', form)
                 .then(res => {
                     commit('searchItemlistinsert', res.data.data);
