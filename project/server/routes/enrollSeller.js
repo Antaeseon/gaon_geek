@@ -17,7 +17,7 @@ let path = require("path");
 let upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: "weareverstorage",
+        bucket: "wearever1",
         key: function(req, file, cb) {
             let extension = path.extname(file.originalname);
             cb(null, Date.now().toString() + extension);

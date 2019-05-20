@@ -28,7 +28,7 @@
                 <v-layout align-center row>
                 <v-flex xs12 sm12>
                   <v-img
-                    :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + item.imageUrl[0]"
+                    :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/' + item.imageUrl[0]"
                     contain
                     aspect-ratio="1.1"
                   ></v-img>
@@ -131,14 +131,14 @@
                     </v-flex>
                     <v-flex :key="imgUrl" v-for="imgUrl in imageUrl_copy" xs12 sm6>
                         <v-img
-                            :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + imgUrl"
+                            :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/' + imgUrl"
                             contain
                             aspect-ratio="1.1"
                         ></v-img>
                     </v-flex>
                     <v-flex xs12 sm6>
                         <v-img
-                            :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + certificateUrl_copy"
+                            :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/' + certificateUrl_copy"
                             contain
                             aspect-ratio="1.1"
                         ></v-img>

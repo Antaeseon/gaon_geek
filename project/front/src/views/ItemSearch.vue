@@ -94,8 +94,8 @@
         </v-container>
 
 
-<!-- :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + item.imageUrl[0]" -->
-     <!-- <v-img :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/'+filter_map[0][4][0]" -->
+<!-- :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/' + item.imageUrl[0]" -->
+     <!-- <v-img :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/'+filter_map[0][4][0]" -->
        <!-- <v-img src="http://visualshock.kr/web/product/big/201807/18752_shop1_15305994850023.jpg" 
               aspect-ratio="1.1"
               contain
@@ -105,7 +105,7 @@
           <v-layout row wrap>
             <v-flex  v-for="i in this.uniq" :key="i" xs4  style="padding-bottom:80px;">
               <a style="color:black" >
-              <v-img v-ripple @click="pass_id(all_info[i].object_id)" :src="`https://s3.ap-northeast-2.amazonaws.com/weareverstorage/`+all_info[i].imageUrl[0]" class="image" alt="lorem" contain
+              <v-img v-ripple @click="pass_id(all_info[i].object_id)" :src="`https://s3.ap-northeast-2.amazonaws.com/wearever1/`+all_info[i].imageUrl[0]" class="image" alt="lorem" contain
                     aspect-ratio="1.1">
               </v-img>
               <!-- <a v-bind:href="link">link</a> -->

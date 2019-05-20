@@ -75,7 +75,7 @@ export default new Router({
                 import( /* webpackChunkName: "about" */ './views/SignUp.vue')
         },
         {
-            path: '/detail',
+            path: '/detail/:id',
             name: 'detail',
             props: true,
             component: () =>

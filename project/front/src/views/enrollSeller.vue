@@ -282,13 +282,13 @@
         userTerms: terms.userTerms,
         items: [
           {
-            src: 'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/share1.PNG'
+            src: 'https://s3.ap-northeast-2.amazonaws.com/wearever1/share1.PNG'
           },
           {
-            src: 'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/share2.PNG'
+            src: 'https://s3.ap-northeast-2.amazonaws.com/wearever1/share2.PNG'
           },
           {
-            src: 'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/share3.PNG'
+            src: 'https://s3.ap-northeast-2.amazonaws.com/wearever1/share3.PNG'
           }
         ]
     }),
