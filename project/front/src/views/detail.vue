@@ -39,8 +39,13 @@
                       v-for="(item,i) in items"
                       :key="i"
                       :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/'+item"
+<<<<<<< HEAD
                     >
                     </v-carousel-item>
+=======
+                      touchless='true'
+                    ></v-carousel-item>
+>>>>>>> 309f3c48909d4b699495b473845903f351a90fef
                   </v-carousel>
                 </template>
               </v-card-text>
@@ -69,10 +74,22 @@
                           <br>
                           소재 : {{mainItem.material}}
                           <div>
+<<<<<<< HEAD
                           <v-chip label color="pink" text-color="white">
                             <v-icon left>label</v-icon>Tags
                           </v-chip>
                           <v-chip outline color="primary" v-for="(t,i) in mainItem.tag" :key="i">#{{t}}</v-chip>
+=======
+                            <v-chip label color="pink" text-color="white">
+                              <v-icon left>label</v-icon>Tags
+                            </v-chip>
+                            <v-chip
+                              outline
+                              color="primary"
+                              v-for="(t,i) in mainItem.tag"
+                              :key="i"
+                            >{{t}}</v-chip>
+>>>>>>> 309f3c48909d4b699495b473845903f351a90fef
                           </div>
                           <v-menu
                             ref="menu"
@@ -87,20 +104,17 @@
                             min-width="290px"
                           >
                             <template v-slot:activator="{ on }">
-                              <v-combobox
+                              <v-text-field
                                 v-model="dates"
-                                multiple
-                                chips
-                                small-chips
-                                label="대여 날짜 선택"
+                                label="시작일"
                                 prepend-icon="event"
                                 readonly
                                 v-on="on"
-                              ></v-combobox>
+                              ></v-text-field>
+                              
                             </template>
                             <v-date-picker
                               v-model="dates"
-                              multiple
                               :allowed-dates="allowedDates"
                               no-title
                               scrollable
@@ -110,9 +124,42 @@
                               <v-btn flat color="primary" @click="$refs.menu.save(dates)">OK</v-btn>
                             </v-date-picker>
                           </v-menu>
+                          <v-menu
+                            ref="menu2"
+                            v-model="menu2"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            :return-value.sync="datesend"
+                            lazy
+                            transition="scale-transition"
+                            offset-y
+                            full-width
+                            min-width="290px"
+                          >
+                            <template v-slot:activator="{ on }">
+                              <v-text-field
+                                v-model="datesend"
+                                label="마감일"
+                                prepend-icon="event"
+                                readonly
+                                v-on="on"
+                              ></v-text-field>
+                              
+                            </template>
+                            <v-date-picker
+                              v-model="datesend"
+                              :allowed-dates="allowedDates"
+                              no-title
+                              scrollable
+                            >
+                              <v-spacer></v-spacer>
+                              <v-btn flat color="primary" @click="menu2 = false">Cancel</v-btn>
+                              <v-btn flat color="primary" @click="$refs.menu2.save(datesend)">OK</v-btn>
+                            </v-date-picker>
+                          </v-menu>
                         </v-flex>
                         <v-btn @click="requestPay">결제하기</v-btn>
-                        <v-btn @click>찜하기</v-btn>
+                        <v-btn @click="submit">찜하기</v-btn>
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -138,8 +185,11 @@ export default {
       active: null,
       qna: "판매문의입니다아",
       review: "리뷰입니다아",
-      dates: [],
-      menu: false
+      dates: new Date().toISOString().substr(0, 10),
+      datesend: new Date().toISOString().substr(0, 10),
+      menu: false,
+      modal: false,
+      menu2: false
     };
   },
   async created() {
@@ -153,6 +203,13 @@ export default {
   },
 
   methods: {
+    submit() {
+      //보내고 싶은 번호와 메세지
+      this.$http.post("http://localhost:3000/sens/sendMessage", {
+        phone: "01052817702",
+        message: "wearever에서 대여 접수가 완료되었습니다."
+      });
+    },
     allowedDates: val => {
       if (
         parseInt(val.substring(5, 7)) <
@@ -194,10 +251,10 @@ export default {
         result_success => {
           //성공할 때 실행 될 콜백 함수
           var msg = "결제가 완료되었습니다.";
-          msg += "고유ID : " + result_success.imp_uid;
-          msg += "상점 거래ID : " + result_success.merchant_uid;
-          msg += "결제 금액 : " + result_success.paid_amount;
-          msg += "카드 승인번호 : " + result_success.apply_num;
+         // msg += "고유ID : " + result_success.imp_uid;
+         //msg += "상점 거래ID : " + result_success.merchant_uid;
+         // msg += "결제 금액 : " + result_success.paid_amount;
+         // msg += "카드 승인번호 : " + result_success.apply_num;
           alert(msg);
         },
         result_failure => {
