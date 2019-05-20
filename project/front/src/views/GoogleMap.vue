@@ -4,50 +4,24 @@
 
 <script>
 import MarkerClusterer from '@google/markerclusterer';
-import store from './../store'
 import gmapsInit from './../utils/gmaps';
-
-const locations = [
-  {
-    position: {
-      lat: 48.160910,
-      lng: 16.383330,
-    },
-  },
-  {
-    // 서울
-    position: {
-      lat: 37.541,
-      lng: 126.986,
-    },
-  },
-  {
-    position: {
-      lat: 48.146140,
-      lng: 16.297030,
-    },
-  },
-  {
-    position: {
-      lat: 48.135830,
-      lng: 16.194460,
-    },
-  },
-  {
-    position: {
-      lat: 48.306091,
-      lng: 14.286440,
-    },
-  },
-  {
-    position: {
-      lat: 47.503040,
-      lng: 9.747070,
-    },
-  }
-];
+import { mapState } from 'vuex';
 
 export default {
+data: () => ({
+  locations : [
+      {
+        // 서울
+        position: {
+          lat: 37.541,
+          lng: 126.986,
+        },
+      }
+    ]
+    }),
+    computed: {
+      ...mapState(["sellerInfo", "isSeller"]),
+    },
   name: `App`,
   async mounted() {
     try {
@@ -55,15 +29,17 @@ export default {
       const geocoder = new google.maps.Geocoder();
       const map = new google.maps.Map(this.$el);
       var loc = "";
-      if(store.state.alreadySeller === true)
-        loc = store.state.sellerInfo.location;
+      if(this.isSeller)
+      {
+        loc = this.sellerInfo.location;
+        this.locations.push({position : { lat: this.sellerInfo.lat , lng: this.sellerInfo.lon }});
+      }
       else
         loc = 'Korea';
       geocoder.geocode({ address: loc }, (results, status) => {
         if (status !== `OK` || !results[0]) {
           throw new Error(status);
         }
-        // data.lat = results[0].geometry.location
         map.setCenter(results[0].geometry.location);
         map.fitBounds(results[0].geometry.viewport);
       });
@@ -73,9 +49,9 @@ export default {
         map.setCenter(marker.getPosition());
       };
 
-      const markers = locations
+      const markers = this.locations
         .map((location) => {
-          const marker = new google.maps.Marker({ ...location, map });
+          const marker = new google.maps.Marker({ ...location, map, });
           marker.addListener(`click`, () => markerClickHandler(marker));
 
           return marker;
