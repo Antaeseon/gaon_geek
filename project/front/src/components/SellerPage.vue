@@ -17,18 +17,28 @@
             
         </v-layout>
         </v-parallax>
-
-        <v-subheader>Item Lists</v-subheader>
+        <v-layout justify-space-between row wrap>
+            <v-flex xs4>
+                <v-subheader>Item Lists</v-subheader>
+            </v-flex>
+            <v-flex xs2>
+                <v-select
+                :items="['없음', '대여 가능', '대여 불가', '판매 완료']"
+                label="상태 선택"
+                v-model="statusFilter"
+                ></v-select>
+            </v-flex>
+        </v-layout>
         <v-container grid-list-lg grid-list-xs text-xs-center column>
         <v-layout wrap justify-space-around align-center> 
             <v-flex xs6 
-              :key="item.item_name"
+              :key="item._id"
               v-for="(item, index) in itemlist">
-            <v-card class="inner_card" height="100%">
+            <v-card v-if="filterCon(item.status)" class="inner_card" height="100%">
                 <v-layout align-center row>
                 <v-flex xs12 sm12>
                   <v-img
-                    :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + item.imageUrl[0]"
+                    :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/' + item.imageUrl[0]"
                     contain
                     aspect-ratio="1.1"
                   ></v-img>
@@ -39,12 +49,14 @@
                     <span v-html="tagCom + ' '"></span>
                 </span>
                 <div v-html="item.size"></div>
-                <div v-html="item.price + ' (원/일)'"></div>
+                <div v-html="item.price + ' (원)'"></div>
+                <div v-html="item.rental + ' (원/일)'"></div>
                 <div v-if="item.status == 0">대여 가능</div>
                 <div v-else-if="item.status == 1">대여 중</div>
-                <div v-else-if="item.status == 2">세탁 중</div>
-                <div v-else-if="item.status == 3">배송 중</div>
-                <div v-else-if="item.status == 4">수리 중</div>
+                <div v-else-if="item.status == 2">판매 완료</div>
+                <div v-else-if="item.status == 3">세탁 중</div>
+                <div v-else-if="item.status == 4">배송 중</div>
+                <div v-else-if="item.status == 5">수리 중</div>
                 <v-btn color="primary" dark @click="item_detail(index)" large depressed> 상세보기 </v-btn>
                 </v-flex>
                 </v-layout>
@@ -84,6 +96,9 @@
                         <v-textarea label="Detail" v-model="detail_copy" required></v-textarea>
                     </v-flex>
                     <v-flex xs12>
+                        <v-text-field label="Rental" v-model="rental_copy" required></v-text-field>
+                    </v-flex>
+                    <v-flex xs12>
                         <v-text-field label="Price" v-model="price_copy" required></v-text-field>
                     </v-flex>
                     <v-flex xs12>
@@ -97,21 +112,17 @@
                         required
                         ></v-select>
                     </v-flex>
-                    <v-autocomplete xs12 sm6>
-                        <v-select
+                    <v-flex xs12 sm6>
+                        <v-autocomplete
                         :items="category"
                         label="Category"
                         v-model="category_copy"
                         required
-                        ></v-select>
-                    </v-autocomplete>
-                    <v-flex xs12 sm6>
-                        <v-select
-                        :items="size"
-                        label="Size"
-                        v-model="size_copy"
-                        required
-                        ></v-select>
+                        attach
+                        ></v-autocomplete>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-text-field label="Size" v-model="size_copy" required></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6>
                         <v-autocomplete
@@ -131,14 +142,14 @@
                     </v-flex>
                     <v-flex :key="imgUrl" v-for="imgUrl in imageUrl_copy" xs12 sm6>
                         <v-img
-                            :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + imgUrl"
+                            :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/' + imgUrl"
                             contain
                             aspect-ratio="1.1"
                         ></v-img>
                     </v-flex>
                     <v-flex xs12 sm6>
                         <v-img
-                            :src="'https://s3.ap-northeast-2.amazonaws.com/weareverstorage/' + certificateUrl_copy"
+                            :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/' + certificateUrl_copy"
                             contain
                             aspect-ratio="1.1"
                         ></v-img>
@@ -170,12 +181,10 @@ export default {
   data() {
     return {
         dialog: false,
-        splitStr: '&nbsp;&nbsp;',
         shop_name: store.state.sellerInfo.shop_name,
         total_visit: store.state.sellerInfo.total_visit,
         rating: store.state.sellerInfo.rating,
         enroll_Date: store.state.sellerInfo.enroll_Date,
-        items: store.state.itemlist,
         size : attribute.size,
         category: attribute.category,
         tag: attribute.tag,
@@ -183,6 +192,7 @@ export default {
         color: attribute.color,
         brand: attribute.brand,
         state: attribute.state,
+        statusFilter: '',
         id_copy: '',
         item_name_copy: '',
         brand_copy: '',
@@ -192,6 +202,7 @@ export default {
         state_copy: '',
         category_copy: '',
         size_copy: '',
+        rental_copy: 0,
         price_copy: 0,
         tag_copy: [],
         certificateUrl_copy: 'wearever.png',
@@ -216,6 +227,7 @@ export default {
         formData.append('detail', this.detail_copy);
         formData.append('state', this.state_copy);
         formData.append('material',this.material_copy);
+        formData.append('rental', this.rental_copy);
         formData.append('price', this.price_copy);
         formData.append('category', this.category_copy);
         formData.append('size', this.size_copy);
@@ -226,21 +238,6 @@ export default {
             formData.append('tag', this.tag_copy[j]);
         }
         this.modifyItem(formData);
-        // .then((err) => {
-        //     if(err) console.log(err);
-        //     else {
-        //         this.items[this.index_copy].item_name = this.item_name_copy;
-        //         this.items[this.index_copy].brand = this.brand_copy;
-        //         this.items[this.index_copy].color = this.color_copy;
-        //         this.items[this.index_copy].detail = this.detail_copy;
-        //         this.items[this.index_copy].state = this.state_copy;
-        //         this.items[this.index_copy].material = this.material_copy;
-        //         this.items[this.index_copy].price = this.price_copy;
-        //         this.items[this.index_copy].category = this.category_copy;
-        //         this.items[this.index_copy].size = this.size_copy;
-        //         this.items[this.index_copy].status = this.status.indexOf(this.status_copy);
-        //     }
-        // });
         
         this.clear();
       },
@@ -253,20 +250,29 @@ export default {
       {
         this.index_copy = index;
         this.dialog = true;
-        this.id_copy = this.items[index]._id.slice();
-        this.item_name_copy = this.items[index].item_name.slice();
-        this.brand_copy = this.items[index].brand.slice();
-        this.color_copy = this.items[index].color.slice();
-        this.detail_copy = this.items[index].detail.slice();
-        this.state_copy = this.items[index].state.slice();
-        this.material_copy = this.items[index].material.slice();
-        this.category_copy = this.items[index].category.slice();
-        this.size_copy = this.items[index].size.slice();
-        this.status_copy = this.status[this.items[index].status];
-        this.price_copy= this.items[index].price;
-        this.tag_copy = this.items[index].tag.slice();
-        this.certificateUrl_copy = this.items[index].certificateUrl.slice();
-        this.imageUrl_copy = this.items[index].imageUrl.slice();
+        this.id_copy = this.itemlist[index]._id.slice();
+        this.item_name_copy = this.itemlist[index].item_name.slice();
+        this.brand_copy = this.itemlist[index].brand.slice();
+        this.color_copy = this.itemlist[index].color.slice();
+        this.detail_copy = this.itemlist[index].detail.slice();
+        this.state_copy = this.itemlist[index].state.slice();
+        this.material_copy = this.itemlist[index].material.slice();
+        this.category_copy = this.itemlist[index].category.slice();
+        this.size_copy = this.itemlist[index].size.slice();
+        this.status_copy = this.status[this.itemlist[index].status];
+        this.rental_copy = this.itemlist[index].rental;
+        this.price_copy = this.itemlist[index].price;
+        this.tag_copy = this.itemlist[index].tag.slice();
+        this.certificateUrl_copy = this.itemlist[index].certificateUrl.slice();
+        this.imageUrl_copy = this.itemlist[index].imageUrl.slice();
+      },
+      filterCon(status)
+      {
+          if(this.statusFilter == '대여 가능' && status == 0) return true;
+          if(this.statusFilter == '판매 완료' && status == 2) return true;
+          if(this.statusFilter == '대여 불가' && status != 0 && status != 2) return true;
+          if(this.statusFilter == '없음' || this.statusFilter == '') return true;
+          else return false;
       },
       clear()
       {
@@ -279,7 +285,8 @@ export default {
         this.category_copy = '';
         this.size_copy = '';
         this.status_copy = '';
-        this.price_copy= 0;
+        this.rental_copy = 0;
+        this.price_copy = 0;
         this.tag_copy = [];
         this.index_copy= 0;
         this.certificateUrl_copy = 'wearever.png';

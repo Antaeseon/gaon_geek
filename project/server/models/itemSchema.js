@@ -43,6 +43,10 @@ const ItemSchema = new Schema({
         type: String,
         required: [true, 'Material field is required']
     },
+    rental: {
+        type: Number,
+        required: [true, 'Rental field is required']
+    },
     price: {
         type: Number,
         required: [true, 'Price field is required']

@@ -17,7 +17,7 @@ let path = require("path");
 let upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: "weareverstorage",
+        bucket: "wearever1",
         key: function(req, file, cb) {
             let extension = path.extname(file.originalname);
             cb(null, Date.now().toString() + extension);
@@ -40,6 +40,7 @@ let upload = multer({
         detail
         state
         material
+        rental
         price
         status
         imageNum
@@ -64,6 +65,7 @@ router.post('/', upload.array('img'), function(req, res, next) {
         detail: req.body.detail,
         state: req.body.state,
         material: req.body.material,
+        rental: req.body.rental,
         price: req.body.price,
         status: 0,
         imageNum: req.body.imageNum,
@@ -112,6 +114,7 @@ router.post('/lists', function(req, res, next) {
         detail
         state
         material
+        rental
         price
         status
     }
@@ -127,6 +130,7 @@ router.post('/modify', upload.array('img'), function(req, res, next) {
         detail: req.body.detail,
         state: req.body.state,
         material: req.body.material,
+        rental: req.body.rental,
         price: req.body.price,
         status: req.body.status
     }, function(err, result) {

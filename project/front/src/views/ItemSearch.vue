@@ -105,7 +105,7 @@
           <v-layout row wrap>
             <v-flex  v-for="i in this.uniq" :key="i" xs4  style="padding-bottom:80px;">
               <a style="color:black" >
-              <v-img v-ripple @click="pass_id(all_info[i].object_id)" :src="`https://s3.ap-northeast-2.amazonaws.com/weareverstorage/`+all_info[i].imageUrl[0]" class="image" alt="lorem" contain
+              <v-img v-ripple @click="pass_id(all_info[i].object_id)" :src="`https://s3.ap-northeast-2.amazonaws.com/wearever1/`+all_info[i].imageUrl[0]" class="image" alt="lorem" contain
                     aspect-ratio="1.1">
               </v-img>
               <!-- <a v-bind:href="link">link</a> -->

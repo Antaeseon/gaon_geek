@@ -31,8 +31,8 @@ export default new Vuex.Store({
         category: [],
         tag: [],
         searchItemlist: [],
-        all_info : [],
-        object_id : [],
+        all_info: [],
+        object_id: [],
         cnt_length: [],
         selected_item_id: '',
 
@@ -102,75 +102,75 @@ export default new Vuex.Store({
             state.modifySellerError = false;
         },
         changeItemInfo(state, payload) {
-            state.itemlist[payload.index] = payload.data;
+            state.itemlist[payload.index].item_name = payload.data.item_name;
+            state.itemlist[payload.index].brand = payload.data.brand;
+            state.itemlist[payload.index].color = payload.data.color;
+            state.itemlist[payload.index].detail = payload.data.detail;
+            state.itemlist[payload.index].state = payload.data.state;
+            state.itemlist[payload.index].material = payload.data.material;
+            state.itemlist[payload.index].rental = payload.data.rental;
+            state.itemlist[payload.index].price = payload.data.price;
+            state.itemlist[payload.index].category = payload.data.category;
+            state.itemlist[payload.index].size = payload.data.size;
+            state.itemlist[payload.index].status = payload.data.status;
         },
         searchItemlistinsert(state, payload) {
             state.searchItemlist = [];
             state.all_info = [];
             state.cnt_length = [];
-            // console.log("START!");
-            // console.log("payload:"+typeof(payload));
-            // console.log("payload:"+payload);
-            // console.log("payload.len:"+payload.length);
-            
-            
             // payload : item 리스트
             state.searchItemlist = payload;
             //console.log(payload.length);
             // console.log("A");
-            for(var i =0 ; i<payload.length; i++){
-                // console.log("B");
-                
-                
-                // console.log(payload[0].price);
+            for (var i = 0; i < payload.length; i++) {
                 var price = payload[i].price
                 price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                
+
                 state.cnt_length.push(i)
 
-                
-                
-                state.all_info[i] = { 
-                    
+
+
+                state.all_info[i] = {
+
                     item_name: payload[i].item_name,
-                    brand:payload[i].brand,
-                    price:price,
-                    size:payload[i].size,
-                    status:payload[i].status,
-                    imageUrl:payload[i].imageUrl,
-                    shop_id:payload[i].shop_id,
-                    category:payload[i].category,
-                    object_id:payload[i]._id
+                    brand: payload[i].brand,
+                    price: price,
+                    size: payload[i].size,
+                    status: payload[i].status,
+                    imageUrl: payload[i].imageUrl,
+                    shop_id: payload[i].shop_id,
+                    category: payload[i].category,
+                    object_id: payload[i]._id
                 };
-                
+
                 // console.log("C");
-           
-                
+
+
                 // console.log("all_info:" + all_info[i]);
-            } 
+            }
             // console.log("D");
-           
+
 
             // 정렬 및 중복 제거 
             state.cnt_length = state.cnt_length.slice() // 정렬하기 전에 복사본을 만든다.
-            .sort(function(a,b){
-                return a - b;
-            })
-            .reduce(function(a,b){
-                if (a.slice(-1)[0] !== b) a.push(b); // slice(-1)[0] 을 통해 마지막 아이템을 가져온다.
-                return a;
-            },[]);
+                .sort(function(a, b) {
+                    return a - b;
+                })
+                .reduce(function(a, b) {
+                    if (a.slice(-1)[0] !== b) a.push(b); // slice(-1)[0] 을 통해 마지막 아이템을 가져온다.
+                    return a;
+                }, []);
             // console.log(state.cnt_length)
             router.push({ name: "itemsearch" });
         },
         select_item(state, payload) {
             state.selected_item_id = payload.id;
             // console.log(state.selected_item_id);
-            router.push({ name : 'detail',params:{"id":payload.id}});
+            router.push({ name: 'detail', params: { "id": payload.id } });
         }
     },
     actions: {
-        
+
 
         login({ dispatch, commit }, { id, pwd }) {
             // console.log('여기들어옴')
@@ -305,9 +305,9 @@ export default new Vuex.Store({
                     console.log(err);
                 })
         },
-        pass_id( { commit }, id ) {
+        pass_id({ commit }, id) {
             // console.log("AA:"+id);
-            commit('select_item',{id: id})
+            commit('select_item', { id: id })
         }
     }
 })
