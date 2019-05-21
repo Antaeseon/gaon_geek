@@ -35,17 +35,11 @@
               <v-card-text>
                 <template>
                   <v-carousel>
-                    <v-carousel-item 
+                    <v-carousel-item
                       v-for="(item,i) in items"
                       :key="i"
                       :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/'+item"
-<<<<<<< HEAD
-                    >
-                    </v-carousel-item>
-=======
-                      touchless='true'
                     ></v-carousel-item>
->>>>>>> 309f3c48909d4b699495b473845903f351a90fef
                   </v-carousel>
                 </template>
               </v-card-text>
@@ -60,6 +54,7 @@
                       <v-card-text>
                         <h2>상품명 : {{mainItem.item_name}}</h2>
                         <br>
+                        판매가격 : {{mainItem.rental}}
                         <br>
                         1일당 : {{mainItem.price}}
                         <br>
@@ -74,12 +69,6 @@
                           <br>
                           소재 : {{mainItem.material}}
                           <div>
-<<<<<<< HEAD
-                          <v-chip label color="pink" text-color="white">
-                            <v-icon left>label</v-icon>Tags
-                          </v-chip>
-                          <v-chip outline color="primary" v-for="(t,i) in mainItem.tag" :key="i">#{{t}}</v-chip>
-=======
                             <v-chip label color="pink" text-color="white">
                               <v-icon left>label</v-icon>Tags
                             </v-chip>
@@ -88,9 +77,16 @@
                               color="primary"
                               v-for="(t,i) in mainItem.tag"
                               :key="i"
-                            >{{t}}</v-chip>
->>>>>>> 309f3c48909d4b699495b473845903f351a90fef
+                            >#{{t}}</v-chip>
                           </div>
+                          <v-flex xs3>
+                            <v-select
+                              :items="['렌탈', '구매']"
+                              label="구매방법"
+                              v-model="statusFilter"
+                            ></v-select>
+                          </v-flex>
+
                           <v-menu
                             ref="menu"
                             v-model="menu"
@@ -102,8 +98,9 @@
                             offset-y
                             full-width
                             min-width="290px"
+                            v-if="statusFilter=='렌탈'"
                           >
-                            <template v-slot:activator="{ on }">
+                            <template v-slot:activator="{ on }" >
                               <v-text-field
                                 v-model="dates"
                                 label="시작일"
@@ -111,7 +108,6 @@
                                 readonly
                                 v-on="on"
                               ></v-text-field>
-                              
                             </template>
                             <v-date-picker
                               v-model="dates"
@@ -135,6 +131,7 @@
                             offset-y
                             full-width
                             min-width="290px"
+                            v-if="statusFilter=='렌탈'"
                           >
                             <template v-slot:activator="{ on }">
                               <v-text-field
@@ -144,7 +141,6 @@
                                 readonly
                                 v-on="on"
                               ></v-text-field>
-                              
                             </template>
                             <v-date-picker
                               v-model="datesend"
@@ -185,11 +181,13 @@ export default {
       active: null,
       qna: "판매문의입니다아",
       review: "리뷰입니다아",
-      dates: new Date().toISOString().substr(0, 10),
-      datesend: new Date().toISOString().substr(0, 10),
+      dates: "",
+      datesend: "",
       menu: false,
       modal: false,
-      menu2: false
+      menu2: false,
+      daylength: null,
+      statusFilter:""
     };
   },
   async created() {
@@ -199,7 +197,7 @@ export default {
     );
     this.mainItem = res.data.response;
     this.items = this.mainItem.imageUrl;
-    console.log("ddd", this.items);
+    console.log("ddd", this.mainItem);
   },
 
   methods: {
@@ -209,6 +207,30 @@ export default {
         phone: "01052817702",
         message: "wearever에서 대여 접수가 완료되었습니다."
       });
+    },
+    testing() {
+      this.$http.post("http://localhost:3000/trade/makeTrade", {
+        buyer_id: this.$store.state.id,
+        seller_id: this.mainItem.shop_id,
+        item_id: this.$route.params.id,
+        borrow_date: this.dates,
+        return_date: this.datesend,
+        is_buy: false,
+        trade_method: "borrow"
+      });
+    },
+    computeDate() {
+      console.log("dd", this.dates, "dd", this.datesend);
+      var sarray = this.dates.split("-");
+      var endarray = this.datesend.split("-");
+      var s_date = new Date(sarray[0], Number(sarray[1]) - 1, sarray[2]);
+      var e_date = new Date(endarray[0], Number(endarray[1]) - 1, endarray[2]);
+      console.log("s와 d", s_date, "dddd", e_date);
+
+      var between = (e_date.getTime() - s_date.getTime()) / 1000 / 60 / 60 / 24;
+
+      console.log("나와라...", between);
+      this.daylength = between;
     },
     allowedDates: val => {
       if (
@@ -235,13 +257,25 @@ export default {
     },
     requestPay: function() {
       // IMP.request_pay(param, callback) 호출
+      var totalPrice
+      if(this.statusFilter=='구매'){
+          totalPrice=this.mainItem.price
+        }
+      else{
+        this.computeDate();
+        if (this.daylength <= 0) {
+          alert("날짜 설정이 잘못되었습니다.");
+          return;
+        }
+        totalPrice=this.mainItem.price * this.daylength
+      }
       Vue.IMP().request_pay(
         {
           pg: "html5_inicis",
           pay_method: "card",
           merchant_uid: "merchant_" + new Date().getTime(),
           name: this.mainItem.item_name,
-          amount: this.mainItem.price * this.dates.length,
+          amount: totalPrice,
           buyer_email: "iamport@siot.do",
           buyer_name: "구매자이름",
           buyer_tel: "010-1234-5678",
@@ -251,11 +285,12 @@ export default {
         result_success => {
           //성공할 때 실행 될 콜백 함수
           var msg = "결제가 완료되었습니다.";
-         // msg += "고유ID : " + result_success.imp_uid;
-         //msg += "상점 거래ID : " + result_success.merchant_uid;
-         // msg += "결제 금액 : " + result_success.paid_amount;
-         // msg += "카드 승인번호 : " + result_success.apply_num;
+          // msg += "고유ID : " + result_success.imp_uid;
+          //msg += "상점 거래ID : " + result_success.merchant_uid;
+          // msg += "결제 금액 : " + result_success.paid_amount;
+          // msg += "카드 승인번호 : " + result_success.apply_num;
           alert(msg);
+          this.$http.post("");
         },
         result_failure => {
           //실패시 실행 될 콜백 함수
