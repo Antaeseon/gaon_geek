@@ -16,9 +16,9 @@ router.post('/makeTrade', function(req, res, next) {
         borrow_date: req.body.borrow_date,
         return_date: req.body.return_date,
         is_buy: req.body.is_buy,
-        trade_method: req.body.trade_method
+        trade_method: req.body.trade_method,
+        pay_date:Date.now()
     });
-
     trade_obj.save(function(err) {
         if (err) {
             console.log(err);
@@ -29,7 +29,11 @@ router.post('/makeTrade', function(req, res, next) {
     });
 });
 
-
+router.get('/getTradeListByItemId/:id',async (req,res)=>{
+    var tt=await Trade.find({item_id:req.params.id})
+    console.log(tt)
+    res.json({response:tt})
+})
 
 
 

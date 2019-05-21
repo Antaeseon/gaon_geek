@@ -54,9 +54,9 @@
                       <v-card-text>
                         <h2>상품명 : {{mainItem.item_name}}</h2>
                         <br>
-                        판매가격 : {{mainItem.rental}}
+                        판매가격 : {{mainItem.price}}
                         <br>
-                        1일당 : {{mainItem.price}}
+                        1일당 : {{mainItem.rental}}
                         <br>
                         <br>
                         <v-flex xs12 sm6>
@@ -80,11 +80,7 @@
                             >#{{t}}</v-chip>
                           </div>
                           <v-flex xs3>
-                            <v-select
-                              :items="['렌탈', '구매']"
-                              label="구매방법"
-                              v-model="statusFilter"
-                            ></v-select>
+                            <v-select :items="['렌탈', '구매']" label="구매방법" v-model="statusFilter"></v-select>
                           </v-flex>
 
                           <v-menu
@@ -100,7 +96,7 @@
                             min-width="290px"
                             v-if="statusFilter=='렌탈'"
                           >
-                            <template v-slot:activator="{ on }" >
+                            <template v-slot:activator="{ on }">
                               <v-text-field
                                 v-model="dates"
                                 label="시작일"
@@ -155,7 +151,7 @@
                           </v-menu>
                         </v-flex>
                         <v-btn @click="requestPay">결제하기</v-btn>
-                        <v-btn @click="submit">찜하기</v-btn>
+                        <v-btn @click="computeDate">찜하기</v-btn>
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -175,6 +171,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      tradeList: [],
       pagaItem: [],
       mainItem: {},
       items: [],
@@ -187,7 +184,8 @@ export default {
       modal: false,
       menu2: false,
       daylength: null,
-      statusFilter:""
+      statusFilter: "",
+      t_method: ""
     };
   },
   async created() {
@@ -195,20 +193,26 @@ export default {
     var res = await this.$http.get(
       `http://localhost:3000/search/getOneItem/${this.$route.params.id}`
     );
+    var rest = await this.$http.get(
+      `http://localhost:3000/trade/getTradeListByItemId/${
+        this.$route.params.id
+      }`
+    );
     this.mainItem = res.data.response;
     this.items = this.mainItem.imageUrl;
-    console.log("ddd", this.mainItem);
+    this.tradeList = rest.data.response;
+    console.log("ddd", rest.data.response);
   },
 
   methods: {
     submit() {
       //보내고 싶은 번호와 메세지
       this.$http.post("http://localhost:3000/sens/sendMessage", {
-        phone: "01089630784",
+        phone: "01052817702",
         message: "wearever에서 대여 접수가 완료되었습니다."
       });
     },
-    testing() {
+    makeTrade() {
       this.$http.post("http://localhost:3000/trade/makeTrade", {
         buyer_id: this.$store.state.id,
         seller_id: this.mainItem.shop_id,
@@ -216,7 +220,7 @@ export default {
         borrow_date: this.dates,
         return_date: this.datesend,
         is_buy: false,
-        trade_method: "borrow"
+        trade_method: this.t_method
       });
     },
     computeDate() {
@@ -227,12 +231,12 @@ export default {
       var e_date = new Date(endarray[0], Number(endarray[1]) - 1, endarray[2]);
       console.log("s와 d", s_date, "dddd", e_date);
 
-      var between = (e_date.getTime() - s_date.getTime()) / 1000 / 60 / 60 / 24;
-
+      var between = parseInt((e_date.getTime() - s_date.getTime()) / 1000 / 60 / 60 / 24);
+      console.log('겟타임',parseInt(e_date.getTime()/1000/60/60/24))
       console.log("나와라...", between);
       this.daylength = between;
     },
-    allowedDates: val => {
+    allowedDates: async val => {
       if (
         parseInt(val.substring(5, 7)) <
         parseInt(new Date().toISOString().substring(5, 7))
@@ -257,17 +261,20 @@ export default {
     },
     requestPay: function() {
       // IMP.request_pay(param, callback) 호출
-      var totalPrice
-      if(this.statusFilter=='구매'){
-          totalPrice=this.mainItem.price
-        }
-      else{
+      var totalPrice;
+      if (this.statusFilter == "구매") {
+        totalPrice = this.mainItem.price;
+        this.is_buy = true;
+        this.t_method = "buy";
+      } else {
+        this.is_buy = false;
         this.computeDate();
+        this.t_method = "borrow";
         if (this.daylength <= 0) {
           alert("날짜 설정이 잘못되었습니다.");
           return;
         }
-        totalPrice=this.mainItem.price * this.daylength
+        totalPrice = this.mainItem.price * this.daylength;
       }
       Vue.IMP().request_pay(
         {
@@ -290,7 +297,7 @@ export default {
           // msg += "결제 금액 : " + result_success.paid_amount;
           // msg += "카드 승인번호 : " + result_success.apply_num;
           alert(msg);
-          this.$http.post("");
+          this.makeTrade();
         },
         result_failure => {
           //실패시 실행 될 콜백 함수

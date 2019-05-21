@@ -4,24 +4,24 @@ const Schema = mongoose.Schema;
 const tradeSchema= new Schema({
     buyer_id: {
         type: String,
-        required: [true, 'Buyer_id field is required'],
-        unique: true
+        // required: [true, 'Buyer_id field is required'],
     },
     seller_id: {
         type: String,
-        required: [true, 'Seller_id field is required'],
-        unique: true
+        // required: [true, 'Seller_id field is required'],
     }, 
     item_id: {
         type: String,
-        required: [true, 'Item_id field is required'],
-        unique: true
+        // required: [true, 'Item_id field is required'],
     },
     borrow_date:{
         type:Date,
     },
     return_date:{
         type:Date
+    },
+    pay_date:{
+        type: Date
     },
     is_buy:{
         type:Boolean
