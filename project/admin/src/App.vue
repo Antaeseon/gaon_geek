@@ -25,10 +25,10 @@
       <v-toolbar-title>Administer</v-toolbar-title>
     </v-toolbar>
     <v-content>
-      <v-container justify-center v-if="!this.$store.state.isLogin">
+      <!-- <v-container justify-center v-if="!this.$store.state.isLogin">
         <login></login>
-      </v-container>
-      <v-container v-else>
+      </v-container> -->
+      <v-container>
         <authSeller></authSeller>
       </v-container>
     </v-content>

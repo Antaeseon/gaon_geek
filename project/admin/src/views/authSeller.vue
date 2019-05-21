@@ -6,14 +6,17 @@
       <td class="text-xs-left">{{ props.item.about_us }}</td>
       <!-- 다이어로그!! -->
       <td class="text-xs-left">
-        <v-dialog v-model="dialog" width="500">
+        <v-dialog v-model="dialog">
           <template v-slot:activator="{ on }">
-            <v-btn color="red lighten-2" dark v-on="on">Click</v-btn>
+            <v-btn small dark v-on="on">Normal</v-btn>
           </template>
 
           <v-card>
             <v-card-title class="headline grey lighten-2" primary-title>Auth Image</v-card-title>
-            <v-img src="https://picsum.photos/510/300?random" aspect-ratio="1.7"></v-img>
+            <v-img
+              :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/'+props.item.imageUrl"
+              aspect-ratio="2.0"
+            ></v-img>
             <v-divider></v-divider>
 
             <v-card-actions>
@@ -25,7 +28,8 @@
       </td>
       <!-- 다이어로그 끝 -->
       <td class="text-xs-left">
-        <v-btn @click="Auth(props.item.id)">OK</v-btn>
+        <v-btn small color="primary" @click="Auth(props.item.id)">Accept</v-btn>
+        <v-btn small color="error" @click="Reject(props.item.id)">Reject</v-btn>
       </td>
     </template>
   </v-data-table>
@@ -61,11 +65,42 @@ export default {
     image(prop) {
       console.log(prop);
     },
-    async Auth(prop){
-      console.log(prop)
-      await this.$http.post('http://localhost:3000/enrollSeller/accept',{id:prop})
+    sendSMS(phoneNum, messageS) {
+      //보내고 싶은 번호와 메세지
+      console.log(phoneNum, messageS);
+      this.$http.post("http://localhost:3000/sens/sendMessage", {
+        phone: phoneNum,
+        message: messageS
+      });
+    },
+    async Auth(prop) {
+      console.log(prop);
+      var getUser = await this.$http.get(`http://localhost:3000/user/${prop}`);
+      console.log(getUser.data.response.phoneNum);
+      await this.$http.post("http://localhost:3000/enrollSeller/accept", {
+        id: prop
+      });
       var tt = await this.$http.get("http://localhost:3000/enrollSeller/lists");
-      this.dets = tt.data.body
+      this.dets = tt.data.body;
+      alert("승인되었습니다.");
+      this.sendSMS(
+        getUser.data.response.phoneNum,
+        "판매자 등록이 완료되었습니다."
+      );
+    },
+    async Reject(prop) {
+      var getUser = await this.$http.get(`http://localhost:3000/user/${prop}`);
+
+      await this.$http.post("http://localhost:3000/enrollSeller/reject", {
+        id: prop
+      });
+      var tt = await this.$http.get("http://localhost:3000/enrollSeller/lists");
+      this.dets = tt.data.body;
+      alert("승인 거절 되었습니다.");
+      this.sendSMS(
+        getUser.data.response.phoneNum,
+        "판매자 등록이 거절되었습니다."
+      );
     }
   }
 };

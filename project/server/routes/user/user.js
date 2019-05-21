@@ -17,6 +17,16 @@ router.get('/', function(req, res, next) {
     }).catch(next);
 });
 
+/* Get  Onee user information.
+    GET /user/:id
+*/
+router.get('/:id', async function(req, res, next) {
+    let oneUser = await User.findOne({id: req.params.id})
+    console.log(oneUser)
+    res.json({response :oneUser})
+});
+
+
 /* Add a new user to the db */
 /*
     POST /user/signup/

@@ -91,7 +91,6 @@ const axios = require("axios");
 
 export default {
   mixins: [validationMixin],
-
   validations: {
     id: { required },
     password: { required },

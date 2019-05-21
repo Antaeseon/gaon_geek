@@ -180,7 +180,7 @@ router.post('/accept', async function(req, res, next) {
     }
 */
 router.post('/reject', function(req, res, next) {
-    enrollSeller.deleteMany({ id: req.body.id }, function(err) {
+    enrollSeller.deleteOne({ id: req.body.id }, function(err) {
         if (err) {
             res.status(500).send({ "Response": 500, "tag": err });
         } else {

@@ -19,15 +19,14 @@ router.post('/sendMessage', async function (req, res, next) {
                 content: req.body.message
             }
         )
-        .then(res => {
-            console.log(res);
+        .then(result => {
+            console.log(result);
+            res.send({message:"clear"})
         })
         .catch(err => {
             console.log(err);
-
+            res.status(500).send({message:err})
         });
-
-        res.send({message:"clear"})
 
 });
 

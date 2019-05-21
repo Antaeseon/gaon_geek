@@ -204,7 +204,7 @@ export default {
     submit() {
       //보내고 싶은 번호와 메세지
       this.$http.post("http://localhost:3000/sens/sendMessage", {
-        phone: "01052817702",
+        phone: "01089630784",
         message: "wearever에서 대여 접수가 완료되었습니다."
       });
     },
