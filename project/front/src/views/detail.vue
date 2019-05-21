@@ -279,7 +279,7 @@ export default {
           buyer_email: "iamport@siot.do",
           buyer_name: "구매자이름",
           buyer_tel: "010-1234-5678",
-          buyer_addr: "서울특별시 강남구 삼성동",
+          buyer_addr: "temp",
           buyer_postcode: "123-456"
         },
         result_success => {

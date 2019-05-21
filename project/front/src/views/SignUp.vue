@@ -36,20 +36,21 @@
         @blur="$v.nation.$touch()"
       ></v-text-field>
       <v-text-field
-        v-model="phone"
-        :error-messages="phoneErrors"
-        label="Phone"
-        required
-        @input="$v.phone.$touch()"
-        @blur="$v.phone.$touch()"
-      ></v-text-field>
-      <v-text-field
         v-model="email"
         :error-messages="emailErrors"
         label="E-mail"
         required
         @input="$v.email.$touch()"
         @blur="$v.email.$touch()"
+      ></v-text-field>
+      <v-text-field
+        v-model="phone"
+        :error-messages="phoneErrors"
+        label="Phone"
+        type="number"
+        required
+        @input="$v.phone.$touch()"
+        @blur="$v.phone.$touch()"
       ></v-text-field>
 
       <v-flex xs2>
@@ -197,7 +198,7 @@ export default {
       if (response.status === "PARTIALLY_AUTHENTICATED") {
         this.doLogin(response.code, response.state);
         this.isAuthentificated = true;
-        console.log('여기',response)
+        console.log("여기", response);
       } else if (response.status === "NOT_AUTHENTICATED") {
         // handle NOT_AUTHENTICATED error
         this.isAuthentificated = false;
@@ -216,7 +217,7 @@ export default {
     smsLogin() {
       AccountKit.login(
         "PHONE",
-        { countryCode: "+82", phoneNumber: "" }, // will use default values if not specified
+        { countryCode: "+82", phoneNumber: this.phone }, // will use default values if not specified
         this.loginCallback
       );
     },
@@ -285,15 +286,12 @@ export default {
           });
           this.$router.push("/");
           alert("회원가입이 완료되었습니다.");
-          
-          
-          //보내고 싶은 번호와 메세지 
-          this.$http.post("http://localhost:3000/sens/sendMessage",{
-            phone : "01089630784",
-            message : "회원가입이 완료되었습니다."
-          })
 
-
+          //보내고 싶은 번호와 메세지
+          this.$http.post("http://localhost:3000/sens/sendMessage", {
+            phone: "01089630784",
+            message: "회원가입이 완료되었습니다."
+          });
         } catch (error) {
           console.log(error.response.data.message);
           alert(error.response.data.message);
@@ -313,7 +311,7 @@ export default {
       this.email = "";
       this.select = null;
       this.checkbox = false;
-    },
+    }
   }
 };
 </script>

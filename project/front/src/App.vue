@@ -19,7 +19,7 @@
           <v-list-tile-content>
             <v-list-tile-title>마이페이지</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile> -->
+        </v-list-tile>-->
         <!-- mypage router로 지시 -->
         <!-- <v-list-tile router :to="{name: 'detail'}" exact>
           <v-list-tile-action>
@@ -28,7 +28,7 @@
           <v-list-tile-content>
             <v-list-tile-title>상세보기</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile> -->
+        </v-list-tile>-->
 
         <!-- mypage router로 지시 -->
         <v-list-tile router :to="{name: 'googlemap'}" exact>
@@ -39,7 +39,6 @@
             <v-list-tile-title>googleMap</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-
         <!-- mypage router로 지시 -->
         <v-list-tile router :to="{name: 'selectcountry'}" exact>
           <v-list-tile-action>
@@ -50,21 +49,19 @@
           </v-list-tile-content>
         </v-list-tile>
 
-         
-
         <!-- router :to="{name: 'enrollSeller'}" -->
         <!-- v-if="Token !== null" -->
-        <v-list-tile @click="convert_login_status">
+        <v-list-tile @click="convert_login_status" v-if="!isSeller">
           <v-list-tile-action>
             <v-icon>supervisor_account</v-icon>
           </v-list-tile-action>
-          <v-list-tile-content>
+          <v-list-tile-content v-if="!isSeller">
             <v-list-tile-title>판매자 등록</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile v-if="isSeller" router :to="{name: 'modifySeller'}">
           <v-list-tile-action>
-            <v-icon>supervisor_account</v-icon>
+              <v-icon>mdi-account-edit</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>판매자 정보 수정</v-list-tile-title>
@@ -72,7 +69,7 @@
         </v-list-tile>
         <v-list-tile v-if="isSeller" router :to="{name: 'enrollItem'}">
           <v-list-tile-action>
-            <v-icon>supervisor_account</v-icon>
+              <v-icon>mdi-briefcase-plus</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>물품 등록</v-list-tile-title>
@@ -107,23 +104,23 @@
         </v-menu>
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn icon v-if="!showId" @click.stop="dialog = true" v-on="on">
-          <v-icon>person_outline</v-icon>
-        </v-btn>
-      </template>
-      <span>Sign In</span>
-    </v-tooltip>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn icon v-if="!showId" @click.stop="dialog = true" v-on="on">
+              <v-icon>mdi-account-check</v-icon>
+            </v-btn>
+          </template>
+          <span>Sign In</span>
+        </v-tooltip>
 
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn icon v-if="!showId" router :to="{name: 'SignUp'}" v-on="on">
-          <v-icon>person_add</v-icon>
-        </v-btn>
-      </template>
-      <span>Sign Up</span>
-    </v-tooltip>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn icon v-if="!showId" router :to="{name: 'SignUp'}" v-on="on">
+              <v-icon>person_add</v-icon>
+            </v-btn>
+          </template>
+          <span>Sign Up</span>
+        </v-tooltip>
 
         <v-dialog v-model="dialog" max-width="290">
           <v-card>
