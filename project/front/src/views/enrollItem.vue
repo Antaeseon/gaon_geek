@@ -63,6 +63,7 @@
         required
         @input="$v.rental.$touch()"
         @blur="$v.rental.$touch()"
+        type="number"
       ></v-text-field>
       <v-text-field
         v-model="price"
@@ -71,6 +72,7 @@
         required
         @input="$v.price.$touch()"
         @blur="$v.price.$touch()"
+        type="number"
       ></v-text-field>
       <v-text-field
         v-model="material"

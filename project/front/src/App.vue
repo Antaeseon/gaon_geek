@@ -107,12 +107,24 @@
         </v-menu>
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
-        <v-btn icon v-if="!showId" @click.stop="dialog = true" >
-          <v-icon title="로그인">person_outline</v-icon>
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn icon v-if="!showId" @click.stop="dialog = true" v-on="on">
+          <v-icon>person_outline</v-icon>
         </v-btn>
-        <v-btn icon v-if="!showId" router :to="{name: 'SignUp'}">
-          <v-icon title="회원가입">person_add</v-icon>
+      </template>
+      <span>Sign In</span>
+    </v-tooltip>
+
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn icon v-if="!showId" router :to="{name: 'SignUp'}" v-on="on">
+          <v-icon>person_add</v-icon>
         </v-btn>
+      </template>
+      <span>Sign Up</span>
+    </v-tooltip>
+
         <v-dialog v-model="dialog" max-width="290">
           <v-card>
             <v-card-title class="headline">Log in</v-card-title>
