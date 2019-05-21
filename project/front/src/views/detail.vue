@@ -227,16 +227,28 @@ export default {
       console.log("dd", this.dates, "dd", this.datesend);
       var sarray = this.dates.split("-");
       var endarray = this.datesend.split("-");
+      var tarray=sarray[0]+sarray[1]+sarray[2]
       var s_date = new Date(sarray[0], Number(sarray[1]) - 1, sarray[2]);
       var e_date = new Date(endarray[0], Number(endarray[1]) - 1, endarray[2]);
-      console.log("s와 d", s_date, "dddd", e_date);
 
-      var between = parseInt((e_date.getTime() - s_date.getTime()) / 1000 / 60 / 60 / 24);
-      console.log('겟타임',parseInt(e_date.getTime()/1000/60/60/24))
-      console.log("나와라...", between);
+      var between = parseInt(
+        (e_date.getTime() - s_date.getTime()) / 1000 / 60 / 60 / 24
+      );
       this.daylength = between;
+
     },
-    allowedDates: async val => {
+    allowedDates: function(val) {
+      var temp=val.substring(0,10).split("-")
+      var temp_date = temp[0]+temp[1]+temp[2]
+       for (var i = 0; i < this.tradeList.length; i++) {
+        console.log(this.tradeList[i].borrow_date);
+        var sarray = this.tradeList[i].borrow_date.substring(0, 10).split("-");
+         var tarray=sarray[0]+sarray[1]+sarray[2]
+        var endarray = this.tradeList[i].return_date.substring(0, 10).split("-");
+        var tearray=endarray[0]+endarray[1]+endarray[2]
+        if(temp_date>=tarray&&temp_date<=tearray)
+          return false
+      }
       if (
         parseInt(val.substring(5, 7)) <
         parseInt(new Date().toISOString().substring(5, 7))
