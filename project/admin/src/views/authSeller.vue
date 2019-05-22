@@ -6,7 +6,7 @@
       <td class="text-xs-left">{{ props.item.about_us }}</td>
       <!-- 다이어로그!! -->
       <td class="text-xs-left">
-        <v-dialog v-model="dialog">
+        <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
           <template v-slot:activator="{ on }">
             <v-btn small dark v-on="on">Normal</v-btn>
           </template>
@@ -15,7 +15,6 @@
             <v-card-title class="headline grey lighten-2" primary-title>Auth Image</v-card-title>
             <v-img
               :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/'+props.item.imageUrl"
-              aspect-ratio="2.0"
             ></v-img>
             <v-divider></v-divider>
 
@@ -105,3 +104,5 @@ export default {
   }
 };
 </script>
+<style>
+</style>

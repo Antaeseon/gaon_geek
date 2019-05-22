@@ -1,5 +1,3 @@
-
-
 <template>
     <!-- xs:mobile, sm:tablet, md:notebook, lg:desktop -->
   <v-container fluid>
@@ -14,46 +12,21 @@
         <!-- 왼쪽 리스트 -->
       <v-container grid-list-xl text-xs-center >
       <v-layout row wrap>
-      
         <v-flex>
-        <!-- <v-flex md3> -->
-          <div><h3>TODAY'S EDITION</h3></div>
-          
+        <!-- <v-flex md3> -->     
           <v-text-field 
             outline
-            label="업체 검색"
+            label="아이템 이름"
             append-icon="search"
-            v-model="seller"
-             :prepend-icon-cb="search(seller)"
-            
+            v-model="item_name"
           ></v-text-field>
-
-
-            
-            <div><h3>제품 상태</h3></div>
-            
-            <v-radio-group   
-            class="justify-center" 
-            v-model="state" 
-            color="red" 
-            row 
-             :prepend-icon-cb="change_itemstate(state)">
-           
-              <v-radio label="대여 중" value="대여 중" ></v-radio>
-              <v-radio label="대여 가능" value="대여 가능" ></v-radio>
-
-            </v-radio-group>
-
             <div><h3>사이즈</h3></div>
-            
-
-            <v-radio-group   
+            <v-radio-group 
             class="justify-center" 
             v-model="size" 
             color="red" 
             row 
-             :prepend-icon-cb="change_size(size)">
-           
+            >
               <v-radio label="XL" value="XL" ></v-radio>
               <v-radio label="L" value="L" ></v-radio>
               <v-radio label="M" value="M"  ></v-radio>
@@ -70,9 +43,9 @@
             chips
             multiple
             persistent-hint
-             :prepend-icon-cb="change_pickbrand(selected_brand)"
         ></v-select>
-
+        <v-layout>
+          <v-flex xs6>
           <div><h3>카테고리</h3></div>
         <v-select
             v-model="selected_category"
@@ -81,21 +54,34 @@
             multiple
             chips
             persistent-hint
-             :prepend-icon-cb="change_pickcategory(selected_category)"
         ></v-select>
-
-        <v-btn @click="check_itemlist()">
+          </v-flex>
+          <v-flex xs6>
+          <div><h3>태그</h3></div>
+        <v-select
+            v-model="selected_tag"
+            :items="tag"
+            label="Select Tag"
+            multiple
+            chips
+            persistent-hint
+        ></v-select>
+          </v-flex>
+        </v-layout>
+        <v-btn @click="filter()">
            조회하기
         </v-btn>
 
         </v-flex>
         </v-layout>
         
-        </v-container>
-       
+        </v-container>      
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
-            <v-flex  v-for="i in this.uniq" :key="i" xs4  style="padding-bottom:80px;">
+            <v-flex 
+            v-if="all_info[index].item_name.toLowerCase().search(item_name.toLowerCase()) != -1"
+             v-for="(i, index) in uniq" :key="i"
+             xs4  style="padding-bottom:80px;">
               <a style="color:black" >
               <v-img v-ripple @click="pass_id(all_info[i].object_id)" :src="`https://s3.ap-northeast-2.amazonaws.com/wearever1/`+all_info[i].imageUrl[0]" class="image" alt="lorem" contain
                     aspect-ratio="1.1">
@@ -120,173 +106,116 @@
 <script>
   import store from './../store.js'
   import attribute from './../attribute.js'
-  import { mapActions } from 'vuex';
-
+  import { mapActions, mapMutations } from 'vuex';
+  var _ = require('lodash');
   export default {
     name: 'paginated-list',
     data: () => ({
-      seller:"",
-      e6: [],
+      item_name:"",
       selected_category: [],
       selected_brand: [],
       selected_tag: [],
       size:"",
-      state:"",
+      itemAvailable: null,
       brand: attribute.brand,
       tag: attribute.tag,
       category: attribute.category,
       status: attribute.status,
-      nation: store.state.nation,
-      itemlist: store.state.searchItemlist,
-      all_info: store.state.all_info,
-      uniq: store.state.cnt_length,
-
+      all_info: [],
+      all_index: [],
+      uniq: [],
     }),
-
+  async created() {
+    var res = await this.$http.post(
+      `http://localhost:3000/search/getItemlist/`, { shop_id: this.$route.params.shop_id }
+    );
+    this.searchItemlist = res.data.data;
+    for (var i = 0; i < res.data.data.length; i++) {
+      if(res.data.data[i].status !== 2)
+      {
+        this.all_index.push(i);
+        let price = res.data.data[i].price;
+        price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        let rental = res.data.data[i].rental;
+        rental = rental.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        this.all_info[i] = {
+            item_name: res.data.data[i].item_name,
+            brand: res.data.data[i].brand,
+            price: price,
+            rental: rental,
+            rprice: res.data.data[i].price,
+            rrental: res.data.data[i].rental,
+            size: res.data.data[i].size,
+            status: res.data.data[i].status,
+            imageUrl: res.data.data[i].imageUrl,
+            shop_id: res.data.data[i].shop_id,
+            category: res.data.data[i].category,
+            tag: res.data.data[i].tag,
+            object_id: res.data.data[i]._id
+        };
+      }
+    }
+    this.uniq = this.all_index.slice();
+  },
+  computed: {
+    ...mapMutations(['searchItemlistinsert']),
+  },
   methods: {
     ...mapActions(['pass_id']),
-    search(seller){
-      store.state.seller=this.seller;
-      console.log(store.state.seller);
-    },
-    change_itemstate(state){
-      store.state.itemAvailable=this.state;
-      console.log(store.state.itemAvailable);
-    },
-    change_size(size){
-      store.state.size=this.size;
-      console.log(store.state.size);
-    },
-    change_pickbrand(selected_brand){
-      store.state.brand=this.selected_brand
-      console.log(store.state.brand);
-    },
-    change_pickcategory(selected_category){
-      store.state.category=this.selected_category
-      console.log(store.state.category);
-    },
-    change_picktag(selected_tag){
-      store.state.tag=this.selected_tag
-      console.log(store.state.tag);
-    },
-    check_itemlist(){
-      // var char = this.itemlist[0].shopid
-      // console.log("all_info: "+ this.all_info.length);
-      const filter_map=[[],[]];
-      const picked_cnt=[];
-      
-      const use_cnt_state=[];
+    filter(){
+      let picked_cnt=[];
       for(var i=0; i<this.all_info.length; i++){
         var use_cnt=1;
-        // console.log("store.state.seller :" + store.state.seller)
-        // console.log("null: " + null);
-        // 필터링 사용중인지 아닌지
-        if(store.state.seller !== '')
+        if(this.item_name !== '')
         {
-          if(store.state.seller !== this.all_info[i].shop_id){
+          if(this.all_info[i].item_name.search(this.item_name)  === -1){
             use_cnt--;
           }
         }
-
-        console.log("store.state.itemAvailable: "+ store.state.itemAvailable)
-        if(store.state.itemAvailable !== '')
-        {
-         if((store.state.itemAvailable !== "대여 중" && this.all_info[i].status === 1) || (store.state.itemAvailable !== "대여 가능" && this.all_info[i].status === 0)  )
-          {
-            use_cnt--; 
-          }
-        }
-        if(store.state.size !== '')
+        if(this.size !== '')
         {
           // 사이즈
-          if(store.state.size !== this.all_info[i].size)
+          if(this.size !== this.all_info[i].size)
           {
             use_cnt--;
           }
         }
-        if(store.state.brand.toString() !== '')
+        if(this.selected_brand.toString() !== '')
         {
         // 브랜드
-          if(store.state.brand.toString() !== this.all_info[i].brand)
+          if(this.selected_brand.indexOf(this.all_info[i].brand) === -1)
           {
             use_cnt--;
           }
         }
-        if(store.state.category.toString() !== '')
+        if(this.selected_category.toString() !== '')
         {
-
         // 카테고리
-          if(store.state.category.toString() !== this.all_info[i].category)
+          if(this.selected_category.indexOf(this.all_info[i].category) === -1)
           {
             use_cnt--;
           }
-        }   
-        console.log("i:"+ i);
-        console.log("use_cnt:"+ use_cnt);
+        }
+        if(this.selected_tag.toString() !== '')
+        {
+          let tagNum = 0;
+          // 태그
+          for(let j = 0; j < this.all_info[i].tag.length; j++)
+          {
+            if(this.selected_tag.indexOf(this.all_info[i].tag[j]) !== -1)
+            {
+              tagNum++;
+            }
+          }
+          if(tagNum === 0) use_cnt--;
+        }
         if(use_cnt == 1)
         {
           picked_cnt.push(i);
         }
-        console.log("all_info_id:"+this.all_info[0].object_id)
         
-
-          
-        
-        
-
-
-        // //  업체
-        // if(store.state.seller === this.all_info[i].shop_id){
-        //   // 기존 i를 저장해놓는 배열 생성
-        //   // all_info[i]에 넣어놓기.
-        //     console.log("shop_id")
-            
-        //     picked_cnt.push(i);
-
-        // } 
-
-        // // 제품 상태
-        // // string to number
-        
-        // if((store.state.itemAvailable === "대여 중" && this.all_info[i].status === 1) || (store.state.itemAvailable === "대여 가능" && this.all_info[i].status === 0)  )
-        // {
-        //   // console.log("??");
-        //   console.log("status")
-        //     picked_cnt.push(i);
-        // }
-        // // 사이즈
-        // if(store.state.size === this.all_info[i].size)
-        // {
-        //   console.log("size")
-        //     picked_cnt.push(i);
-        // }
-        // // 브랜드
-        // if(store.state.brand.toString() === this.all_info[i].brand)
-        // {
-        //   console.log("brand")
-        //     picked_cnt.push(i);
-        // }
-        // // 카테고리
-        // if(store.state.category.toString() === this.all_info[i].category)
-        // {
-        //   console.log("category")
-        //     picked_cnt.push(i);
-        // }
-        
-      }
-
-      console.log("uniq1: "+this.uniq);
-      // 정렬 및 중복 제거 
-      this.uniq = picked_cnt.slice() // 정렬하기 전에 복사본을 만든다.
-      .sort(function(a,b){
-        return a - b;
-      })
-      .reduce(function(a,b){
-        if (a.slice(-1)[0] !== b) a.push(b); // slice(-1)[0] 을 통해 마지막 아이템을 가져온다.
-        return a;
-      },[]);
-      
-      console.log("uniq2: "+this.uniq);   
+      } 
+      this.uniq = picked_cnt.slice();
     },
 
   },

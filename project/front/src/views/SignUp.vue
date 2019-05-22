@@ -104,7 +104,9 @@ export default {
       }
     }
   },
-
+  created(){
+    this.clear()
+  },
   data: () => ({
     creds: {
       fbAppEventsEnabled: true,
@@ -121,7 +123,7 @@ export default {
     checkbox: false,
     isAuthentificated: false
   }),
-
+  
   computed: {
     checkboxErrors() {
       const errors = [];
@@ -285,12 +287,6 @@ export default {
           });
           this.$router.push("/");
           alert("회원가입이 완료되었습니다.");
-
-          //보내고 싶은 번호와 메세지
-          this.$http.post("http://localhost:3000/sens/sendMessage", {
-            phone: "01089630784",
-            message: "회원가입이 완료되었습니다."
-          });
         } catch (error) {
           console.log(error.response.data.message);
           alert(error.response.data.message);
@@ -310,6 +306,7 @@ export default {
       this.email = "";
       this.select = null;
       this.checkbox = false;
+      this.isAuthentificated=false;
     }
   }
 };

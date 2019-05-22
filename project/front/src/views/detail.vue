@@ -297,7 +297,7 @@ export default {
           alert("날짜 설정이 잘못되었습니다.");
           return;
         }
-        totalPrice = this.mainItem.price * this.daylength;
+        totalPrice = this.mainItem.rental * (this.daylength+1);
       }
       this.t_price=totalPrice
       Vue.IMP().request_pay(
