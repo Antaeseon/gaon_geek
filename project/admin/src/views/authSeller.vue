@@ -15,7 +15,6 @@
             <v-card-title class="headline grey lighten-2" primary-title>Auth Image</v-card-title>
             <v-img
               :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/'+props.item.imageUrl"
-              aspect-ratio="2.0"
             ></v-img>
             <v-divider></v-divider>
 
