@@ -131,6 +131,8 @@
     );
     this.searchItemlist = res.data.data;
     for (var i = 0; i < res.data.data.length; i++) {
+      if(res.data.data[i].status !== 2)
+      {
         this.all_index.push(i);
         let price = res.data.data[i].price;
         price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -151,6 +153,7 @@
             tag: res.data.data[i].tag,
             object_id: res.data.data[i]._id
         };
+      }
     }
     this.uniq = this.all_index.slice();
   },
