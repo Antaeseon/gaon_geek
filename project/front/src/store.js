@@ -22,8 +22,6 @@ export default new Vuex.Store({
         login_dialog: false,
 
         // Item_Search State
-        nation: null,
-
         seller: null,
         itemAvailable: null,
         size: null,
@@ -126,11 +124,7 @@ export default new Vuex.Store({
             for (var i = 0; i < payload.length; i++) {
                 var price = payload[i].price
                 price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
                 state.cnt_length.push(i)
-
-
-
                 state.all_info[i] = {
 
                     item_name: payload[i].item_name,
@@ -143,15 +137,7 @@ export default new Vuex.Store({
                     category: payload[i].category,
                     object_id: payload[i]._id
                 };
-
-                // console.log("C");
-
-
-                // console.log("all_info:" + all_info[i]);
             }
-            // console.log("D");
-
-
             // 정렬 및 중복 제거 
             state.cnt_length = state.cnt_length.slice() // 정렬하기 전에 복사본을 만든다.
                 .sort(function(a, b) {
@@ -161,8 +147,6 @@ export default new Vuex.Store({
                     if (a.slice(-1)[0] !== b) a.push(b); // slice(-1)[0] 을 통해 마지막 아이템을 가져온다.
                     return a;
                 }, []);
-            // console.log(state.cnt_length)
-            router.push({ name: "itemsearch" });
         },
         select_item(state, payload) {
             state.selected_item_id = payload.id;
@@ -243,9 +227,7 @@ export default new Vuex.Store({
                 })
         },
         // Seller 정보 받아오기
-        getSellerInfo({
-            commit
-        }, form) {
+        getSellerInfo({ commit }, form) {
             // 아직 Seller가 아닐때 올림.
             axios.post('http://localhost:3000/enrollSeller/getSellerInfo', form)
                 .then(res => {
@@ -288,9 +270,7 @@ export default new Vuex.Store({
                     commit('modifyError');
                 });
         },
-        getItemList({
-            commit
-        }, form) {
+        getItemList({ commit }, form) {
             axios.post('http://localhost:3000/enrollItem/lists', form)
                 .then(res => {
                     let result = res.data.body;
@@ -334,28 +314,12 @@ export default new Vuex.Store({
         },
         getNationShoplist({ commit }, form) {
             router.push({ name: "shopsearch", params: { "nation": form.nation } });
-            // axios.post('http://localhost:3000/search/getNationShoplist', form)
-            //     .then(res => {
-            //         res.data.data['nation'] = form.nation.slice();
-            //         commit('searchShoplistinsert', res.data.data);
-            //     }).catch((err) => {
-            //         console.log(err);
-            //     })
         },
-        getItemlist({ commit }, form) {
-            axios.post('http://localhost:3000/search/getItemlist', form)
-                .then(res => {
-                    commit('searchItemlistinsert', res.data.data);
-                }).catch((err) => {
-                    console.log(err);
-                })
+        getItemlistforSearch({ commit }, form) {
+            router.push({ name: "itemsearch", params: { "shop_id": form.shop_id } });
         },
         pass_id({ commit }, id) {
-            // console.log("AA:"+id);
             commit('select_item', { id: id })
-        },
-        renew_showShop({ commit }, payload) {
-            commit('renew_showShop', payload)
         },
     }
 })
