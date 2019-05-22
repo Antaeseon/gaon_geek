@@ -295,10 +295,10 @@ export default {
   //   ...mapGetters()
   // },
   methods: {
-    ...mapActions(['getNationItemlist']),
+    ...mapActions(['getNationShoplist']),
     change_nation(nationInfo){
       store.state.nation=nationInfo;
-      this.getNationItemlist({ nation: nationInfo.slice()})
+      this.getNationShoplist({ nation: nationInfo.slice()})
     }
   }
 }

@@ -15,27 +15,45 @@ const router = express.Router();
         nation
     }
 */
-router.post('/getNationItemlist', function(req, res, next) {
-    Shop.find({ nation: req.body.nation }, function(err, result) {
+router.post('/getNationShoplist', function(req, res, next) {
+    Shop.find({ nation: req.body.nation }, function(err, shopresult) {
         if (err) {
             res.status(500).send({ "Response": 500, "tag": err });
         } else {
-            let id_list = [];
-            for (let i = 0; i < result.length; i++)
-                id_list.push({ "shop_id": result[i].id });
-            item.find({ $or: id_list }, function(err, itemResult) {
-                if (itemResult === undefined) {
-                    res.status(200).send({ "Response": 200, "data": [] });
-                } else if (itemResult !== undefined) {
-                    res.status(200).send({ "Response": 200, "data": itemResult });
-                } else if (err) {
-                    console.log(err);
-                }
-            })
+            if (shopresult === undefined) {
+                res.status(200).send({ "Response": 200, "data": [] });
+            } else if (shopresult !== undefined) {
+                res.status(200).send({ "Response": 200, "data": shopresult });
+            } else if (err) {
+                console.log(err);
+            }
         }
     });
 });
 
+/* List all of the item in a country */
+/*
+    POST /search/getItemlist
+    {
+        nation
+    }
+*/
+router.post('/getItemlist', function(req, res, next) {
+    item.find({ shop_id: req.body.shop_id }, function(err, itemResult) {
+        console.log(itemResult);
+        if (err) {
+            res.status(500).send({ "Response": 500, "tag": err });
+        } else {
+            if (itemResult === undefined) {
+                res.status(200).send({ "Response": 200, "data": [] });
+            } else if (itemResult !== undefined) {
+                res.status(200).send({ "Response": 200, "data": itemResult });
+            } else if (err) {
+                console.log(err);
+            }
+        }
+    })
+});
 
 /* List just one Item for using detail */
 /*
@@ -44,11 +62,10 @@ router.post('/getNationItemlist', function(req, res, next) {
         nation
     }
 */
-
-router.get('/getOneItem/:id',async (req,res)=>{
-    let singleItem = await item.findOne({_id: ObjectId(req.params.id)})
+router.get('/getOneItem/:id', async(req, res) => {
+    let singleItem = await item.findOne({ _id: ObjectId(req.params.id) })
     console.log(singleItem)
-    res.json({response :singleItem})
+    res.json({ response: singleItem })
 })
 
 // app.js로 모듈 연결

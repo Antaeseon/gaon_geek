@@ -5,6 +5,8 @@ var fs = require('fs');
 const ObjectId = mongoose.Types.ObjectId;
 const router = express.Router();
 const Trade = require('../models/tradeSchema');
+const Shop = require('../models/shopSchema');
+const item = require('../models/itemSchema');
 
 
 router.post('/makeTrade', function(req, res, next) {
@@ -29,8 +31,22 @@ router.post('/makeTrade', function(req, res, next) {
     });
 });
 
+router.get('/plusVisitor/:id', async function(req, res, next) {
+    var Oneitem=await item.findOne({_id: ObjectId(req.params.id)})
+    var Oneshop=await Shop.findOne({id:Oneitem.shop_id})
+
+    await Shop.updateOne({ id: Oneshop.id }, { total_visit: Oneshop.total_visit+1 }, (err, output) => {
+        if (err) {
+            res.status(500).json({ message: "update fail" })
+        }
+    })
+
+
+    res.send({message:"success"})
+});
+
 router.get('/getTradeListByItemId/:id',async (req,res)=>{
-    var tt=await Trade.find({item_id:req.params.id})
+    var tt=await Trade.findOne({item_id:req.params.id})
     console.log(tt)
     res.json({response:tt})
 })
