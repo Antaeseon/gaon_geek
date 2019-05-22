@@ -1,5 +1,3 @@
-
-
 <template>
     <!-- xs:mobile, sm:tablet, md:notebook, lg:desktop -->
   <v-container fluid>
@@ -141,6 +139,8 @@
             brand: res.data.data[i].brand,
             price: price,
             rental: rental,
+            rprice: res.data.data[i].price,
+            rrental: res.data.data[i].rental,
             size: res.data.data[i].size,
             status: res.data.data[i].status,
             imageUrl: res.data.data[i].imageUrl,
