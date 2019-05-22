@@ -242,11 +242,15 @@ export default {
       );
       this.daylength = between;
     },
-    allowedDates: function(val) {        
+    allowedDates: function(val) { 
+        console.log('gg')
+        console.log(val)
         var temp = val.substring(0, 10).split("-");
         var temp_date = temp[0] + temp[1] + temp[2];
+        console.log(this.tradeList.length)
         for (var i = 0; i < this.tradeList.length; i++) {
-          console.log(this.tradeList[i].borrow_date);
+          if(this.tradeList[i].borrow_date==null||this.tradeList[i].return_date==null)
+            continue
           var sarray = this.tradeList[i].borrow_date.substring(0, 10).split("-");
           var tarray = sarray[0] + sarray[1] + sarray[2];
           var endarray = this.tradeList[i].return_date
