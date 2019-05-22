@@ -285,10 +285,7 @@ export default {
       if(this.$store.state.Token==null){
         alert("로그인을 해 주세요.")
         return
-
       }
-
-
       // IMP.request_pay(param, callback) 호출
       var totalPrice;
       if (this.statusFilter == "구매") {
