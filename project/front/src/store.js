@@ -30,6 +30,8 @@ export default new Vuex.Store({
         brand: [],
         category: [],
         tag: [],
+        searchShoplist: [],
+        showShop: [],
         searchItemlist: [],
         all_info: [],
         object_id: [],
@@ -118,14 +120,21 @@ export default new Vuex.Store({
             state.itemlist[payload.index].size = payload.data.size;
             state.itemlist[payload.index].status = payload.data.status;
         },
+        searchShoplistinsert(state, payload) {
+            state.searchShoplist = payload;
+            for (let i = 0; i < payload.length; i++)
+                state.showShop.push(true);
+            router.push({ name: "shopsearch" });
+        },
+        renew_showShop(state, payload) {
+            for (let i = 0; i < state.showShop.length; i++)
+                state.showShop[i] = payload.show[i];
+        },
         searchItemlistinsert(state, payload) {
             state.searchItemlist = [];
             state.all_info = [];
             state.cnt_length = [];
-            // payload : item 리스트
             state.searchItemlist = payload;
-            //console.log(payload.length);
-            // console.log("A");
             for (var i = 0; i < payload.length; i++) {
                 var price = payload[i].price
                 price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -165,9 +174,7 @@ export default new Vuex.Store({
                     return a;
                 }, []);
             // console.log(state.cnt_length)
-            router.push({
-                name: "itemsearch"
-            });
+            router.push({ name: "itemsearch" });
         },
         select_item(state, payload) {
             state.selected_item_id = payload.id;
@@ -337,10 +344,16 @@ export default new Vuex.Store({
                     commit('enrollError');
                 })
         },
-        getNationItemlist({
-            commit
-        }, form) {
-            axios.post('http://localhost:3000/search/getNationItemlist', form)
+        getNationShoplist({ commit }, form) {
+            axios.post('http://localhost:3000/search/getNationShoplist', form)
+                .then(res => {
+                    commit('searchShoplistinsert', res.data.data);
+                }).catch((err) => {
+                    console.log(err);
+                })
+        },
+        getItemlist({ commit }, form) {
+            axios.post('http://localhost:3000/search/getItemlist', form)
                 .then(res => {
                     commit('searchItemlistinsert', res.data.data);
                 }).catch((err) => {
@@ -350,6 +363,9 @@ export default new Vuex.Store({
         pass_id({ commit }, id) {
             // console.log("AA:"+id);
             commit('select_item', { id: id })
-        }
+        },
+        renew_showShop({ commit }, payload) {
+            commit('renew_showShop', payload)
+        },
     }
 })
