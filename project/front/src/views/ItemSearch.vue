@@ -75,11 +75,13 @@
         </v-flex>
         </v-layout>
         
-        </v-container>
-       
+        </v-container>      
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
-            <v-flex  v-for="i in uniq" :key="i" xs4  style="padding-bottom:80px;">
+            <v-flex 
+            v-if="all_info[index].item_name.toLowerCase().search(item_name.toLowerCase()) != -1"
+             v-for="(i, index) in uniq" :key="i"
+             xs4  style="padding-bottom:80px;">
               <a style="color:black" >
               <v-img v-ripple @click="pass_id(all_info[i].object_id)" :src="`https://s3.ap-northeast-2.amazonaws.com/wearever1/`+all_info[i].imageUrl[0]" class="image" alt="lorem" contain
                     aspect-ratio="1.1">
@@ -105,7 +107,7 @@
   import store from './../store.js'
   import attribute from './../attribute.js'
   import { mapActions, mapMutations } from 'vuex';
-
+  var _ = require('lodash');
   export default {
     name: 'paginated-list',
     data: () => ({
