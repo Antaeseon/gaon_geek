@@ -29,8 +29,6 @@ export default new Vuex.Store({
         brand: [],
         category: [],
         tag: [],
-        searchShoplist: [],
-        showShop: [],
         searchItemlist: [],
         all_info: [],
         object_id: [],
@@ -118,16 +116,6 @@ export default new Vuex.Store({
             state.itemlist[payload.index].category = payload.data.category;
             state.itemlist[payload.index].size = payload.data.size;
             state.itemlist[payload.index].status = payload.data.status;
-        },
-        searchShoplistinsert(state, payload) {
-            state.searchShoplist = payload;
-            for (let i = 0; i < payload.length; i++)
-                state.showShop.push(true);
-            router.push({ name: "shopsearch" });
-        },
-        renew_showShop(state, payload) {
-            for (let i = 0; i < state.showShop.length; i++)
-                state.showShop[i] = payload.show[i];
         },
         searchItemlistinsert(state, payload) {
             state.searchItemlist = [];
@@ -341,12 +329,14 @@ export default new Vuex.Store({
                 })
         },
         getNationShoplist({ commit }, form) {
-            axios.post('http://localhost:3000/search/getNationShoplist', form)
-                .then(res => {
-                    commit('searchShoplistinsert', res.data.data);
-                }).catch((err) => {
-                    console.log(err);
-                })
+            router.push({ name: "shopsearch", params: { "nation": form.nation } });
+            // axios.post('http://localhost:3000/search/getNationShoplist', form)
+            //     .then(res => {
+            //         res.data.data['nation'] = form.nation.slice();
+            //         commit('searchShoplistinsert', res.data.data);
+            //     }).catch((err) => {
+            //         console.log(err);
+            //     })
         },
         getItemlist({ commit }, form) {
             axios.post('http://localhost:3000/search/getItemlist', form)

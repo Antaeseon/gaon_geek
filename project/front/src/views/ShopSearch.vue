@@ -46,8 +46,9 @@
 
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
-            <v-flex v-if="showShop[index]"
-            v-for="(i, index) in searchShoplist"
+            <v-flex
+            v-if="filteredShoplist[index].shop_name.toLowerCase().search(shopNameKeyword.toLowerCase()) != -1"
+            v-for="(i, index) in filteredShoplist"
             :key="i._id" xs4 style="padding-bottom:80px;">
               <a style="color:black">
                 <v-img
@@ -66,14 +67,6 @@
             </v-flex>
           </v-layout>
         </v-container>
-
-        <!-- <div class="text-xs-center">
-        <v-pagination
-          v-model="page"
-          :length="5"
-          circle
-        ></v-pagination>
-        </div>-->
       </v-container>
     </v-layout>
     <v-dialog v-model="dialog" max-width="600px">
@@ -93,31 +86,28 @@ import { mapActions, mapState } from "vuex";
 export default {
   data: () => ({
     dialog: false,
+    shoplist: [],
+    filteredShoplist: [],
     shopNameKeyword: '',
     locationKeyword: '',
     distanceKeyword: 10,
     distance: [5, 10, 20, 40, 100],
     show: [true, true],
-    locations : [
-    {
-      // 서울
-      // position: {
-      //   lat: 37.541,
-      //   lng: 126.986,
-      // },
-    }
-  ]
   }),
+  async created() {
+    var res = await this.$http.post(
+      `http://localhost:3000/search/getNationShoplist/`, { nation: this.$route.params.nation }
+    );
+    this.shoplist = res.data.data;
+    this.filteredShoplist = res.data.data;
+  },
   methods: {
     ...mapActions(['getItemlist','renew_showShop']),
-    show_map() {
-      // this.dialog = true;
-      // this.mounted();
-    },
     show_itemlist(id) {
       this.getItemlist({shop_id: id});
     },
     filter() {
+      this.filteredShoplist = [];
       var distanceFilter = async function(keyword) {
         const google = await gmapsInit();
         const geocoder = new google.maps.Geocoder();
@@ -130,25 +120,18 @@ export default {
           });
         });
       }
-        for(let index = 0; index < this.searchShoplist.length; index++)
+        for(let index = 0; index < this.shoplist.length; index++)
         {
           distanceFilter(this.locationKeyword).then((result) =>{
           if(result.tag != 'Error')
-            {
-              let dist = this.computeDistance(result.lat,result.lon, this.searchShoplist[index].lat, this.searchShoplist[index].lon);
-              if(dist <= this.distanceKeyword) this.show[index] = true;
-              else this.show[index] = false;
-            }
-            else this.show[index] = true;
+          {
+            let dist = this.computeDistance(result.lat,result.lon, this.shoplist[index].lat, this.shoplist[index].lon);
+            if(dist <= this.distanceKeyword) this.filteredShoplist.push(this.shoplist[index]);
+          }
+          else this.filteredShoplist.push(this.shoplist[index]);
           });
-          this.show[index] = this.show[index] && (this.searchShoplist[index].shop_name.toLowerCase().search(this.shopNameKeyword.toLowerCase()) != -1);
         }
-        this.renew_showShop({show: this.show});
     },
-    // search(index) {
-    //   if( ) return true;
-    //   else return false;
-    // },
     computeDistance(lat1, lon1, lat2, lon2) {
       let theta = lon1 - lon2;
       let dist = Math.sin(this.deg2rad(lat1)) * Math.sin(this.deg2rad(lat2)) + Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * Math.cos(this.deg2rad(theta));
@@ -166,52 +149,9 @@ export default {
     {
       return (rad * 180 / Math.PI);
     },
-    async mounted() {
-      try {
-        const google = await gmapsInit();
-        const geocoder = new google.maps.Geocoder();
-        const map = new google.maps.Map(this.$el);
-        var loc = "";
-        if(this.isSeller)
-        {
-          loc = this.sellerInfo.location;
-          this.locations.push({position : { lat: this.sellerInfo.lat , lng: this.sellerInfo.lon }});
-        }
-        else
-          loc = 'Korea';
-        geocoder.geocode({ address: loc }, (results, status) => {
-          if (status !== `OK` || !results[0]) {
-            throw new Error(status);
-          }
-          map.setCenter(results[0].geometry.location);
-          map.fitBounds(results[0].geometry.viewport);
-        });
-
-        const markerClickHandler = (marker) => {
-          map.setZoom(13);
-          map.setCenter(marker.getPosition());
-        };
-
-        const markers = this.locations
-          .map((location) => {
-            const marker = new google.maps.Marker({ ...location, map, });
-            marker.addListener(`click`, () => markerClickHandler(marker));
-
-            return marker;
-          });
-
-        // eslint-disable-next-line no-new
-        new MarkerClusterer(map, markers, {
-          imagePath: `https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m`,
-        });
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error);
-      }
-    },
   },
   computed: {
-    ...mapState(['searchShoplist','showShop']),
+    ...mapState(['showShop']),
   },
 }
 </script>
