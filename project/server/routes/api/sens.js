@@ -27,7 +27,6 @@ router.post('/sendMessage', async function (req, res, next) {
             console.log(err);
             res.status(500).send({message:err})
         });
-
 });
 
 module.exports = router;

@@ -6,7 +6,7 @@
       <td class="text-xs-left">{{ props.item.about_us }}</td>
       <!-- 다이어로그!! -->
       <td class="text-xs-left">
-        <v-dialog v-model="dialog">
+        <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
           <template v-slot:activator="{ on }">
             <v-btn small dark v-on="on">Normal</v-btn>
           </template>
@@ -105,3 +105,5 @@ export default {
   }
 };
 </script>
+<style>
+</style>
