@@ -117,13 +117,13 @@ export default new Router({
                 import ( /* webpackChunkName: "about" */ './views/SelectCountry.vue')
         },
         {
-            path: '/shopsearch',
+            path: '/shopsearch/:nation',
             name: 'shopsearch',
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/ShopSearch.vue')
         },
         {
-            path: '/itemsearch',
+            path: '/itemsearch/:id',
             name: 'itemsearch',
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/ItemSearch.vue')
