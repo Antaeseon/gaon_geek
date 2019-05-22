@@ -151,7 +151,7 @@
                           </v-menu>
                         </v-flex>
                         <v-btn @click="requestPay">결제하기</v-btn>
-                        <v-btn @click="computeDate">찜하기</v-btn>
+                        <v-btn @click="makeTrade">찜하기</v-btn>
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -185,13 +185,16 @@ export default {
       menu2: false,
       daylength: null,
       statusFilter: "",
-      t_method: ""
+      t_method: "",
+      t_price:0
     };
   },
   async created() {
     console.log("여여여여", this.$route.params.id);
 
-    await this.$http.get(`http://localhost:3000/trade/plusVisitor/${this.$route.params.id}`)
+    await this.$http.get(
+      `http://localhost:3000/trade/plusVisitor/${this.$route.params.id}`
+    );
     var res = await this.$http.get(
       `http://localhost:3000/search/getOneItem/${this.$route.params.id}`
     );
@@ -200,11 +203,10 @@ export default {
         this.$route.params.id
       }`
     );
-
     this.mainItem = res.data.response;
     this.items = this.mainItem.imageUrl;
     this.tradeList = rest.data.response;
-    console.log("ddd", rest.data.response);
+    console.log("ddd", this.mainItem);
   },
 
   methods: {
@@ -223,14 +225,15 @@ export default {
         borrow_date: this.dates,
         return_date: this.datesend,
         is_buy: false,
-        trade_method: this.t_method
+        trade_method: this.t_method,
+        total_price:this.t_price
       });
     },
     computeDate() {
       console.log("dd", this.dates, "dd", this.datesend);
       var sarray = this.dates.split("-");
       var endarray = this.datesend.split("-");
-      var tarray=sarray[0]+sarray[1]+sarray[2]
+      var tarray = sarray[0] + sarray[1] + sarray[2];
       var s_date = new Date(sarray[0], Number(sarray[1]) - 1, sarray[2]);
       var e_date = new Date(endarray[0], Number(endarray[1]) - 1, endarray[2]);
 
@@ -238,41 +241,41 @@ export default {
         (e_date.getTime() - s_date.getTime()) / 1000 / 60 / 60 / 24
       );
       this.daylength = between;
-
     },
-    allowedDates: function(val) {
-      var temp=val.substring(0,10).split("-")
-      var temp_date = temp[0]+temp[1]+temp[2]
-       for (var i = 0; i < this.tradeList.length; i++) {
-        console.log(this.tradeList[i].borrow_date);
-        var sarray = this.tradeList[i].borrow_date.substring(0, 10).split("-");
-         var tarray=sarray[0]+sarray[1]+sarray[2]
-        var endarray = this.tradeList[i].return_date.substring(0, 10).split("-");
-        var tearray=endarray[0]+endarray[1]+endarray[2]
-        if(temp_date>=tarray&&temp_date<=tearray)
-          return false
-      }
-      if (
-        parseInt(val.substring(5, 7)) <
-        parseInt(new Date().toISOString().substring(5, 7))
-      )
-        return false;
-      else if (
-        parseInt(val.substring(5, 7)) >
-        parseInt(new Date().toISOString().substring(5, 7))
-      )
-        return true;
-      if (
-        parseInt(val.split("-")[2], 10) >
-        parseInt(
-          new Date()
-            .toISOString()
-            .substr(0, 10)
-            .split("-")[2],
-          10
+    allowedDates: function(val) {        
+        var temp = val.substring(0, 10).split("-");
+        var temp_date = temp[0] + temp[1] + temp[2];
+        for (var i = 0; i < this.tradeList.length; i++) {
+          console.log(this.tradeList[i].borrow_date);
+          var sarray = this.tradeList[i].borrow_date.substring(0, 10).split("-");
+          var tarray = sarray[0] + sarray[1] + sarray[2];
+          var endarray = this.tradeList[i].return_date
+            .substring(0, 10)
+            .split("-");
+          var tearray = endarray[0] + endarray[1] + endarray[2];
+          if (temp_date >= tarray && temp_date <= tearray) return false;
+        }
+        if (
+          parseInt(val.substring(5, 7)) <
+          parseInt(new Date().toISOString().substring(5, 7))
         )
-      )
-        return true;
+          return false;
+        else if (
+          parseInt(val.substring(5, 7)) >
+          parseInt(new Date().toISOString().substring(5, 7))
+        )
+          return true;
+        if (
+          parseInt(val.split("-")[2], 10) >
+          parseInt(
+            new Date()
+              .toISOString()
+              .substr(0, 10)
+              .split("-")[2],
+            10
+          )
+        )
+          return true;
     },
     requestPay: function() {
       // IMP.request_pay(param, callback) 호출
@@ -291,6 +294,7 @@ export default {
         }
         totalPrice = this.mainItem.price * this.daylength;
       }
+      this.t_price=totalPrice
       Vue.IMP().request_pay(
         {
           pg: "html5_inicis",

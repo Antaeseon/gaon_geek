@@ -11,7 +11,8 @@ const tradeSchema= new Schema({
         // required: [true, 'Seller_id field is required'],
     }, 
     item_id: {
-        type: String,
+        type : Schema.Types.ObjectId,
+        ref:'item'
         // required: [true, 'Item_id field is required'],
     },
     borrow_date:{
@@ -32,6 +33,9 @@ const tradeSchema= new Schema({
     trade_status:{ // 0일때는 대여 전 1일때는 대여중 2일때는 거래 종료
         type:Number,
         default:0
+    },
+    total_price:{
+        type:Number
     }
 })
 

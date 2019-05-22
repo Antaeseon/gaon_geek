@@ -8,50 +8,30 @@
       <v-tab-item>
         <v-card flat>
           <v-card-text>
-            <v-timeline>
-              <v-timeline-item v-for="n in 4" :key="n" color="red lighten-2" large>
-                <template v-slot:opposite>
-                  <span>Tus eu perfecto</span>
-                </template>
-                <v-card class="elevation-2">
-                  <v-card-title class="headline">Lorem ipsum</v-card-title>
-                  <v-card-text>Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an salutandi sententiae.</v-card-text>
-                </v-card>
-              </v-timeline-item>
-            </v-timeline>
+            <v-data-table :headers="headers2" :items="buyItem" class="elevation-1">
+              <template v-slot:items="props">
+                <td>{{ props.item.item_id.item_name }}</td>
+                <td class="text-xs-left">{{ props.item.pay_date.substring(0,10) }}</td>
+                <td class="text-xs-left">{{ props.item.total_price }}(Won)</td>
+                <td class="text-xs-left">
+                  <v-btn small color="primary" :to="{name: 'detail',params: { id: props.item.item_id._id }  }">Detail</v-btn>
+                </td>
+              </template>
+            </v-data-table>
           </v-card-text>
         </v-card>
       </v-tab-item>
       <v-tab-item>
         <v-card flat>
           <v-card-text>
-            <v-data-table :headers="headers" :items="dets" class="elevation-1">
+            <v-data-table :headers="headers" :items="borrowItem" class="elevation-1">
               <template v-slot:items="props">
-                <td>{{ props.item.shop_name }}</td>
-                <td class="text-xs-left">{{ props.item.location }}</td>
-                <td class="text-xs-left">{{ props.item.about_us }}</td>
-                <!-- 다이어로그!! -->
+                <td>{{ props.item.item_id.item_name }}</td>
+                <td class="text-xs-left">{{ props.item.borrow_date.substring(0,10) }}</td>
+                <td class="text-xs-left">{{ props.item.return_date.substring(0,10) }}</td>
+                <td class="text-xs-left">{{ props.item.total_price }}(Won)</td>
                 <td class="text-xs-left">
-                  <v-dialog v-model="dialog" width="500">
-                    <template v-slot:activator="{ on }">
-                      <v-btn color="red lighten-2" dark v-on="on">Click</v-btn>
-                    </template>
-
-                    <v-card>
-                      <v-card-title class="headline grey lighten-2" primary-title>Auth Image</v-card-title>
-                      <v-img src="https://picsum.photos/510/300?random" aspect-ratio="1.7"></v-img>
-                      <v-divider></v-divider>
-
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" flat @click="dialog = false">Close</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                </td>
-                <!-- 다이어로그 끝 -->
-                <td class="text-xs-left">
-                  <v-btn @click="Auth(props.item.id)">OK</v-btn>
+                  <v-btn small color="primary" :to="{name: 'detail',params: { id: props.item.item_id._id }  }">Detail</v-btn>
                 </td>
               </template>
             </v-data-table>
@@ -67,43 +47,54 @@
   </div>
 </template>
 <script>
+var _ = require('lodash');
 export default {
   data() {
     return {
       active: null,
       dialog: false,
-
+      mainItem: [],
       headers: [
         {
-          text: "SHOP_NAME",
+          text: "상품명",
           align: "left",
           sortable: false,
           value: "id"
         },
-        { text: "Location", value: "lat", sortable: false },
-        { text: "About_us", sortable: false },
-        { text: "Image", sortable: false },
-        { text: "Auth", sortable: false }
+        { text: "대여일", sortable: false },
+        { text: "반납일", sortable: false },
+        { text: "금액", sortable: false },
+        { text: "상세정보", sortable: false }
       ],
-      dets: []
+            headers2: [
+        {
+          text: "상품명",
+          align: "left",
+          sortable: false,
+          value: "id"
+        },
+        { text: "구매일", sortable: false },
+        { text: "금액", sortable: false },
+        { text: "상세정보", sortable: false }
+      ],
+
+      buyItem: [],
+      borrowItem:[]
     };
   },
   async created() {
-    var tt = await this.$http.get("http://localhost:3000/enrollSeller/lists");
-    this.dets = tt.data.body;
-    console.log("이건", this.dets);
+    var tlist = await this.$http.post(
+      `http://localhost:3000/trade/getItemListByUserId`,
+      {
+        id: this.$store.state.id
+      }
+    );
+    this.buyItem=_.filter(tlist.data.response,{trade_method:'buy'})
+    this.borrowItem=_.filter(tlist.data.response,{trade_method:'borrow'})
   },
   methods: {
     image(prop) {
       console.log(prop);
-    },
-    async Auth(prop) {
-      console.log(prop);
-      await this.$http.post("http://localhost:3000/enrollSeller/accept", {
-        id: prop
-      });
-      var tt = await this.$http.get("http://localhost:3000/enrollSeller/lists");
-      this.dets = tt.data.body;
     }
   }
 };

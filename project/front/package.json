@@ -13,6 +13,7 @@
     "axios": "^0.18.0",
     "expose-loader": "^0.7.5",
     "jquery": "^3.4.0",
+    "lodash": "^4.17.11",
     "mongoose": "^5.5.5",
     "sass-loader": "^7.1.0",
     "vue": "^2.6.6",

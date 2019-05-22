@@ -23,7 +23,6 @@ export default new Vuex.Store({
 
         // Item_Search State
         nation: null,
-
         seller: null,
         itemAvailable: null,
         size: null,
@@ -140,9 +139,6 @@ export default new Vuex.Store({
                 price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
                 state.cnt_length.push(i)
-
-
-
                 state.all_info[i] = {
 
                     item_name: payload[i].item_name,

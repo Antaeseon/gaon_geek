@@ -6,6 +6,7 @@
         "start": "nodemon ./bin/www"
     },
     "dependencies": {
+        "async": "^3.0.0",
         "aws-sdk": "^2.453.0",
         "axios": "^0.18.0",
         "body-parser": "^1.18.3",
