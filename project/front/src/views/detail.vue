@@ -190,6 +190,8 @@ export default {
   },
   async created() {
     console.log("여여여여", this.$route.params.id);
+
+    await this.$http.get(`http://localhost:3000/trade/plusVisitor/${this.$route.params.id}`)
     var res = await this.$http.get(
       `http://localhost:3000/search/getOneItem/${this.$route.params.id}`
     );
@@ -198,6 +200,7 @@ export default {
         this.$route.params.id
       }`
     );
+
     this.mainItem = res.data.response;
     this.items = this.mainItem.imageUrl;
     this.tradeList = rest.data.response;
