@@ -102,9 +102,9 @@ export default {
     this.filteredShoplist = res.data.data;
   },
   methods: {
-    ...mapActions(['getItemlist','renew_showShop']),
+    ...mapActions(['getItemlistforSearch']),
     show_itemlist(id) {
-      this.getItemlist({shop_id: id});
+      this.getItemlistforSearch({shop_id: id});
     },
     filter() {
       this.filteredShoplist = [];
