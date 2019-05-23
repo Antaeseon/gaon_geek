@@ -68,10 +68,36 @@
         ></v-select>
           </v-flex>
         </v-layout>
+        <div><h3>가격대</h3></div>
+        <v-radio-group 
+        class="justify-center" 
+        v-model="priceORrental" 
+        color="red" 
+        row 
+        >
+          <v-radio label="구매" value="구매" ></v-radio>
+          <v-radio label="렌탈" value="렌탈" ></v-radio>
+        </v-radio-group>
+        <v-layout>
+          <v-flex xs6>
+          <v-text-field 
+            label="최소 가격"
+            v-model="min_price"
+          ></v-text-field>
+          </v-flex>
+          <v-flex xs6>
+          <v-text-field 
+            label="최대 가격"
+            v-model="max_price"
+          ></v-text-field>
+          </v-flex>
+        </v-layout>
         <v-btn @click="filter()">
            조회하기
         </v-btn>
-
+        <v-btn @click="clear()">
+           초기화
+        </v-btn>
         </v-flex>
         </v-layout>
         
@@ -113,6 +139,9 @@
     name: 'paginated-list',
     data: () => ({
       item_name:"",
+      max_price:"",
+      min_price:"",
+      priceORrental: "",
       selected_category: [],
       selected_brand: [],
       selected_tag: [],
@@ -167,6 +196,10 @@
     ...mapActions(['pass_id']),
     filter(){
       let picked_cnt=[];
+      if(this.beforefiltering() === false)
+      {
+        return;
+      }
       for(var i=0; i<this.all_info.length; i++){
         var use_cnt=1;
         if(this.item_name !== '')
@@ -212,6 +245,26 @@
           }
           if(tagNum === 0) use_cnt--;
         }
+        let filterPrice = null;
+        if(this.priceORrental === '판매') filterPrice = this.all_info[i].rprice;
+        else filterPrice = this.all_info[i].rrental;
+
+        if(this.min_price !== '')
+        {
+          // 최소 가격
+          if(Number(this.min_price) > filterPrice)
+          {
+            use_cnt--;
+          }
+        }
+        if(this.max_price !== '')
+        {
+          // 최소 가격
+          if(Number(this.max_price) < filterPrice)
+          {
+            use_cnt--;
+          }
+        }
         if(use_cnt == 1)
         {
           picked_cnt.push(i);
@@ -220,7 +273,32 @@
       } 
       this.uniq = picked_cnt.slice();
     },
-
+    beforefiltering(){
+      if(this.min_price !== "" || this.max_price !== "")
+        if(this.priceORrental === "")
+        {
+          alert("구매인지 렌탈인지 선택해주세요.");
+          return false;
+        }
+      if(this.min_price !== "" && this.max_price !== "")
+        if(this.min_price > this.max_price)
+        {
+          alert("최소 가격이 최대 가격보다 큽니다 재설정해주세요.");
+          return false;
+        }
+      return true;
+    },
+    clear()
+    {
+      this.item_name = "";
+      this.max_price = "";
+      this.min_price = "";
+      this.priceORrental = "";
+      this.selected_category = [];
+      this.selected_brand = [];
+      this.selected_tag = [];
+      this.selected_color = [];
+    }
   },
    
 }
