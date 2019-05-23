@@ -20,30 +20,30 @@
             append-icon="search"
             v-model="item_name"
           ></v-text-field>
-            <div><h3>사이즈</h3></div>
-            <v-radio-group 
-            class="justify-center" 
-            v-model="size" 
-            color="red" 
-            row 
-            >
-              <v-radio label="XL" value="XL" ></v-radio>
-              <v-radio label="L" value="L" ></v-radio>
-              <v-radio label="M" value="M"  ></v-radio>
-              <v-radio label="S" value="S"  ></v-radio>
-              <v-radio label="NONE" value="NONE"  ></v-radio>
-            </v-radio-group>
-            
-          
+          <v-layout>
+            <v-flex xs6>
             <div><h3>브랜드 선택</h3></div>
         <v-select
             v-model="selected_brand"
             :items="brand"
-            label="Select brand"
+            label="Select Brand"
             chips
             multiple
             persistent-hint
         ></v-select>
+            </v-flex>
+            <v-flex xs6>
+            <div><h3>색상 선택</h3></div>
+        <v-select
+            v-model="selected_color"
+            :items="color"
+            label="Select Color"
+            chips
+            multiple
+            persistent-hint
+        ></v-select>
+            </v-flex>
+          </v-layout>
         <v-layout>
           <v-flex xs6>
           <div><h3>카테고리</h3></div>
@@ -116,12 +116,13 @@
       selected_category: [],
       selected_brand: [],
       selected_tag: [],
-      size:"",
+      selected_color: [],
       itemAvailable: null,
       brand: attribute.brand,
       tag: attribute.tag,
       category: attribute.category,
       status: attribute.status,
+      color: attribute.color,
       all_info: [],
       all_index: [],
       uniq: [],
@@ -147,6 +148,7 @@
             rprice: res.data.data[i].price,
             rrental: res.data.data[i].rental,
             size: res.data.data[i].size,
+            color: res.data.data[i].color,
             status: res.data.data[i].status,
             imageUrl: res.data.data[i].imageUrl,
             shop_id: res.data.data[i].shop_id,
@@ -173,10 +175,10 @@
             use_cnt--;
           }
         }
-        if(this.size !== '')
+        if(this.selected_color.toString() !== '')
         {
-          // 사이즈
-          if(this.size !== this.all_info[i].size)
+        // 색
+          if(this.selected_color.indexOf(this.all_info[i].color) === -1)
           {
             use_cnt--;
           }
