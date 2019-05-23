@@ -187,6 +187,15 @@ export default {
       Token: "Token"
     })
   },
+  async created(){
+    if(this.$store.state.Token!=null){
+      var temp=await this.$http.get(`http://localhost:3000/user/${this.$store.state.id}`)
+      console.log('ddd',temp.data.response)
+      if(temp.data.response.isSeller)
+        this.$store.state.isSeller=true
+    }
+    console.log('asdas',this.$store.state.isSeller)
+  },
   methods: {
     async login() {
       try {
