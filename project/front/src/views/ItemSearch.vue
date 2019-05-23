@@ -89,6 +89,7 @@
               <div style="text-align:center; color:#808080">{{status[all_info[i].status]}}</div>
               <div class="text-xs-center" @click="pass_id(all_info[i].object_id)" style="font-weight:bold; text-overflow:ellipsis; overflow:hidden;">{{all_info[i].item_name}}</div>
               <div style="text-align:center; color:#808080">{{all_info[i].price}}원</div>
+              <div style="text-align:center; color:#808080">{{all_info[i].rental}}(원/일)</div>
               </a>    
             </v-flex>
           </v-layout>
