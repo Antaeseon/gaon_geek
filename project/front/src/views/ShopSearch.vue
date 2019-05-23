@@ -53,7 +53,7 @@
               <a style="color:black">
                 <v-img
                   v-ripple
-                  :src="`https://s3.ap-northeast-2.amazonaws.com/wearever1/wearever.png`"
+                  :src="`https://s3.ap-northeast-2.amazonaws.com/wearever1/` + i.imageUrl[1]"
                   class="image"
                   alt="lorem"
                   contain

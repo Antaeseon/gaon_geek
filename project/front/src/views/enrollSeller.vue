@@ -158,7 +158,7 @@
                         </template>
                         <v-text-field
                         readonly
-                        label="Select Image"
+                        label="Select Authentication Image"
                         v-model="imageName"
                         prepend-icon='attach_file'
                         required
@@ -173,6 +173,24 @@
                             ref="image"
                             @change="onFilePicked"
                             accept="image/*"
+                        >
+                        <v-text-field
+                        readonly
+                        label="Select Shop Image"
+                        v-model="imageName2"
+                        prepend-icon='attach_file'
+                        required
+                        @click='pickFile2'
+                        @input="$v.imageName2.$touch()"
+                        @blur="$v.imageName2.$touch()"
+                        :error-messages="ImageErrors2"
+                        ></v-text-field>
+                        <input
+                            type="file"
+                            style="display: none"
+                            ref="image2"
+                            @change="onFilePicked2"
+                            accept="image2/*"
                         >
                         </v-card>
                        <v-btn
@@ -255,6 +273,7 @@
         about_us: { required },
         tag: { required },
         imageName: { required },
+        imageName2: { required },
         checkbox: {
         checked(val) {
         return val;
@@ -274,9 +293,12 @@
         nation: '',
         nation_lists : attribute.nation,
         imageName: '',
+        imageName2: '',
         imageUrl: '',
         imageFile: null,
+        imageFile2: null,
         imageNum: 0,
+        imageNum2: 0,
         checkbox: false,
         islocationError: false,
         userTerms: terms.userTerms,
@@ -326,6 +348,12 @@
         !this.$v.imageName.required && errors.push('Seller Authentication Image is required')
         return errors
         },
+        ImageErrors2 () {
+        const errors = []
+        if (!this.$v.imageName2.$dirty) return errors
+        !this.$v.imageName2.required && errors.push('Shop Image is required')
+        return errors
+        },
         checkboxErrors() {
             const errors = [];
             if (!this.$v.checkbox.$dirty) return errors;
@@ -372,6 +400,7 @@
                     formData.append('lon', results[0].geometry.location.lng());
                     var tempfileUrl = 'resources/images/' + this.imageName;
                     formData.append('img', this.imageFile);
+                    formData.append('img', this.imageFile2);
                     formData.append('imageUrl', tempfileUrl);
                     this.requestEnrollSeller(formData)
                 });
@@ -380,7 +409,9 @@
         pickFile () {
             this.$refs.image.click ()
         },
-      
+        pickFile2 () {
+            this.$refs.image2.click ()
+        },
 		onFilePicked (e) {
             const files = e.target.files
             this.imageNum = files.length
@@ -405,9 +436,32 @@
                 }
             }
         },
+    onFilePicked2 (e)
+    {
+      const files = e.target.files;
+      const fileElement = files[0];
+      if(fileElement !== undefined)
+      {
+        this.imageName2 = fileElement.name;
+        if(this.imageName2.lastIndexOf('.') <= 0)
+        {
+          return
+        }
+        const fr = new FileReader ();
+        fr.readAsDataURL(fileElement)
+        fr.addEventListener('load', () => {
+          this.imageFile2 = fileElement; // this is an image file that can be sent to server...
+        })
+      }
+      else
+      {
+        this.imageName2= '';
+        this.imageFile2= null;
+      }
+    },
         formBlankTest()
         {
-            return this.name !== '' && this.nation !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== [];
+            return this.name !== '' && this.nation !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== ''&& this.imageName2 !== '';
         },
     clear() {
         this.$v.$reset();

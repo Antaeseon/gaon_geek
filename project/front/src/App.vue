@@ -31,12 +31,12 @@
         </v-list-tile>-->
 
         <!-- mypage router로 지시 -->
-        <v-list-tile router :to="{name: 'googlemap'}" exact>
+        <v-list-tile v-if="isSeller" router :to="{name: 'googlemap'}" exact>
           <v-list-tile-action>
             <v-icon>place</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>googleMap</v-list-tile-title>
+            <v-list-tile-title>판매자 위치</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <!-- mypage router로 지시 -->

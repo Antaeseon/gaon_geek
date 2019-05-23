@@ -229,7 +229,8 @@ export default new Vuex.Store({
                         lon: res.data.body[0].lon,
                         enroll_Date: res.data.body[0].enroll_Date,
                         rating: res.data.body[0].rating,
-                        total_visit: res.data.body[0].total_visit
+                        total_visit: res.data.body[0].total_visit,
+                        imageUrl: res.data.body[0].imageUrl
                     }
                     commit('getSellerInfoSuccess', current);
                 }).catch((err) => {

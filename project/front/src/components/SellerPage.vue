@@ -185,6 +185,7 @@ export default {
         total_visit: store.state.sellerInfo.total_visit,
         rating: store.state.sellerInfo.rating,
         enroll_Date: store.state.sellerInfo.enroll_Date,
+        imageUrl: store.state.sellerInfo.imageUrl[1],
         size : attribute.size,
         category: attribute.category,
         tag: attribute.tag,
