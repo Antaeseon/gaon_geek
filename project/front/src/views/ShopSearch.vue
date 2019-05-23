@@ -57,7 +57,7 @@
         <v-card-text>
           <!-- Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running. -->
         <div>
-                    <!-- <div>
+                    <div>
                       <h2>Search and add a pin</h2>
                       <label>
                         <gmap-autocomplete
@@ -67,7 +67,7 @@
                       </label>
                       <br/>
 
-                    </div> -->
+                    </div>
                     <!-- <br> -->
                     <gmap-map
                       :center="center"
@@ -84,12 +84,16 @@
                       }"
                       style="width:550px;  height: 400px;"
                     >
+                
                       <gmap-marker
                         :key="index"
                         v-for="(m, index) in markers"
                         :position="m.position"
 
                       ></gmap-marker>
+                      
+                     
+
                     </gmap-map>
                   </div>
         </v-card-text>
@@ -178,6 +182,7 @@ import gmapsInit from './../utils/gmaps'
 import store from "./../store.js";
 import attribute from "./../attribute.js";
 import { mapActions, mapState } from "vuex";
+import GmapCustomMarker from 'vue2-gmap-custom-marker';
 
 
 export default {
@@ -191,11 +196,15 @@ export default {
     distance: [5, 10, 20, 40, 100],
     show: [true, true],
     center: { lat: 45.508, lng: -73.587 },
-    markers: [ ],
+    markers: [],
     places: [],
     currentPlace: null,
+    
   
   }),
+   components: {
+      'gmap-custom-marker': GmapCustomMarker
+  },
   mounted() {
     this.geolocate();
   },
@@ -213,7 +222,7 @@ export default {
     },
     filter() {
       this.filteredShoplist = [];
-      
+      this.markers=[];
       var distanceFilter = async function(keyword) {
         const google = await gmapsInit();
         const geocoder = new google.maps.Geocoder();
@@ -236,10 +245,12 @@ export default {
             if(dist <= this.distanceKeyword) this.filteredShoplist.push(this.shoplist[index]);
           }
           else this.filteredShoplist.push(this.shoplist[index]);
-          // console.log("index:"+index);
-          // console.log("this.filter:"+this.filteredShoplist[0].lat);
-          this.markers.push(this.shoplist[index].lat,this.shoplist[index].lon);
-
+          console.log("index:"+index);
+          console.log("this.filter:"+this.filteredShoplist[index].lat);
+          // this.markers.push(this.shoplist[index].lat,this.shoplist[index].lon);
+          // var marker = new google.maps.Marker({
+          //   position: {lat:this.shoplist[index].lat , lng: this.shoplist[index].lon }
+          // })
           });
         }
     },
@@ -247,18 +258,23 @@ export default {
       this.currentPlace = place;
     },
     addMarker() {
-      if (this.currentPlace) {
-     
+      // if (this.currentPlace) {
+        for(let index=0; index < this.shoplist.length; index++){
         const marker = {
-          lat: this.currentPlace.geometry.location.lat(),
-          lng: this.currentPlace.geometry.location.lng()
-        };
-        
-        this.markers.push({ position: marker });
-        this.places.push(this.currentPlace);
-        this.center = marker;
-        this.currentPlace = null;
-      }
+            // lat: this.currentPlace.geometry.location.lat(),
+            // lng: this.currentPlace.geometry.location.lng()
+              lat: this.filteredShoplist[index].lat,
+              lng: this.filteredShoplist[index].lon
+          };
+
+          console.log("lat:"+marker.lat);
+          console.log("lng:"+marker.lng);
+          this.markers.push({ position: marker });
+          // this.places.push(this.currentPlace);
+          // this.center = marker;
+          // this.currentPlace = null;
+        // }
+        }
     },
     geolocate: function() {
       navigator.geolocation.getCurrentPosition(position => {
