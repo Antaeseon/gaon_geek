@@ -39,7 +39,95 @@
               </v-flex>
               </v-layout>
               <v-btn @click="filter()">조회하기</v-btn>
-              <v-btn @click="show_map()">지도로 보기</v-btn>
+              <!-- <v-btn @click="show_map()">지도로 보기</v-btn> -->
+               
+    <v-btn
+      @click.stop="dialog = true"
+    >
+      지도로 보기
+    </v-btn>
+
+    <v-dialog
+      v-model="dialog"
+      max-width="600px"
+    >
+      <v-card>
+        <v-card-title class="headline">명품 중고 업체 위치</v-card-title>
+
+        <v-card-text>
+          <!-- Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running. -->
+        <div>
+                    <!-- <div>
+                      <h2>Search and add a pin</h2>
+                      <label>
+                        <gmap-autocomplete
+                          @place_changed="setPlace">
+                        </gmap-autocomplete>
+                        <button @click="addMarker">Add</button>
+                      </label>
+                      <br/>
+
+                    </div> -->
+                    <!-- <br> -->
+                    <gmap-map
+                      :center="center"
+                      :zoom="12"
+                      style="width:550px;  height: 400px;"
+                    >
+                      <gmap-marker
+                        :key="index"
+                        v-for="(m, index) in markers"
+                        :position="m.position"
+
+                      ></gmap-marker>
+                    </gmap-map>
+                  </div>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+         
+
+          <v-btn
+            color="green darken-1"
+            flat="flat"
+            @click="dialog = false"
+          >
+            확인
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-layout row justify-center>
+  </v-layout>
+               <!-- <div>
+                    <div>
+                      <h2>Search and add a pin</h2>
+                      <label>
+                        <gmap-autocomplete
+                          @place_changed="setPlace">
+                        </gmap-autocomplete>
+                        <button @click="addMarker">Add</button>
+                      </label>
+                      <br/>
+
+                    </div>
+                    <br>
+                    <gmap-map
+                      :center="center"
+                      :zoom="12"
+                      style="width:100%;  height: 400px;"
+                    >
+                      <gmap-marker
+                        :key="index"
+                        v-for="(m, index) in markers"
+                        :position="m.position"
+                        @click="center=m.position"
+                      ></gmap-marker>
+                    </gmap-map>
+                  </div> -->
+                  
             </v-flex>
           </v-layout>
         </v-container>
@@ -69,9 +157,7 @@
         </v-container>
       </v-container>
     </v-layout>
-    <v-dialog v-model="dialog" max-width="600px">
-      <div class="App"/>
-    </v-dialog>
+    
   </v-container>
 </template>
 
@@ -93,7 +179,14 @@ export default {
     distanceKeyword: 10,
     distance: [5, 10, 20, 40, 100],
     show: [true, true],
+    center: { lat: 45.508, lng: -73.587 },
+    markers: [ ],
+    places: [],
+    currentPlace: null
   }),
+  mounted() {
+    this.geolocate();
+  },
   async created() {
     var res = await this.$http.post(
       `http://localhost:3000/search/getNationShoplist/`, { nation: this.$route.params.nation }
@@ -108,6 +201,7 @@ export default {
     },
     filter() {
       this.filteredShoplist = [];
+      
       var distanceFilter = async function(keyword) {
         const google = await gmapsInit();
         const geocoder = new google.maps.Geocoder();
@@ -120,6 +214,7 @@ export default {
           });
         });
       }
+
         for(let index = 0; index < this.shoplist.length; index++)
         {
           distanceFilter(this.locationKeyword).then((result) =>{
@@ -132,6 +227,44 @@ export default {
           });
         }
     },
+     setPlace(place) {
+      this.currentPlace = place;
+    },
+    addMarker() {
+      if (this.currentPlace) {
+     
+        const marker = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng()
+        };
+        
+        this.markers.push({ position: marker });
+        this.places.push(this.currentPlace);
+        this.center = marker;
+        this.currentPlace = null;
+      }
+    },
+    geolocate: function() {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      });
+    },
+    initialize() {
+      var myOptions = {
+        zoom: 4,
+        center: new google.maps.LatLng(-33, 151),
+        panControl: false,
+        zoomControl: false,
+        scaleControl: true,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+      var map = new google.maps.Map(document.getElementById("map_canvas"),
+            myOptions);
+    },
+
     computeDistance(lat1, lon1, lat2, lon2) {
       let theta = lon1 - lon2;
       let dist = Math.sin(this.deg2rad(lat1)) * Math.sin(this.deg2rad(lat2)) + Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * Math.cos(this.deg2rad(theta));

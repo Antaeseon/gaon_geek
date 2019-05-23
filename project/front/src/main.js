@@ -7,6 +7,7 @@ import store from './store'
 import AccountKit from 'vue-facebook-account-kit'
 import LoadScript from 'vue-plugin-load-script';
 import IMP from 'vue-iamport'
+import * as VueGoogleMaps from "vue2-google-maps";
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
@@ -15,8 +16,20 @@ Vue.use(LoadScript);
 
 Vue.loadScript("https://code.jquery.com/jquery-1.12.4.min.js")
 
+Vue.use(VueGoogleMaps, {
+    load: {
+      key: "AIzaSyCN-EalhkgItu9dDWfcr02Ca0u7w64XN-I",
+      libraries: "places" // necessary for places input
+    }
+});
+
 
 new Vue({
+
+    el: "#app",
+    components: { App },
+    template: "<App/>",
+
     router,
     store,
     render: h => h(App)
