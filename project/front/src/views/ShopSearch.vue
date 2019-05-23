@@ -71,7 +71,17 @@
                     <!-- <br> -->
                     <gmap-map
                       :center="center"
+                      id="map"
                       :zoom="12"
+                      :options="{
+                          zoomControl: false,
+                          mapTypeControl: false,
+                          scaleControl: false,
+                          streetViewControl: false,
+                          rotateControl: false,
+                          fullscreenControl: false,
+                          disableDefaultUi: false
+                      }"
                       style="width:550px;  height: 400px;"
                     >
                       <gmap-marker
@@ -169,6 +179,7 @@ import store from "./../store.js";
 import attribute from "./../attribute.js";
 import { mapActions, mapState } from "vuex";
 
+
 export default {
   data: () => ({
     dialog: false,
@@ -182,7 +193,8 @@ export default {
     center: { lat: 45.508, lng: -73.587 },
     markers: [ ],
     places: [],
-    currentPlace: null
+    currentPlace: null,
+  
   }),
   mounted() {
     this.geolocate();
@@ -224,6 +236,10 @@ export default {
             if(dist <= this.distanceKeyword) this.filteredShoplist.push(this.shoplist[index]);
           }
           else this.filteredShoplist.push(this.shoplist[index]);
+          // console.log("index:"+index);
+          // console.log("this.filter:"+this.filteredShoplist[0].lat);
+          this.markers.push(this.shoplist[index].lat,this.shoplist[index].lon);
+
           });
         }
     },
