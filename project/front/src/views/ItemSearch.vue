@@ -92,12 +92,36 @@
           ></v-text-field>
           </v-flex>
         </v-layout>
+        <v-layout justify-space-between>
+          <v-flex xs10>
         <v-btn @click="filter()">
            조회하기
         </v-btn>
         <v-btn @click="clear()">
            초기화
         </v-btn>
+        </v-flex>
+        <v-flex xs5>
+          <v-btn-toggle v-model="selected_sorting">
+            <v-btn flat value="pu" @click="sorting('pu')">
+              <span>가격</span>
+              <v-icon>arrow_drop_up</v-icon>
+            </v-btn>
+            <v-btn flat value="pd" @click="sorting('pd')">
+              <span>가격</span>
+              <v-icon>arrow_drop_down</v-icon>
+            </v-btn>
+            <v-btn flat value="ru" @click="sorting('ru')">
+              <span>렌탈</span>
+              <v-icon>arrow_drop_up</v-icon>
+            </v-btn>
+            <v-btn flat value="rd" @click="sorting('rd')">
+              <span>렌탈</span>
+              <v-icon>arrow_drop_down</v-icon>
+            </v-btn>
+          </v-btn-toggle>
+          </v-flex>
+        </v-layout>
         </v-flex>
         </v-layout>
         
@@ -146,6 +170,7 @@
       selected_brand: [],
       selected_tag: [],
       selected_color: [],
+      selected_sorting: undefined,
       itemAvailable: null,
       brand: attribute.brand,
       tag: attribute.tag,
@@ -155,6 +180,7 @@
       all_info: [],
       all_index: [],
       uniq: [],
+      uniqBackup : []
     }),
   async created() {
     var res = await this.$http.post(
@@ -188,6 +214,7 @@
       }
     }
     this.uniq = this.all_index.slice();
+    this.uniqBackup = this.uniq.slice();
   },
   computed: {
     ...mapMutations(['searchItemlistinsert']),
@@ -272,6 +299,7 @@
         
       } 
       this.uniq = picked_cnt.slice();
+      this.uniqBackup = uniq.slice();
     },
     beforefiltering(){
       if(this.min_price !== "" || this.max_price !== "")
@@ -281,12 +309,52 @@
           return false;
         }
       if(this.min_price !== "" && this.max_price !== "")
-        if(this.min_price > this.max_price)
+        if(Number(this.min_price) > Number(this.max_price))
         {
           alert("최소 가격이 최대 가격보다 큽니다 재설정해주세요.");
           return false;
         }
       return true;
+    },
+    sorting(what)
+    {
+      if(this.selected_sorting === what)
+      {
+        this.uniq = this.uniqBackup.slice();
+      }
+      else
+      {
+        let pandr = [];
+        for(let i = 0; i < this.uniq.length; i++)
+          pandr.push({ 'index' : this.uniq[i] , 'price' : this.all_info[this.uniq[i]].rprice , 'rental' : this.all_info[this.uniq[i]].rrental });
+        if(what === 'pu')
+        {
+          pandr.sort(function(a,b) {
+            return a.price - b.price;
+          });
+        }
+        else if(what === 'pd')
+        { 
+          pandr.sort(function(a,b) {
+            return b.price - a.price;
+          });
+        }
+        else if(what === 'ru')
+        {
+          pandr.sort(function(a,b) {
+            return a.rental - b.rental;
+          });
+        }
+        else if(what === 'rd')
+        {
+          pandr.sort(function(a,b) {
+            return b.rental - a.rental;
+          });
+        }
+        this.uniq = [];
+        for(let j = 0; j < pandr.length; j++)
+          this.uniq[j] = pandr[j].index;
+      }
     },
     clear()
     {
@@ -298,6 +366,7 @@
       this.selected_brand = [];
       this.selected_tag = [];
       this.selected_color = [];
+      this.selected_sorting = "";
     }
   },
    
