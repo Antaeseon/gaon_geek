@@ -41,7 +41,16 @@
             chips
             multiple
             persistent-hint
-        ></v-select>
+        >
+          <!-- <template slot="item" slot-scope="data">
+            <v-list-tile-avatar>
+              <img :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/' + data.item.url" />
+            </v-list-tile-avatar>
+            <v-list-tile-content>
+              <v-list-tile-title v-html="data.item.color"></v-list-tile-title>
+            </v-list-tile-content>
+          </template> -->
+        </v-select>
             </v-flex>
           </v-layout>
         <v-layout>
@@ -299,7 +308,7 @@
         
       } 
       this.uniq = picked_cnt.slice();
-      this.uniqBackup = uniq.slice();
+      this.uniqBackup = this.uniq.slice();
     },
     beforefiltering(){
       if(this.min_price !== "" || this.max_price !== "")

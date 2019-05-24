@@ -13,6 +13,25 @@ export default {
     status: ['대여 가능', '대여 중', '판매 완료', '세탁 중', '배송 중', '수리 중'],
     nation: ['대한민국', '이탈리아', '일본', '호주', '영국', '미국', '프랑스', '중국', '독일', '인도'],
     color: ['Beige', 'Black', 'Blue', 'Brown', 'Charcoal', 'Gray', 'Green',
-        'Indigo', 'Khaki', 'Lime', 'Olive', 'Orange', 'Pink', 'Red', 'Sky', 'White', 'Yellow'
+        'Indigo', 'Khaki', 'Light Pink', 'Lime', 'Olive', 'Orange', "Pink", 'Red', 'Sky', 'White', 'Yellow'
     ],
+    //     color: [{ 'color': 'Beige', 'url': 'beige.png' },
+    //     { 'color': 'Black', 'url': 'black.png' },
+    //     { 'color': 'Blue', 'url': 'blue.png' },
+    //     { 'color': 'Brown', 'url': 'brown.png' },
+    //     { 'color': 'Charcoal', 'url': 'charcoal.png' },
+    //     { 'color': 'Gray', 'url': 'gray.png' },
+    //     { 'color': 'Green', 'url': 'green.png' },
+    //     { 'color': 'Indigo', 'url': 'indigo.png' },
+    //     { 'color': 'Khaki', 'url': 'khaki.png' },
+    //     { 'color': 'Light Pink', 'url': 'light_pink.png' },
+    //     { 'color': 'Lime', 'url': 'lime.png' },
+    //     { 'color': 'Olive', 'url': 'olive.png' },
+    //     { 'color': 'Orange', 'url': 'orange.png' },
+    //     { 'color': 'Pink', 'url': 'pink.png' },
+    //     { 'color': 'Red', 'url': 'red.png' },
+    //     { 'color': 'Sky', 'url': 'sky.png' },
+    //     { 'color': 'White', 'url': 'white.png' },
+    //     { 'color': 'Yellow', 'url': 'yellow.png' },
+    // ]
 }
