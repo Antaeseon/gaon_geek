@@ -42,7 +42,7 @@
               <!-- <v-btn @click="show_map()">지도로 보기</v-btn> -->
                
     <v-btn
-      @click.stop="dialog = true"
+      @click.stop="addMarker()"
     >
       지도로 보기
     </v-btn>
@@ -58,14 +58,14 @@
           <!-- Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running. -->
         <div>
                     <div>
-                      <h2>Search and add a pin</h2>
+                      <!-- <h2>Search and add a pin</h2>
                       <label>
                         <gmap-autocomplete
                           @place_changed="setPlace">
                         </gmap-autocomplete>
                         <button @click="addMarker">Add</button>
                       </label>
-                      <br/>
+                      <br/> -->
 
                     </div>
                     <!-- <br> -->
@@ -222,7 +222,6 @@ export default {
     },
     filter() {
       this.filteredShoplist = [];
-      this.markers=[];
       var distanceFilter = async function(keyword) {
         const google = await gmapsInit();
         const geocoder = new google.maps.Geocoder();
@@ -245,21 +244,20 @@ export default {
             if(dist <= this.distanceKeyword) this.filteredShoplist.push(this.shoplist[index]);
           }
           else this.filteredShoplist.push(this.shoplist[index]);
-          console.log("index:"+index);
-          console.log("this.filter:"+this.filteredShoplist[index].lat);
-          // this.markers.push(this.shoplist[index].lat,this.shoplist[index].lon);
-          // var marker = new google.maps.Marker({
-          //   position: {lat:this.shoplist[index].lat , lng: this.shoplist[index].lon }
-          // })
+        
           });
         }
     },
      setPlace(place) {
       this.currentPlace = place;
     },
+
+    // shop name, tag, shop사진, 클릭했을 때가 가장 좋음.
     addMarker() {
+      this.dialog = true;
+      this.markers=[];
       // if (this.currentPlace) {
-        for(let index=0; index < this.shoplist.length; index++){
+        for(let index=0; index < this.filteredShoplist.length; index++){
         const marker = {
             // lat: this.currentPlace.geometry.location.lat(),
             // lng: this.currentPlace.geometry.location.lng()
@@ -267,11 +265,12 @@ export default {
               lng: this.filteredShoplist[index].lon
           };
 
-          console.log("lat:"+marker.lat);
-          console.log("lng:"+marker.lng);
-          this.markers.push({ position: marker });
+          // console.log("lat:"+marker.lat);
+          // console.log("lng:"+marker.lng);
+          if(this.filteredShoplist[index].shop_name.toLowerCase().search(this.shopNameKeyword.toLowerCase()) != -1)
+            this.markers.push({ position: marker });
           // this.places.push(this.currentPlace);
-          // this.center = marker;
+          this.center = marker;
           // this.currentPlace = null;
         // }
         }
