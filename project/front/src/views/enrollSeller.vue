@@ -394,7 +394,11 @@
                     formData.append('location', this.location);
                     formData.append('nation', this.nation);
                     formData.append('about_us', this.about_us);
-                    formData.append('tag', this.tag);
+
+                    let parsedTag = [];
+                    parsedTag = this.parsingTag().slice();
+                    for(let i = 0; i < parsedTag.length; i++)
+                      formData.append('tag', parsedTag[i]);
                     formData.append('imageNum', this.imageNum);
                     formData.append('lat', results[0].geometry.location.lat());
                     formData.append('lon', results[0].geometry.location.lng());
@@ -459,10 +463,30 @@
         this.imageFile2= null;
       }
     },
-        formBlankTest()
-        {
-            return this.name !== '' && this.nation !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== ''&& this.imageName2 !== '';
-        },
+    parsingTag()
+    {
+      let s = this.tag.split('#');
+      
+      for(let i = 0; i < s.length; i++)
+      {
+        s[i] = s[i].trim().slice();
+      }
+      for(let i = 0; i < s.length; i++)
+      {
+        if(s[i] === '') s.splice(i, 1);
+      }
+      for(let i = 0; i < s.length; i++)
+      {
+        s[i] = '#' + s[i];
+      }
+      if(s === undefined) s = [];
+      else if(s.length === 1 && s[0] === '') s = [];
+      return s;
+    },
+    formBlankTest()
+    {
+        return this.name !== '' && this.nation !== '' && this.location !== '' && this.about_us !== '' && this.tag !== '' && this.imageName !== ''&& this.imageName2 !== '';
+    },
     clear() {
         this.$v.$reset();
         this.e1= 1,

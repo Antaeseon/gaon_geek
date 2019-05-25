@@ -25,7 +25,7 @@ const enrollSellerSchema = new Schema({
         required: [true, 'About us field is required']
     },
     tag: {
-        type: String,
+        type: [String],
         required: [true, 'Tag field is required']
     },
     imageNum: {
