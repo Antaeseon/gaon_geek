@@ -5,7 +5,7 @@ export default {
         'scarf', 'shorts', 'skinny Jean', 'skirt', 'slacks', 'slip on', 'slipper', 'sneakers', 'sunglasses', 'sports wear', 'sweater', 'tailored Jacket',
         'turtle Neck', 'trousers', 'vest', 'wallet', 'watch', 'windbreaker'
     ],
-    brand: ['GUCCI', 'HERMES', 'LOUIS VUITTON', 'CHANEL', 'PRADA', 'GIVENCHY', 'BOTTENGA VENETA', 'CELINE', 'SAINT LAURENT'],
+    brand: ['GUCCI', 'HERMES', 'LOUIS VUITTON', 'CHANEL', 'PRADA', 'GIVENCHY', 'ROLEX', 'CELINE', 'SAINT LAURENT','MARNI'],
     tag: ['spring', 'summer', 'fall', 'winter', 'limited edition',
         'luxurious', 'vintage', 'sleeveless', 'lace', 'see-through', 'stripe', 'dotted', 'pattern'
     ],
