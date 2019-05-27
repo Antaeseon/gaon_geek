@@ -56,52 +56,30 @@
 
         <v-card-text>
           <!-- Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running. -->
-        <div>
-                    <div>
-                      <!-- <h2>Search and add a pin</h2>
-                      <label>
-                        <gmap-autocomplete
-                          @place_changed="setPlace">
-                        </gmap-autocomplete>
-                        <button @click="addMarker">Add</button>
-                      </label>
-                      <br/> -->
-
-                    </div>
-                    <!-- <br> -->
-                    <gmap-map
-                      :center="center"
-                      id="map"
-                      :zoom="12"
-                      :options="{
+           <gmap-map ref="mymap" :options="{
                           zoomControl: false,
                           mapTypeControl: false,
                           scaleControl: false,
                           streetViewControl: false,
                           rotateControl: false,
                           fullscreenControl: false,
-                          disableDefaultUi: false
-                      }"
-                      style="width:550px;  height: 400px;"
-                    >
-                
-                      <gmap-marker
-                        :key="index"
-                        v-for="(m, index) in markers"
-                        :position="m.position"
+                          disableDefaultUi: false,
+           }"
+              :center="startLocation" :zoom="10" style="width: 100%; height: 300px">
+              
+              <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" @closeclick="infoOpened=false">
+              {{infoContent}}
+              </gmap-info-window>
 
-                      ></gmap-marker>
-                      
-                     
-
-                    </gmap-map>
-                  </div>
+              <gmap-marker v-for="(item, key) in coordinates" :key="key" :position="getPosition(item)" :clickable="true" @click="toggleInfo(item, key)" />
+            </gmap-map>
         </v-card-text>
 
         <v-card-actions>
+          
           <v-spacer></v-spacer>
 
-         
+      
 
           <v-btn
             color="green darken-1"
@@ -111,6 +89,7 @@
             확인
           </v-btn>
         </v-card-actions>
+
       </v-card>
     </v-dialog>
     <v-layout row justify-center>
@@ -195,11 +174,27 @@ export default {
     distanceKeyword: 10,
     distance: [5, 10, 20, 40, 100],
     show: [true, true],
-    center: { lat: 45.508, lng: -73.587 },
-    markers: [],
+    markers: [
+      
+    ],
     places: [],
     currentPlace: null,
-    
+
+    startLocation: {
+      lat: 0,
+      lng: 0
+    },
+    coordinates: {},
+    infoPosition: null,
+    infoContent: null,
+    infoOpened: false,
+    infoCurrentKey: null,
+    infoOptions: {
+      pixelOffset: {
+        width: 0,
+        height: -35
+      }
+    },
   
   }),
    components: {
@@ -207,6 +202,7 @@ export default {
   },
   mounted() {
     this.geolocate();
+   
   },
   async created() {
     var res = await this.$http.post(
@@ -222,6 +218,7 @@ export default {
     },
     filter() {
       this.filteredShoplist = [];
+      // this.window_open= [];
       var distanceFilter = async function(keyword) {
         const google = await gmapsInit();
         const geocoder = new google.maps.Geocoder();
@@ -254,26 +251,59 @@ export default {
 
     // shop name, tag, shop사진, 클릭했을 때가 가장 좋음.
     addMarker() {
+      console.log("A:"+this.startLocation.lat, this.startLocation.lng);
       this.dialog = true;
       this.markers=[];
+      let middle_lat = 0;
+      let middle_lon = 0;
       // if (this.currentPlace) {
-        for(let index=0; index < this.filteredShoplist.length; index++){
-        const marker = {
-            // lat: this.currentPlace.geometry.location.lat(),
-            // lng: this.currentPlace.geometry.location.lng()
-              lat: this.filteredShoplist[index].lat,
-              lng: this.filteredShoplist[index].lon
-          };
+      for(let index=0; index < this.filteredShoplist.length; index++){
+        this.coordinates[index] = {};
+        this.coordinates[index].full_name = this.filteredShoplist[index].shop_name.slice();
+        this.coordinates[index].lat = this.filteredShoplist[index].lat;
+        this.coordinates[index].lng = this.filteredShoplist[index].lon;
+        // console.log(this.coordinates);
+        middle_lat += this.coordinates[index].lat;
+        middle_lon += this.coordinates[index].lng;
+      }
+      middle_lat= middle_lat/this.filteredShoplist.length;
+      middle_lon= middle_lon/this.filteredShoplist.length;
+      this.startLocation.lat = middle_lat;
+      this.startLocation.lng = middle_lon;
 
-          // console.log("lat:"+marker.lat);
-          // console.log("lng:"+marker.lng);
-          if(this.filteredShoplist[index].shop_name.toLowerCase().search(this.shopNameKeyword.toLowerCase()) != -1)
-            this.markers.push({ position: marker });
-          // this.places.push(this.currentPlace);
-          this.center = marker;
-          // this.currentPlace = null;
-        // }
-        }
+      console.log("A:"+this.startLocation.lat, this.startLocation.lng);
+      //   const marker = {
+      //     // lat: this.currentPlace.geometry.location.lat(),
+      //     // lng: this.currentPlace.geometry.location.lng() v
+      //       lat: this.filteredShoplist[index].lat,
+      //       lng: this.filteredShoplist[index].lon,
+      //       open: false,
+      //   };
+
+      //   // console.log("lat:"+marker.lat);
+      //   // console.log("lng:"+marker.lng);
+      //   if(this.filteredShoplist[index].shop_name.toLowerCase().search(this.shopNameKeyword.toLowerCase()) != -1)
+      //   {
+      //     this.markers.push({ position: marker});
+      //   }
+          
+      //   // this.places.push(this.currentPlace);
+      //   this.center = marker;
+
+      //   // this.currentPlace = null;
+      // // }
+
+    },
+    
+    openWindow (index) {
+        this.markers.map(marker => {
+          this.$set(this.window_open[index], 'open', true);
+        });
+        console.log("windows:"+this.window_open[index].open);
+        // console.log("index:"+index)
+        // this.window_open[index]=true;
+        // console.log("window_open:"+this.window_open)
+        
     },
     geolocate: function() {
       navigator.geolocation.getCurrentPosition(position => {
@@ -283,19 +313,7 @@ export default {
         };
       });
     },
-    initialize() {
-      var myOptions = {
-        zoom: 4,
-        center: new google.maps.LatLng(-33, 151),
-        panControl: false,
-        zoomControl: false,
-        scaleControl: true,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      }
-      var map = new google.maps.Map(document.getElementById("map_canvas"),
-            myOptions);
-    },
-
+    
     computeDistance(lat1, lon1, lat2, lon2) {
       let theta = lon1 - lon2;
       let dist = Math.sin(this.deg2rad(lat1)) * Math.sin(this.deg2rad(lat2)) + Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * Math.cos(this.deg2rad(theta));
@@ -313,6 +331,23 @@ export default {
     {
       return (rad * 180 / Math.PI);
     },
+    getPosition: function(marker) {
+      return {
+        lat: parseFloat(marker.lat),
+        lng: parseFloat(marker.lng)
+      }
+    },
+    toggleInfo: function(marker, key) {
+      this.infoPosition = this.getPosition(marker)
+      this.infoContent = marker.full_name
+      if (this.infoCurrentKey == key) {
+        this.infoOpened = !this.infoOpened
+      } else {
+        this.infoOpened = true
+        this.infoCurrentKey = key
+      }
+    }
+    
   },
   computed: {
     ...mapState(['showShop']),
