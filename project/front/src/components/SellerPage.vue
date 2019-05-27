@@ -161,6 +161,7 @@
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" flat @click.stop="close">Close</v-btn>
                 <v-btn color="blue darken-1" flat @click.stop="submit">Save</v-btn>
+                <v-btn color="red darken-1" flat @click.stop="beforedeleteItem({ _id: id_copy })">Delete</v-btn>
                 </v-card-actions>
             </v-card>
             </v-dialog>
@@ -216,7 +217,7 @@ export default {
       ...mapState([ "itemlist" ]),
   },
   methods: {
-      ...mapActions(['modifyItem']),
+      ...mapActions(['modifyItem','deleteItem']),
       async submit()
       {
         this.dialog = false;
@@ -274,6 +275,11 @@ export default {
           if(this.statusFilter == '대여 불가' && status != 0 && status != 2) return true;
           if(this.statusFilter == '없음' || this.statusFilter == '') return true;
           else return false;
+      },
+      beforedeleteItem(form)
+      {
+          this.deleteItem({ _id: id_copy });
+          this.close();
       },
       clear()
       {

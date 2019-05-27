@@ -267,6 +267,16 @@ export default new Vuex.Store({
                     console.log(err);
                 })
         },
+        deleteItem({ commit }, form) {
+            form['shop_id'] = sessionStorage.getItem('id');
+            axios.post('http://localhost:3000/enrollItem/deleteItem', form)
+                .then(res => {
+                    let result = res.data.body;
+                    commit('getItemListSuccess', result);
+                }).catch((err) => {
+                    console.log(err);
+                })
+        },
         enrollItem({
             commit
         }, form) {

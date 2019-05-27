@@ -53,10 +53,11 @@
                     <v-card color="grey lighten-4" light>
                       <v-card-text>
                         <h2>상품명 : {{mainItem.item_name}}</h2>
+                        <hr>
                         <br>
                         판매가격 : {{mainItem.price}}
                         <br>
-                        1일당 : {{mainItem.rental}}
+                        대여가격 : {{mainItem.rental}}(1일)
                         <br>
                         <br>
                         <v-flex xs12 sm6>
@@ -79,7 +80,7 @@
                               :key="i"
                             >#{{t}}</v-chip>
                           </div>
-                          <v-flex xs3>
+                          <v-flex xs5>
                             <v-select :items="['렌탈', '구매']" label="구매방법" v-model="statusFilter"></v-select>
                           </v-flex>
 

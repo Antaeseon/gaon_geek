@@ -38,15 +38,41 @@
                 ></v-select>
               </v-flex>
               </v-layout>
+              <v-layout justify-space-between>
+              <v-flex xs3>
+                <v-select
+                :items="taglist"
+                v-model="selected_tag"
+                label="태그 검색"
+                chips
+                deletable-chips
+                @change="filter_etc"
+                ></v-select>
+              </v-flex>
+              <v-flex xs9>
               <v-btn @click="filter()">조회하기</v-btn>
               <v-btn @click="show_map()">지도로 보기</v-btn>
+              </v-flex>
+              <v-flex xs1>
+                <v-btn-toggle v-model="selected_sorting">
+                  <v-btn flat value="ru" @click="sorting('ru')">
+                    <span>평점</span>
+                    <v-icon>arrow_drop_up</v-icon>
+                  </v-btn>
+                  <v-btn flat value="rd" @click="sorting('rd')">
+                    <span>평점</span>
+                    <v-icon>arrow_drop_down</v-icon>
+                  </v-btn>
+                </v-btn-toggle>
+                </v-flex>
+              </v-layout>
             </v-flex>
           </v-layout>
         </v-container>
 
         <v-container fluid grid-list-sm>
           <v-layout row wrap>
-            <v-flex
+            <v-flex 
             v-if="filteredShoplist[index].shop_name.toLowerCase().search(shopNameKeyword.toLowerCase()) != -1"
             v-for="(i, index) in filteredShoplist"
             :key="i._id" xs4 style="padding-bottom:80px;">
@@ -61,8 +87,9 @@
                   @click ="show_itemlist(i.id)"
                 ></v-img>
                 <div style="text-align:center; font-weight:bold;">{{i.shop_name}}</div>
+                <div style="text-align:center;"><v-rating small v-model="i.rating" readonly></v-rating></div>
                 <div style="text-align:center; color:#808080;">{{i.location}}</div>
-                <div style="text-align:center; color:#808080;">{{i.tag}}</div>
+                <div style="text-align:center; color:#808080;">{{i.tag.toString().replace(/,/gi,' ')}}</div>
               </a>
             </v-flex>
           </v-layout>
@@ -88,23 +115,70 @@ export default {
     dialog: false,
     shoplist: [],
     filteredShoplist: [],
+    filteredShoplistBackup: [],
+    taglist: [],
+    selected_tag: '',
     shopNameKeyword: '',
     locationKeyword: '',
     distanceKeyword: 10,
     distance: [5, 10, 20, 40, 100],
     show: [true, true],
+    selected_sorting: undefined,
   }),
   async created() {
     var res = await this.$http.post(
       `http://localhost:3000/search/getNationShoplist/`, { nation: this.$route.params.nation }
     );
     this.shoplist = res.data.data;
+    for(let i = 0; i < this.shoplist.length; i++)
+      for(let j = 0; j < this.shoplist[i].tag.length; j++)
+      {
+        if(!this.taglist.includes(this.shoplist[i].tag[j])) this.taglist.push(this.shoplist[i].tag[j].slice());
+      }
     this.filteredShoplist = res.data.data;
+    for(let i = 0; i < res.data.data.length; i++)
+    {
+      this.filteredShoplistBackup[i] = { about_us : this.filteredShoplist[i].about_us.slice(),
+      enroll_Date : this.filteredShoplist[i].enroll_Date.slice(),
+      id : this.filteredShoplist[i].id.slice(),
+      imageNum : this.filteredShoplist[i].imageNum,
+      imageUrl : this.filteredShoplist[i].imageUrl.slice(),
+      lat : this.filteredShoplist[i].lat,
+      lon : this.filteredShoplist[i].lon,
+      location : this.filteredShoplist[i].location.slice(),
+      nation : this.filteredShoplist[i].nation.slice(),
+      rating : this.filteredShoplist[i].rating,
+      shop_name : this.filteredShoplist[i].shop_name.slice(),
+      total_visit : this.filteredShoplist[i].total_visit,
+      tag : this.filteredShoplist[i].tag.slice(),
+      _id : this.filteredShoplist[i]._id.slice() };
+    }
   },
   methods: {
     ...mapActions(['getItemlistforSearch']),
     show_itemlist(id) {
       this.getItemlistforSearch({shop_id: id});
+    },
+    sorting(what) {
+      if(this.selected_sorting === what)
+      {
+        this.filteredShoplist = this.filteredShoplistBackup.slice();
+      }
+      else
+      {
+        if(what === 'ru')
+        {
+          this.filteredShoplist.sort(function(a,b) {
+            return a.rating - b.rating;
+          });
+        }
+        else if(what === 'rd')
+        { 
+          this.filteredShoplist.sort(function(a,b) {
+            return b.rating - a.rating;
+          });
+        }
+      }
     },
     filter() {
       this.filteredShoplist = [];
@@ -131,6 +205,30 @@ export default {
           else this.filteredShoplist.push(this.shoplist[index]);
           });
         }
+    },
+    filter_etc()
+    {
+      if(this.selected_tag === null)
+      {
+        this.filteredShoplist = this.filteredShoplistBackup.slice();
+      }
+      else
+      {
+        this.filteredShoplist = this.filteredShoplistBackup.slice();
+        for(let index = 0; index < this.filteredShoplist.length; index++)
+        {
+          let isOk = false;
+          if(this.filteredShoplist[index].tag.includes(this.selected_tag))
+          {
+            isOk = true;
+          }
+          if(isOk === false)
+          {
+            this.filteredShoplist.splice(index,1);
+            index--;
+          }
+        }
+      }
     },
     computeDistance(lat1, lon1, lat2, lon2) {
       let theta = lon1 - lon2;

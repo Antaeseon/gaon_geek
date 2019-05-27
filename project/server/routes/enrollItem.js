@@ -100,6 +100,29 @@ router.post('/lists', function(req, res, next) {
     });
 });
 
+/* List all of the item of a users */
+/*
+    POST /enrollSeller/deleteItem
+    {
+        id
+    }
+*/
+router.post('/deleteItem', function(req, res, next) {
+    item.deleteOne({ _id: req.body._id }, function(err, result) {
+        if (err) {
+            res.status(500).send({ "Response": 500, "tag": err });
+        } else {
+            item.find({ shop_id: req.body.shop_id }, function(err, result) {
+                if (err) {
+                    res.status(500).send({ "Response": 500, "tag": err });
+                } else {
+                    res.status(202).send({ "Response": 202, "body": result });
+                }
+            });
+        }
+    })
+});
+
 /* Add a new item to the db */
 /*
     POST /enrollItem/modify
