@@ -20,6 +20,7 @@
     "vue-facebook-account-kit": "^0.1.0",
     "vue-iamport": "^0.1.2",
     "vue-router": "^3.0.1",
+    "vue2-gmap-custom-marker": "^5.5.0",
     "vue2-google-maps": "^0.10.6",
     "vuelidate": "^0.7.4",
     "vuetify": "^1.5.5",
