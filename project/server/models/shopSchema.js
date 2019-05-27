@@ -7,7 +7,7 @@ const ShopSchema = new Schema({
         type: String,
         required: [true, 'User id field is required'],
         unique: true
-    }, 
+    },
     location: {
         type: String,
         required: [true, 'Location field is required']
@@ -25,7 +25,7 @@ const ShopSchema = new Schema({
         required: [true, 'About us field is required']
     },
     tag: {
-        type: String,
+        type: [String],
         required: [true, 'Tag field is required']
     },
     lat: {

@@ -229,7 +229,8 @@ export default new Vuex.Store({
                         lon: res.data.body[0].lon,
                         enroll_Date: res.data.body[0].enroll_Date,
                         rating: res.data.body[0].rating,
-                        total_visit: res.data.body[0].total_visit
+                        total_visit: res.data.body[0].total_visit,
+                        imageUrl: res.data.body[0].imageUrl
                     }
                     commit('getSellerInfoSuccess', current);
                 }).catch((err) => {
@@ -259,6 +260,16 @@ export default new Vuex.Store({
         },
         getItemList({ commit }, form) {
             axios.post('http://localhost:3000/enrollItem/lists', form)
+                .then(res => {
+                    let result = res.data.body;
+                    commit('getItemListSuccess', result);
+                }).catch((err) => {
+                    console.log(err);
+                })
+        },
+        deleteItem({ commit }, form) {
+            form['shop_id'] = sessionStorage.getItem('id');
+            axios.post('http://localhost:3000/enrollItem/deleteItem', form)
                 .then(res => {
                     let result = res.data.body;
                     commit('getItemListSuccess', result);

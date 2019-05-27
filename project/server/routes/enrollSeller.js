@@ -54,7 +54,7 @@ let upload = multer({
         imageUrl
     }
 */
-router.post('/', upload.single('img'), function(req, res, next) {
+router.post('/', upload.array('img'), function(req, res, next) {
     // 이미 제출했는지 검사
     // console.log(req.file)
     User.find({ id: req.body.id }, function(err, result) {
@@ -64,6 +64,10 @@ router.post('/', upload.single('img'), function(req, res, next) {
             res.send({ "Response": 500, "tag": "There is no user which has a such name." });
         } else {
             if (result[0].isSeller === false) {
+                var imagelist = [];
+                for (var i = 0; i < 2; i++) {
+                    imagelist.push(req.files[i].key);
+                }
                 // enrollSeller Schema 구성
                 var enroll_obj = new enrollSeller({
                     id: req.body.id,
@@ -75,7 +79,7 @@ router.post('/', upload.single('img'), function(req, res, next) {
                     lat: req.body.lat,
                     lon: req.body.lon,
                     imageNum: req.body.imageNum,
-                    imageUrl: req.file.key
+                    imageUrl: imagelist
                 });
                 // 중복 제출 검사
                 enrollSeller.find({ id: req.body.id }, function(err, resultDupCheck) {

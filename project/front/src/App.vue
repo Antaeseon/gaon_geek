@@ -31,12 +31,12 @@
         </v-list-tile>-->
 
         <!-- mypage router로 지시 -->
-        <v-list-tile router :to="{name: 'googlemap'}" exact>
+        <v-list-tile v-if="isSeller" router :to="{name: 'googlemap'}" exact>
           <v-list-tile-action>
             <v-icon>place</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>googleMap</v-list-tile-title>
+            <v-list-tile-title>판매자 위치</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <!-- mypage router로 지시 -->
@@ -190,11 +190,9 @@ export default {
   async created(){
     if(this.$store.state.Token!=null){
       var temp=await this.$http.get(`http://localhost:3000/user/${this.$store.state.id}`)
-      console.log('ddd',temp.data.response)
       if(temp.data.response.isSeller)
         this.$store.state.isSeller=true
     }
-    console.log('asdas',this.$store.state.isSeller)
   },
   methods: {
     async login() {
