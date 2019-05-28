@@ -73,7 +73,8 @@
               <!-- <v-btn @click="show_map()">지도로 보기</v-btn> -->
     <v-dialog
       v-model="dialog"
-      max-width="600px"
+      max-width="800px"
+      height="800px"
     >
       <v-card>
         <v-card-title class="headline">명품 중고 업체 위치</v-card-title>
@@ -89,13 +90,31 @@
                           fullscreenControl: false,
                           disableDefaultUi: false,
            }"
-              :center="startLocation" :zoom="10" style="width: 100%; height: 300px">
+              :center="startLocation" :zoom="10" style="width: 100%; height: 500px">
               
               <gmap-info-window :options="infoOptions" :position="infoPosition" :opened="infoOpened" @closeclick="infoOpened=false">
-              {{infoContent}}
+                <v-layout fluid>
+              <v-flex 
+                xs12 >
+                    <v-img
+                      v-ripple
+                      :src="`https://s3.ap-northeast-2.amazonaws.com/wearever1/` + infoContent.imageUrl[1]"
+                      class="image"
+                      alt="lorem"
+                      contain
+                      aspect-ratio="1.1"
+                      @click ="show_itemlist(infoContent.id)"
+                    ></v-img>
+
+
+                    <div style="text-align:center; font-weight:bold;">{{infoContent.full_name}}</div>
+                    <div style="text-align:center;"><v-rating small v-model="infoContent.rating" readonly></v-rating></div>
+                    <div style="text-align:center; color:#808080;">{{infoContent.location}}</div>
+              </v-flex>
+                </v-layout>
               </gmap-info-window>
 
-              <gmap-marker v-for="(item, key) in coordinates" :key="key" :position="getPosition(item)" :clickable="true" @click="toggleInfo(item, key)" />
+              <gmap-marker v-for="(item, key) in coordinates" :key="key" :position="getPosition(item)" :clickable="true" @click="toggleInfo(item, key)"></gmap-marker>
             </gmap-map>
         </v-card-text>
 
@@ -215,7 +234,7 @@ export default {
     },
     coordinates: {},
     infoPosition: null,
-    infoContent: null,
+    infoContent: { 'full_name' : null, 'rating' : null, 'imageUrl' : ['wearever.png','wearever.png'], 'location' : null, 'id' : null},
     infoOpened: false,
     infoCurrentKey: null,
     infoOptions: {
@@ -358,7 +377,10 @@ export default {
         this.coordinates[index].full_name = this.filteredShoplist[index].shop_name.slice();
         this.coordinates[index].lat = this.filteredShoplist[index].lat;
         this.coordinates[index].lng = this.filteredShoplist[index].lon;
-        // console.log(this.coordinates);
+        this.coordinates[index].rating = this.filteredShoplist[index].rating;
+        this.coordinates[index].location = this.filteredShoplist[index].location;
+        this.coordinates[index].imageUrl = this.filteredShoplist[index].imageUrl;
+        this.coordinates[index].id = this.filteredShoplist[index].id;
         middle_lat += this.coordinates[index].lat;
         middle_lon += this.coordinates[index].lng;
       }
@@ -435,7 +457,12 @@ export default {
     },
     toggleInfo: function(marker, key) {
       this.infoPosition = this.getPosition(marker)
-      this.infoContent = marker.full_name
+      this.infoContent.full_name = marker.full_name;
+      this.infoContent.rating = marker.rating;
+      this.infoContent.imageUrl = marker.imageUrl;
+      this.infoContent.location = marker.location;
+      this.infoContent.id = marker.id;
+      console.log(marker);
       if (this.infoCurrentKey == key) {
         this.infoOpened = !this.infoOpened
       } else {
