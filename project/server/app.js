@@ -16,7 +16,7 @@ var searchRouter = require('./routes/search');
 var adminRouter = require('./routes/admin/admin')
 var tradeRouter = require('./routes/trade')
 var sensRouter = require('./routes/api/sens')
-
+var itemUpdate = require('./routes/itemUpdate')
 
 // 익스프레스 객체를 생성하고 환경 설정을 한다.
 
@@ -54,6 +54,7 @@ app.use('/enrollItem', enrollItemRouter);
 app.use('/search', searchRouter);
 app.use('/admin',adminRouter)
 app.use('/sens',sensRouter)
+app.use('/item',itemUpdate)
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
