@@ -200,7 +200,12 @@
     for (var i = 0; i < res.data.data.length; i++) {
       if(res.data.data[i].status !== 2)
       {
+<<<<<<< HEAD
+        console.log(res.data.data[i].status,'dd')
+        this.all_index.push(i);
+=======
         this.all_index.push(cnt);
+>>>>>>> fe26e7a807006d9fb88289ca8497ff1bcff5e17a
         let price = res.data.data[i].price;
         price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         let rental = res.data.data[i].rental;

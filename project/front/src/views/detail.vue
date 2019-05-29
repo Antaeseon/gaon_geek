@@ -16,7 +16,98 @@
               </v-tab-item>
               <v-tab-item>
                 <v-card flat>
-                  <v-card-text>{{ qna }}</v-card-text>
+                  <v-card-text>
+                    {{ qna }}
+                    <board></board>
+                    <v-dialog v-model="dialog" persistent max-width="290">
+                      <template v-slot:activator="{ on }">
+                        <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title class="headline">Use Google's location service?</v-card-title>
+                        <v-card-text>
+                          <v-card>
+                            <v-toolbar color="blue darken-4" dark>
+                              <v-toolbar-side-icon></v-toolbar-side-icon>
+                              <v-toolbar-title class="headline">Todo App</v-toolbar-title>
+
+                              <v-spacer></v-spacer>
+
+                              <v-btn icon>
+                                <v-icon>search</v-icon>
+                              </v-btn>
+                              <v-tooltip bottom>
+                                <template v-slot:activator="{ on }">
+                                  <v-btn icon @click="show = !show" v-on="on">
+                                    <v-icon
+                                      v-model="isDark"
+                                      @click="isDark = !isDark"
+                                    >{{ show ? 'check_circle' : 'check_circle_outline' }}</v-icon>
+                                  </v-btn>
+                                </template>
+                                <span>Dark mode</span>
+                              </v-tooltip>
+                            </v-toolbar>
+
+                            <v-list two-line subheader>
+                              <v-container>
+                                <v-subheader class="headline">{{day}} , {{date}}{{ord}}</v-subheader>
+                                <v-spacer></v-spacer>
+
+                                <p class="text-xs-right">
+                                  <b>{{todos.length}}</b> Tasks
+                                </p>
+
+                                <v-flex xs12>
+                                  <v-text-field
+                                    clearable
+                                    color="white"
+                                    v-model="newTodo"
+                                    id="newTodo"
+                                    name="newTodo"
+                                    label="Type your task"
+                                    @keyup.enter="addTodo"
+                                  ></v-text-field>
+                                </v-flex>
+                              </v-container>
+                              <v-subheader
+                                class="subheading"
+                                v-if="todos.length == 0"
+                              >You have 0 Tasks, add some</v-subheader>
+                              <v-subheader
+                                class="subheading"
+                                v-elseif="todos.length == 1"
+                              >Your Tasks</v-subheader>
+                              <div v-for="(todo, i) in todos" :key="i">
+                                <v-list-tile avatar>
+                                  <v-list-tile-action>
+                                    <v-checkbox v-if="!todo.done" v-model="todo.done"></v-checkbox>
+                                  </v-list-tile-action>
+                                  <v-list-tile-content>
+                                    <v-list-tile-title
+                                      :class="{
+                  done: todo.done
+                  }"
+                                      class="title"
+                                    >{{todo.title | capitalize}}</v-list-tile-title>
+                                    <v-list-tile-sub-title>Added on: {{date}}{{ord}} {{day}} {{year}}</v-list-tile-sub-title>
+                                  </v-list-tile-content>
+                                  <v-btn icon ripple color="red" @click="removeTodo(i)">
+                                    <v-icon class="white--text">close</v-icon>
+                                  </v-btn>
+                                </v-list-tile>
+                              </div>
+                            </v-list>
+                          </v-card>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn color="green darken-1" flat @click="dialog = false">Disagree</v-btn>
+                          <v-btn color="green darken-1" flat @click="dialog = false">Agree</v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-card-text>
                 </v-card>
               </v-tab-item>
               <v-tab-item>
@@ -53,11 +144,11 @@
                     <v-card color="grey lighten-4" light>
                       <v-card-text>
                         <h2>상품명 : {{mainItem.item_name}}</h2>
-                        <hr>
                         <br>
                         판매가격 : {{mainItem.price}}
+                        
                         <br>
-                        대여가격 : {{mainItem.rental}}(1일)
+                        1일당 : {{mainItem.rental}}
                         <br>
                         <br>
                         <v-flex xs12 sm6>
@@ -80,10 +171,10 @@
                               :key="i"
                             >#{{t}}</v-chip>
                           </div>
-                          <div v-if="mainItem.status!=2">
-                          <v-flex xs5>
+                          <v-flex xs3>
                             <v-select :items="['렌탈', '구매']" label="구매방법" v-model="statusFilter"></v-select>
                           </v-flex>
+                            
                           <v-menu
                             ref="menu"
                             v-model="menu"
@@ -116,7 +207,6 @@
                               <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
                               <v-btn flat color="primary" @click="$refs.menu.save(dates)">OK</v-btn>
                             </v-date-picker>
-                            
                           </v-menu>
                           <v-menu
                             ref="menu2"
@@ -151,15 +241,9 @@
                               <v-btn flat color="primary" @click="$refs.menu2.save(datesend)">OK</v-btn>
                             </v-date-picker>
                           </v-menu>
+                        </v-flex>
                         <v-btn @click="requestPay">결제하기</v-btn>
                         <v-btn @click="makeTrade">찜하기</v-btn>
-                        </div>
-                        <div v-else>
-                          <br>
-                          <h2>판매완료 상품입니다.</h2>
-                          </div>
-                        </v-flex>
-                        
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -175,10 +259,21 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
+import board from '../components/Board'
 
 export default {
   data() {
     return {
+      dialog: false,
+      isDark: true,
+      show: true,
+      newTodo: "",
+      todo: [],
+      todos: [],
+      day: this.todoDay(),
+      date: new Date().getDate(),
+      ord: this.nth(new Date().getDate()),
+      year: new Date().getFullYear(),
       tradeList: [],
       pagaItem: [],
       mainItem: {},
@@ -194,8 +289,11 @@ export default {
       daylength: null,
       statusFilter: "",
       t_method: "",
-      t_price:0
+      t_price: 0
     };
+  },
+  components: {
+      board
   },
   async created() {
     console.log("여여여여", this.$route.params.id);
@@ -218,6 +316,53 @@ export default {
   },
 
   methods: {
+    addTodo() {
+      var value = this.newTodo && this.newTodo.trim();
+      if (!value) {
+        return;
+      }
+      this.todos.push({
+        title: this.newTodo,
+        done: false
+      });
+      this.newTodo = "";
+    },
+    removeTodo(index) {
+      this.todos.splice(index, 1);
+    },
+    todoDay() {
+      var d = new Date();
+      var days = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ];
+      return days[d.getDay()];
+    },
+    nth(d) {
+      if (d > 3 && d < 21) return "th";
+      switch (d % 10) {
+        case 1:
+          return "st";
+        case 2:
+          return "nd";
+        case 3:
+          return "rd";
+        default:
+          return "th";
+      }
+    }
+  },
+  filters: {
+    capitalize: function(value) {
+      if (!value) return "";
+      value = value.toString();
+      return value.charAt(0).toUpperCase() + value.slice(1);
+    },
     submit() {
       //보내고 싶은 번호와 메세지
       this.$http.post("http://localhost:3000/sens/sendMessage", {
@@ -225,8 +370,8 @@ export default {
         message: "wearever에서 대여 접수가 완료되었습니다."
       });
     },
-    async makeTrade() {
-      await this.$http.post("http://localhost:3000/trade/makeTrade", {
+    makeTrade() {
+      this.$http.post("http://localhost:3000/trade/makeTrade", {
         buyer_id: this.$store.state.id,
         seller_id: this.mainItem.shop_id,
         item_id: this.$route.params.id,
@@ -234,15 +379,8 @@ export default {
         return_date: this.datesend,
         is_buy: false,
         trade_method: this.t_method,
-        total_price:this.t_price
+        total_price: this.t_price
       });
-
-      if(this.t_method=="buy"){
-        await this.$http.post("http://localhost:3000/item/itemStatusUpdate",{
-          id: this.$route.params.id,
-          status: 2
-        })
-      }
     },
     computeDate() {
       console.log("dd", this.dates, "dd", this.datesend);
@@ -257,49 +395,52 @@ export default {
       );
       this.daylength = between;
     },
-    allowedDates: function(val) { 
-        console.log('gg')
-        console.log(val)
-        var temp = val.substring(0, 10).split("-");
-        var temp_date = temp[0] + temp[1] + temp[2];
-        console.log(this.tradeList.length)
-        for (var i = 0; i < this.tradeList.length; i++) {
-          if(this.tradeList[i].borrow_date==null||this.tradeList[i].return_date==null)
-            continue
-          var sarray = this.tradeList[i].borrow_date.substring(0, 10).split("-");
-          var tarray = sarray[0] + sarray[1] + sarray[2];
-          var endarray = this.tradeList[i].return_date
-            .substring(0, 10)
-            .split("-");
-          var tearray = endarray[0] + endarray[1] + endarray[2];
-          if (temp_date >= tarray && temp_date <= tearray) return false;
-        }
+    allowedDates: function(val) {
+      console.log("gg");
+      console.log(val);
+      var temp = val.substring(0, 10).split("-");
+      var temp_date = temp[0] + temp[1] + temp[2];
+      console.log(this.tradeList.length);
+      for (var i = 0; i < this.tradeList.length; i++) {
         if (
-          parseInt(val.substring(5, 7)) <
-          parseInt(new Date().toISOString().substring(5, 7))
+          this.tradeList[i].borrow_date == null ||
+          this.tradeList[i].return_date == null
         )
-          return false;
-        else if (
-          parseInt(val.substring(5, 7)) >
-          parseInt(new Date().toISOString().substring(5, 7))
+          continue;
+        var sarray = this.tradeList[i].borrow_date.substring(0, 10).split("-");
+        var tarray = sarray[0] + sarray[1] + sarray[2];
+        var endarray = this.tradeList[i].return_date
+          .substring(0, 10)
+          .split("-");
+        var tearray = endarray[0] + endarray[1] + endarray[2];
+        if (temp_date >= tarray && temp_date <= tearray) return false;
+      }
+      if (
+        parseInt(val.substring(5, 7)) <
+        parseInt(new Date().toISOString().substring(5, 7))
+      )
+        return false;
+      else if (
+        parseInt(val.substring(5, 7)) >
+        parseInt(new Date().toISOString().substring(5, 7))
+      )
+        return true;
+      if (
+        parseInt(val.split("-")[2], 10) >
+        parseInt(
+          new Date()
+            .toISOString()
+            .substr(0, 10)
+            .split("-")[2],
+          10
         )
-          return true;
-        if (
-          parseInt(val.split("-")[2], 10) >
-          parseInt(
-            new Date()
-              .toISOString()
-              .substr(0, 10)
-              .split("-")[2],
-            10
-          )
-        )
-          return true;
+      )
+        return true;
     },
     requestPay: function() {
-      if(this.$store.state.Token==null){
-        alert("로그인을 해 주세요.")
-        return
+      if (this.$store.state.Token == null) {
+        alert("로그인을 해 주세요.");
+        return;
       }
       // IMP.request_pay(param, callback) 호출
       var totalPrice;
@@ -315,42 +456,46 @@ export default {
           alert("날짜 설정이 잘못되었습니다.");
           return;
         }
-        totalPrice = this.mainItem.rental * (this.daylength+1);
+        totalPrice = this.mainItem.rental * (this.daylength + 1);
       }
-      this.t_price=totalPrice
-      // Vue.IMP().request_pay(
-      //   {
-      //     pg: "html5_inicis",
-      //     pay_method: "card",
-      //     merchant_uid: "merchant_" + new Date().getTime(),
-      //     name: this.mainItem.item_name,
-      //     amount: totalPrice,
-      //     buyer_email: "iamport@siot.do",
-      //     buyer_name: "구매자이름",
-      //     buyer_tel: "010-1234-5678",
-      //     buyer_addr: "temp",
-      //     buyer_postcode: "123-456"
-      //   },
-      //   result_success => {
-      //     //성공할 때 실행 될 콜백 함수
-      //     var msg = "결제가 완료되었습니다.";
-      //     // msg += "고유ID : " + result_success.imp_uid;
-      //     //msg += "상점 거래ID : " + result_success.merchant_uid;
-      //     // msg += "결제 금액 : " + result_success.paid_amount;
-      //     // msg += "카드 승인번호 : " + result_success.apply_num;
-      //     alert(msg);
-      //     this.makeTrade();
-      //   },
-      //   result_failure => {
-      //     //실패시 실행 될 콜백 함수
-      //     var msg = "결제에 실패하였습니다.";
-      //     msg += "에러내용 : " + result_failure.error_msg;
-      //     alert(msg);
-      //   }
-      // );
-      this.makeTrade();
+      this.t_price = totalPrice;
+      Vue.IMP().request_pay(
+        {
+          pg: "html5_inicis",
+          pay_method: "card",
+          merchant_uid: "merchant_" + new Date().getTime(),
+          name: this.mainItem.item_name,
+          amount: totalPrice,
+          buyer_email: "iamport@siot.do",
+          buyer_name: "구매자이름",
+          buyer_tel: "010-1234-5678",
+          buyer_addr: "temp",
+          buyer_postcode: "123-456"
+        },
+        result_success => {
+          //성공할 때 실행 될 콜백 함수
+          var msg = "결제가 완료되었습니다.";
+          // msg += "고유ID : " + result_success.imp_uid;
+          //msg += "상점 거래ID : " + result_success.merchant_uid;
+          // msg += "결제 금액 : " + result_success.paid_amount;
+          // msg += "카드 승인번호 : " + result_success.apply_num;
+          alert(msg);
+          this.makeTrade();
+        },
+        result_failure => {
+          //실패시 실행 될 콜백 함수
+          var msg = "결제에 실패하였습니다.";
+          msg += "에러내용 : " + result_failure.error_msg;
+          alert(msg);
+        }
+      );
     }
   }
 };
 </script>
+<style>
+.done {
+  text-decoration: line-through;
+}
+</style>
 
