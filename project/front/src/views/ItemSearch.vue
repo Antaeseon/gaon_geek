@@ -199,6 +199,7 @@
     for (var i = 0; i < res.data.data.length; i++) {
       if(res.data.data[i].status !== 2)
       {
+        console.log(res.data.data[i].status,'dd')
         this.all_index.push(i);
         let price = res.data.data[i].price;
         price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
