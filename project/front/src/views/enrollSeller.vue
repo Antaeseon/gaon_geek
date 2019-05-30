@@ -108,11 +108,40 @@
                               v-model="location"
                               :error-messages="locationErrors"
                               required
+                              readonly
                               label="업체의 정확한 위치를 입력하세요."
                               @input="$v.location.$touch()"
                               @blur="$v.location.$touch()"
                           >
                           </v-text-field>
+                            <div>
+                              <div>
+                                <label>
+                                  <gmap-autocomplete
+                                    @place_changed="setPlace">
+                                  </gmap-autocomplete>
+                                  <button @click="addMarker">위치 확인</button>
+                                </label>
+                                <br/>
+
+                              </div>
+                              <br>
+                              <gmap-map
+                                :center="center"
+                                :zoom="12"
+                                style="width:100%;  height: 400px;"
+                              >
+                                <gmap-marker
+                                  :key="index"
+                                  v-for="(m, index) in markers"
+                                  :position="m.position"
+                                  @click="center=m.position"
+                                ></gmap-marker>
+                              </gmap-map>
+                            </div>
+
+                          
+                          
                           <v-text-field
                               v-model="about_us"
                               :error-messages="aboutusErrors"
@@ -262,9 +291,11 @@
     import router from './../router'
     import attribute from './../attribute'
     import terms from './../terms'
+    import GoogleMap from "./../components/GoogleMap";
 
     export default {
     mixins: [validationMixin],
+  
 
     validations: {
         name: { required },
@@ -312,7 +343,11 @@
           {
             src: 'https://s3.ap-northeast-2.amazonaws.com/wearever1/wearever3.PNG'
           }
-        ]
+        ],
+        center: { lat: 45.508, lng: -73.587 },
+        markers: [],
+        places: [],
+        currentPlace: null
     }),
 
     computed: {
@@ -367,7 +402,9 @@
           return errors
         },
     },
-
+    mounted() {
+      this.geolocate();
+    },
     methods: {
         ...mapActions(['requestEnrollSeller']),
         async submit () {
@@ -506,6 +543,32 @@
         store.state.isSubmitDup = false,
         store.state.isSubmitError = false
         router.push({name:"home"});
+    },
+     setPlace(place) {
+      this.currentPlace = place;
+      
+    },
+    addMarker() {
+      if (this.currentPlace) {
+        this.location = this.currentPlace.name.slice(); //JSON.stringify();
+        //   console.log("current:"+JSON.stringify(this.currentPlace.name))
+        const marker = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng()
+        };
+        this.markers.push({ position: marker });
+        this.places.push(this.currentPlace);
+        this.center = marker;
+        this.currentPlace = null;
+      }
+    },
+    geolocate: function() {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      });
     }
     }
     }
