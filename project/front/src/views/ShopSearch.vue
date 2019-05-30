@@ -81,7 +81,7 @@
 
         <v-card-text>
           <!-- Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running. -->
-           <gmap-map ref="mymap" :options="{
+           <gmap-map  :options="{
                           zoomControl: false,
                           mapTypeControl: false,
                           scaleControl: false,
@@ -308,6 +308,7 @@ export default {
       }
     },
     filter() {
+
       this.filteredShoplist = [];
       // this.window_open= [];
       var distanceFilter = async function(keyword) {
@@ -367,6 +368,7 @@ export default {
     // shop name, tag, shop사진, 클릭했을 때가 가장 좋음.
     addMarker() {
       console.log("A:"+this.startLocation.lat, this.startLocation.lng);
+      this.coordinates= {};
       this.dialog = true;
       this.markers=[];
       let middle_lat = 0;
@@ -389,7 +391,7 @@ export default {
       this.startLocation.lat = middle_lat;
       this.startLocation.lng = middle_lon;
 
-      console.log("A:"+this.startLocation.lat, this.startLocation.lng);
+      console.log("coordinates:"+this.coordinates);
       //   const marker = {
       //     // lat: this.currentPlace.geometry.location.lat(),
       //     // lng: this.currentPlace.geometry.location.lng() v
@@ -462,7 +464,7 @@ export default {
       this.infoContent.imageUrl = marker.imageUrl;
       this.infoContent.location = marker.location;
       this.infoContent.id = marker.id;
-      console.log(marker);
+      console.log("marker:"+marker);
       if (this.infoCurrentKey == key) {
         this.infoOpened = !this.infoOpened
       } else {
