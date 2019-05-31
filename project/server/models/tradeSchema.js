@@ -30,7 +30,7 @@ const tradeSchema= new Schema({
     trade_method:{ //구매일땐 buy 빌릴땐 borrow
         type:String
     },
-    trade_status:{ // 0일때는 대여 전 1일때는 대여중 2일때는 거래 종료
+    trade_status:{ //이는 빌리는 경우에만 필요 0일때는 빌리기 전 1일때는 대여중 2일때는 반납완료
         type:Number,
         default:0
     },

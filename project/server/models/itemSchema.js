@@ -51,7 +51,7 @@ const ItemSchema = new Schema({
         type: Number,
         required: [true, 'Rental field is required']
     },
-    status: {
+    status: { //0일때는 재고에 있음 1일때는 대여중 2일때는 구매
         type: Number,
         default: 0
     },

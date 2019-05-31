@@ -195,16 +195,17 @@
     var res = await this.$http.post(
       `http://localhost:3000/search/getItemlist/`, { shop_id: this.$route.params.shop_id }
     );
+    let cnt = 0;
     this.searchItemlist = res.data.data;
     for (var i = 0; i < res.data.data.length; i++) {
       if(res.data.data[i].status !== 2)
       {
-        this.all_index.push(i);
+        this.all_index.push(cnt);
         let price = res.data.data[i].price;
         price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         let rental = res.data.data[i].rental;
         rental = rental.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        this.all_info[i] = {
+        this.all_info[cnt] = {
             item_name: res.data.data[i].item_name,
             brand: res.data.data[i].brand,
             price: price,
@@ -220,6 +221,7 @@
             tag: res.data.data[i].tag,
             object_id: res.data.data[i]._id
         };
+        cnt++;
       }
     }
     this.uniq = this.all_index.slice();
