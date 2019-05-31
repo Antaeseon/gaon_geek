@@ -18,95 +18,89 @@
                 <v-card flat>
                   <v-card-text>
                     {{ qna }}
-                    <board></board>
-                    <v-dialog v-model="dialog" persistent max-width="290">
-                      <template v-slot:activator="{ on }">
-                        <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
-                      </template>
-                      <v-card>
-                        <v-card-title class="headline">Use Google's location service?</v-card-title>
-                        <v-card-text>
-                          <v-card>
-                            <v-toolbar color="blue darken-4" dark>
-                              <v-toolbar-side-icon></v-toolbar-side-icon>
-                              <v-toolbar-title class="headline">Todo App</v-toolbar-title>
+                    <div>
+    <v-dialog v-model="dialog" max-width="500px">
+      <template v-slot:activator="{ on }">
+        <v-btn color="primary" dark class="mb-2" v-on="on">글쓰기</v-btn>
+        <v-btn
+          color="primary"
+          dark
+          @click="expand = !expand"
+        >{{ expand ? 'Close' : 'Keep' }} other rows</v-btn>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">{{ formTitle }}</span>
+        </v-card-title>
 
-                              <v-spacer></v-spacer>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12 sm6 md12>
+                <v-text-field v-model="editedItem.userid" label="작성자"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md12>
+                <v-text-field v-model="editedItem.date" label="작성일"></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md12>
+                <v-text-field
+                  outline
+                  v-model="editedItem.title"
+                  label="제목"
+                  value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
+                ></v-text-field>
+              </v-flex>
+              <v-flex xs12 sm6 md12>
+                <v-textarea
+                  outline
+                  v-model="editedItem.content"
+                  label="내용"
+                  value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
+                ></v-textarea>
+              </v-flex>
+              
+              
+            </v-layout>
+          </v-container>
+        </v-card-text>
 
-                              <v-btn icon>
-                                <v-icon>search</v-icon>
-                              </v-btn>
-                              <v-tooltip bottom>
-                                <template v-slot:activator="{ on }">
-                                  <v-btn icon @click="show = !show" v-on="on">
-                                    <v-icon
-                                      v-model="isDark"
-                                      @click="isDark = !isDark"
-                                    >{{ show ? 'check_circle' : 'check_circle_outline' }}</v-icon>
-                                  </v-btn>
-                                </template>
-                                <span>Dark mode</span>
-                              </v-tooltip>
-                            </v-toolbar>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
+          <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
-                            <v-list two-line subheader>
-                              <v-container>
-                                <v-subheader class="headline">{{day}} , {{date}}{{ord}}</v-subheader>
-                                <v-spacer></v-spacer>
-
-                                <p class="text-xs-right">
-                                  <b>{{todos.length}}</b> Tasks
-                                </p>
-
-                                <v-flex xs12>
-                                  <v-text-field
-                                    clearable
-                                    color="white"
-                                    v-model="newTodo"
-                                    id="newTodo"
-                                    name="newTodo"
-                                    label="Type your task"
-                                    @keyup.enter="addTodo"
-                                  ></v-text-field>
-                                </v-flex>
-                              </v-container>
-                              <v-subheader
-                                class="subheading"
-                                v-if="todos.length == 0"
-                              >You have 0 Tasks, add some</v-subheader>
-                              <v-subheader
-                                class="subheading"
-                                v-elseif="todos.length == 1"
-                              >Your Tasks</v-subheader>
-                              <div v-for="(todo, i) in todos" :key="i">
-                                <v-list-tile avatar>
-                                  <v-list-tile-action>
-                                    <v-checkbox v-if="!todo.done" v-model="todo.done"></v-checkbox>
-                                  </v-list-tile-action>
-                                  <v-list-tile-content>
-                                    <v-list-tile-title
-                                      :class="{
-                  done: todo.done
-                  }"
-                                      class="title"
-                                    >{{todo.title | capitalize}}</v-list-tile-title>
-                                    <v-list-tile-sub-title>Added on: {{date}}{{ord}} {{day}} {{year}}</v-list-tile-sub-title>
-                                  </v-list-tile-content>
-                                  <v-btn icon ripple color="red" @click="removeTodo(i)">
-                                    <v-icon class="white--text">close</v-icon>
-                                  </v-btn>
-                                </v-list-tile>
-                              </div>
-                            </v-list>
-                          </v-card>
-                        </v-card-text>
-                        <v-card-actions>
-                          <v-spacer></v-spacer>
-                          <v-btn color="green darken-1" flat @click="dialog = false">Disagree</v-btn>
-                          <v-btn color="green darken-1" flat @click="dialog = false">Agree</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
+    <v-data-table
+      :headers="headers"
+      :items="desserts"
+      class="elevation-1"
+      :expand="expand"
+      item-key="title"
+    >
+      <template v-slot:items="props">
+        <tr @click="props.expanded = !props.expanded">
+             
+        <td class="text-xs-left">{{ props.item.userid }}</td>
+        <td class="text-xs-left">{{ props.item.date }}</td>
+        <td>{{ props.item.title }}</td>
+        
+        <td class="text-xs-left">
+          <v-icon small class="mr-2" @click="editItem(props.item)">edit</v-icon>
+          <v-icon small @click="deleteItem(props.item)">delete</v-icon>
+        </td>
+        </tr>
+      </template>
+      <template v-slot:expand="props">
+        <v-card flat>
+          <v-card-text><h3>판매 내용</h3>{{ props.item.content }}</v-card-text>
+        </v-card>
+      </template>
+    </v-data-table>
+  </div>
+               
+    
                   </v-card-text>
                 </v-card>
               </v-tab-item>
@@ -262,16 +256,51 @@ import axios from "axios";
 import board from '../components/Board'
 
 export default {
+  
   data() {
     return {
-      dialog: false,
+     expand: false,
+    dialog: false,
+    headers: [
+        
+      //{ text: "content내용", value: "content" },
+      { text: "작성자", value: "userid" },
+      { text: "작성일", value: "date" },
+      //{ text: "Protein (g)", value: "protein" },
+      {
+        text: "제목",
+        align: "left",
+        sortable: false,
+        value: "title"
+      } ,
+      { text: "수정/삭제", sortable: false }
+    ],
+    desserts: [],
+    editedIndex: -1,
+    editedItem: {
+      title: "제목없음",
+      content: "내용없음",
+      userid: this.$store.state.id,
+      //userid: "id없음",
+      date: new Date().toISOString().substr(0, 10)
+     // protein: 0
+    },
+    defaultItem: {
+      title: "제목없음",
+      content: "내용없음",
+      //userid: "id없음",
+      userid: this.$store.state.id,
+      date: new Date().toISOString().substr(0, 10)
+      //protein: 0
+    },
+      
       isDark: true,
       show: true,
       newTodo: "",
       todo: [],
       todos: [],
       day: this.todoDay(),
-      date: new Date().getDate(),
+      //date: new Date().getDate(),
       ord: this.nth(new Date().getDate()),
       year: new Date().getFullYear(),
       tradeList: [],
@@ -295,6 +324,18 @@ export default {
   components: {
       board
   },
+   
+computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "글쓰기" : "수정하기";
+    }
+  },
+
+  watch: {
+    dialog(val) {
+      val || this.close();
+    }
+  },
   async created() {
     console.log("여여여여", this.$route.params.id);
 
@@ -316,6 +357,35 @@ export default {
   },
 
   methods: {
+     
+
+      editItem (item) {
+        this.editedIndex = this.desserts.indexOf(item)  
+        this.editedItem = Object.assign({}, item)
+        this.dialog = true
+      },
+
+      deleteItem (item) {
+        const index = this.desserts.indexOf(item)
+        confirm('Are you sure you want to delete this item?') && this.desserts.splice(index, 1)
+      },
+
+      close () {
+        this.dialog = false
+        setTimeout(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.editedIndex = -1
+        }, 300)
+      },
+
+      save () {
+        if (this.editedIndex > -1) {
+          Object.assign(this.desserts[this.editedIndex], this.editedItem)
+        } else {
+          this.desserts.push(this.editedItem)
+        }
+        this.close()
+      },
     addTodo() {
       var value = this.newTodo && this.newTodo.trim();
       if (!value) {
@@ -343,6 +413,7 @@ export default {
       ];
       return days[d.getDay()];
     },
+
     nth(d) {
       if (d > 3 && d < 21) return "th";
       switch (d % 10) {
