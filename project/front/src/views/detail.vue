@@ -151,7 +151,10 @@
                           </v-menu>
                         </v-flex>
                         <v-btn @click="requestPay">결제하기</v-btn>
-                        <v-btn @click="makeTrade">찜하기</v-btn>
+                          <v-btn fab dark small color="white" @click="likeitToggle()">
+                            <v-icon v-if="likeit == true" color="pink">favorite</v-icon>
+                            <v-icon v-if="likeit == false" color="black">favorite_border</v-icon>
+                          </v-btn>
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -167,6 +170,7 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
+import { mapState } from 'vuex'
 
 export default {
   data() {
@@ -186,7 +190,9 @@ export default {
       daylength: null,
       statusFilter: "",
       t_method: "",
-      t_price:0
+      t_price:0,
+      likeit : false,
+      likeitList : []
     };
   },
   async created() {
@@ -203,13 +209,55 @@ export default {
         this.$route.params.id
       }`
     );
+    // 로그인이 안되어 있다면, likeit 해제
+    if(this.Token !== null)
+    {
+      var user = await this.$http.get(
+        `http://localhost:3000/user/${
+          sessionStorage.getItem('id')
+        }`
+      );
+      if(user.data.response.likeit.includes(this.$route.params.id))
+        this.likeit = true;
+      else
+        this.likeit = false;
+      this.likeitList = user.data.response.likeit;
+    }
+    else this.likeit = false;
+
     this.mainItem = res.data.response;
     this.items = this.mainItem.imageUrl;
     this.tradeList = rest.data.response;
     console.log("ddd", this.mainItem);
   },
-
+  computed: {
+    ...mapState(['Token']),
+  },
   methods: {
+    likeitToggle()
+    {
+      if(this.Token === null)
+      {
+        alert("로그인이 필요한 서비스입니다.");
+      }
+      else
+      {
+        if(this.likeit === true)
+        {
+          const idx = this.likeitList.indexOf(this.$route.params.id)
+          this.likeitList.splice(idx, 1)
+        }
+        else
+        {
+          this.likeitList.push(this.$route.params.id);
+        }
+        this.likeit = !this.likeit;
+        this.$http.post("http://localhost:3000/user/likeit", {
+        id: sessionStorage.getItem('id'),
+        body : { likeit : this.likeitList }
+      });
+      }
+    },
     submit() {
       //보내고 싶은 번호와 메세지
       this.$http.post("http://localhost:3000/sens/sendMessage", {
