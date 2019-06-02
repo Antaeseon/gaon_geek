@@ -21,11 +21,10 @@ router.get('/', function(req, res, next) {
     GET /user/:id
 */
 router.get('/:id', async function(req, res, next) {
-    let oneUser = await User.findOne({id: req.params.id})
+    let oneUser = await User.findOne({ id: req.params.id })
     console.log(oneUser)
-    res.json({response :oneUser})
+    res.json({ response: oneUser })
 });
-
 
 /* Add a new user to the db */
 /*
@@ -40,7 +39,6 @@ router.get('/:id', async function(req, res, next) {
     
     }
 */
-
 router.post('/signup', function(req, res, next) {
     // req.body.signup_Date = Date.now();
     // crypto.randomBytes(64, (err, buf) => {
@@ -49,10 +47,10 @@ router.post('/signup', function(req, res, next) {
     //       req.body.pwd=key.toString('base64')
     //     });
     //   });
-    let  cipher = crypto.createCipher('aes192', config.secret);
-    cipher.update(req.body.pwd,'utf8', 'base64');
+    let cipher = crypto.createCipher('aes192', config.secret);
+    cipher.update(req.body.pwd, 'utf8', 'base64');
     let cipherPw = cipher.final('base64');
-  
+
     console.log(req.body)
     var user_obj = new User({
         id: req.body.id,
@@ -61,6 +59,7 @@ router.post('/signup', function(req, res, next) {
         nation: req.body.nation,
         phoneNum: req.body.phoneNum,
         email: req.body.email,
+        likeit: [],
         signup_Date: Date.now(),
         point: 0, // empty array
         isSeller: false
@@ -149,15 +148,15 @@ router.post('/isSeller', function(req, res, next) {
     }
 */
 router.post('/login', function(req, res, next) {
-    let  cipher = crypto.createCipher('aes192', config.secret);
-    cipher.update(req.body.pwd,'utf8', 'base64');
+    let cipher = crypto.createCipher('aes192', config.secret);
+    cipher.update(req.body.pwd, 'utf8', 'base64');
     let cipherPw = cipher.final('base64');
     let {
         id,
         pwd
     } = req.body;
-    
-    pwd=cipherPw
+
+    pwd = cipherPw
     const secret = req.app.get('jwt-secret');
     console.log("secrete : ", secret);
     console.log(id, pwd);
@@ -210,7 +209,20 @@ router.post('/login', function(req, res, next) {
         .catch(onError);
 });
 
-
+/* Update a user in the db
+    POST /user/likeit/
+    {
+        id
+        body
+    }
+*/
+router.post('/likeit', function(req, res, next) {
+    User.findOneAndUpdate({ id: req.body.id }, req.body.body).then(user => {
+        User.findOne({ id: req.body.id }).then(user => {
+            res.send(user);
+        }).catch(next);
+    }).catch(next);
+});
 
 function getToken(req, user) {
     const secret = req.app.get('jwt-secret');
