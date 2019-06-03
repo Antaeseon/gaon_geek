@@ -75,6 +75,7 @@
                       <v-btn
                         color="primary"
                         @click="e1 = 2"
+          
                       >
                         Continue
                       </v-btn>
@@ -104,6 +105,7 @@
                           @input="$v.nation.$touch()"
                           @blur="$v.nation.$touch()"
                           ></v-select>
+
                           <v-text-field
                               v-model="location"
                               :error-messages="locationErrors"
@@ -114,13 +116,119 @@
                               @blur="$v.location.$touch()"
                           >
                           </v-text-field>
-                            <div>
+                           
+                           
+                            <div class="text-xs-center">
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <template v-slot:activator="{ on }">
+        <v-btn
+          color="primary"
+          dark
+          v-on="on"
+        >
+          위치 검색
+        </v-btn>
+      </template>
+
+      <v-card>
+        
+
+        <v-card-text>
+        
+        <div>
+            <label>
+              
+              <gmap-autocomplete
+                placeholder="Search..." 
+              style="
+                  width: 100%;
+                  font-size: 15px;
+                  font-weight: bold;
+                  outline: primary;
+                  background-color: #E2E2E2;
+                  height: 20px;
+                  line-height: normal;
+                  text-align: left;
+                  padding: .8em .5em;
+                  border-radius: 2px;
+                  border: primary;  
+                "
+                @place_changed="setPlace">
+                
+              </gmap-autocomplete>
+              <div class="text-xs-right">
+              <v-spacer></v-spacer>
+              <v-btn 
+              @click="addMarker();" 
+              color="primary"
+              >위치 확인</v-btn>
+              </div>
+              
+            </label>
+           
+          <gmap-map
+            :center="center"
+            
+            :zoom="12"
+            style="width:100%;  height: 400px;"
+            :options="{
+              zoomControl: false,
+              mapTypeControl: false,
+              scaleControl: false,
+              streetViewControl: false,
+              rotateControl: false,
+              fullscreenControl: false,
+              disableDefaultUi: false,
+            }"
+          >
+            <gmap-marker
+              :key="index"
+              v-for="(m, index) in markers"
+              :position="m.position"
+              @click="center=m.position"
+            ></gmap-marker>
+          </gmap-map>
+        </div>
+        
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            flat
+            @click="dialog = false"
+          >
+            확인
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+                            <!-- <div>
                               <div>
                                 <label>
                                   <gmap-autocomplete
+                                    placeholder="업체의 정확한 위치를 입력하세요." 
+                                  style="
+
+                                   display: block;
+                                          width: 60vw;
+                                          font-size: 20px;
+                                          font-weight: 100;
+                                          outline: primary;
+                                          height: 20px;
+                                          line-height: 20px;
+                                          text-align: left;
+                                          "
                                     @place_changed="setPlace">
                                   </gmap-autocomplete>
-                                  <button @click="addMarker">위치 확인</button>
+                                  <v-btn @click="addMarker" color="primary">위치 확인</v-btn>
                                 </label>
                                 <br/>
 
@@ -128,8 +236,18 @@
                               <br>
                               <gmap-map
                                 :center="center"
+                                
                                 :zoom="12"
                                 style="width:100%;  height: 400px;"
+                                :options="{
+                                  zoomControl: false,
+                                  mapTypeControl: false,
+                                  scaleControl: false,
+                                  streetViewControl: false,
+                                  rotateControl: false,
+                                  fullscreenControl: false,
+                                  disableDefaultUi: false,
+                                }"
                               >
                                 <gmap-marker
                                   :key="index"
@@ -138,7 +256,7 @@
                                   @click="center=m.position"
                                 ></gmap-marker>
                               </gmap-map>
-                            </div>
+                            </div> -->
 
                           
                           
