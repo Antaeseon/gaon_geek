@@ -55,6 +55,37 @@ router.post('/getItemlist', function(req, res, next) {
     })
 });
 
+/* List all of the item in a country */
+/*
+    POST /search/getItemLikeit
+    {
+        likeitList
+    }
+*/
+router.post('/getItemLikeit', function(req, res, next) {
+    if (req.body.likeit.length == 0) {
+        res.status(200).send({ "Response": 200, "data": [] });
+    } else {
+        let query = [];
+        for (let i = 0; i < req.body.likeit.length; i++) {
+            query.push({ _id: req.body.likeit[i] });
+        }
+        item.find({ $or: query }, function(err, itemResult) {
+            if (err) {
+                res.status(500).send({ "Response": 500, "tag": err });
+            } else {
+                if (itemResult === undefined) {
+                    res.status(200).send({ "Response": 200, "data": [] });
+                } else if (itemResult !== undefined) {
+                    res.status(200).send({ "Response": 200, "data": itemResult });
+                } else if (err) {
+                    console.log(err);
+                }
+            }
+        });
+    }
+});
+
 /* List just one Item for using detail */
 /*
     POST /search/getNationItemlist

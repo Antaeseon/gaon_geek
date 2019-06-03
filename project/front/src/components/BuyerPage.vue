@@ -40,7 +40,20 @@
       </v-tab-item>
       <v-tab-item>
         <v-card flat>
-          <v-card-text>관심상품 입니다</v-card-text>
+          <v-card-text>
+            <v-data-table :headers="headers3" :items="LikeItem" class="elevation-1">
+              <template v-slot:items="props">
+                <td>{{ props.item.item_name }}</td>
+                <td class="text-xs-left">{{ props.item.brand }}</td>
+                <td class="text-xs-left">{{ props.item.category }}</td>
+                <td class="text-xs-left">{{ props.item.srental }}(Won/Day)</td>
+                <td class="text-xs-left">{{ props.item.sprice }}(Won)</td>
+                <td class="text-xs-left">
+                  <v-btn small color="primary" :to="{name: 'detail',params: { id: props.item._id }  }">Detail</v-btn>
+                </td>
+              </template>
+            </v-data-table>
+          </v-card-text>
         </v-card>
       </v-tab-item>
     </v-tabs>
@@ -77,9 +90,21 @@ export default {
         { text: "금액", sortable: false },
         { text: "상세정보", sortable: false }
       ],
-
+          headers3: [
+        {
+          text: "상품명",
+          align: "left",
+          sortable: false,
+          value: "id"
+        },
+        { text: "브랜드", sortable: false },
+        { text: "종류", sortable: false },
+        { text: "렌탈 가격", sortable: false },
+        { text: "구매 가격", sortable: false }
+      ],
       buyItem: [],
-      borrowItem:[]
+      borrowItem:[],
+      LikeItem: []
     };
   },
   async created() {
@@ -89,6 +114,27 @@ export default {
         id: this.$store.state.id
       }
     );
+    var user = await this.$http.get(
+      `http://localhost:3000/user/${
+        sessionStorage.getItem('id')
+      }`
+    );
+    var items = await this.$http.post(
+      `http://localhost:3000/search/getItemLikeit`,{
+        likeit: user.data.response.likeit
+      }
+    );
+
+    this.LikeItem = items.data.data;
+    for(let i = 0; i < this.LikeItem.length; i++)
+    {
+      let price = this.LikeItem[i].price;
+      price = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      let rental = this.LikeItem[i].rental;
+      rental = rental.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      this.LikeItem[i].sprice = price.slice();
+      this.LikeItem[i].srental = rental.slice();
+    }
     this.buyItem=_.filter(tlist.data.response,{trade_method:'buy'})
     this.borrowItem=_.filter(tlist.data.response,{trade_method:'borrow'})
   },

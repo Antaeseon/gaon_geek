@@ -68,10 +68,9 @@ funct = function () {
                 console.log(err);
                 return resolve(err);
             });
-        }, 2000);
+        }, 3000);
     });
 }
-
 
 async function main() {
     while(1) {

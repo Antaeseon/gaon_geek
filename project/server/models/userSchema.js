@@ -28,6 +28,10 @@ const UserSchema = new Schema({
         type: String,
         required: [true, 'User email is required']
     },
+    likeit: {
+        type: [String],
+        required: [true, 'Like it is required']
+    },
     signup_Date: {
         type: Date
     },
@@ -43,19 +47,19 @@ const UserSchema = new Schema({
 });
 UserSchema.statics.findOneById = function(id) {
     return this.findOne({
-      id
+        id
     }).exec();
-  };
-  
-  UserSchema.methods.verify = function(pwd) {
+};
+
+UserSchema.methods.verify = function(pwd) {
     return this.pwd == pwd;
-  };
-  
-  UserSchema.methods.assignAdmin = function() {
+};
+
+UserSchema.methods.assignAdmin = function() {
     this.admin = true;
     return this.save();
-  };
-  
+};
+
 // Collection 이름 지정
 const User = mongoose.model('user', UserSchema);
 

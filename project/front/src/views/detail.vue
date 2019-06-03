@@ -53,11 +53,10 @@
                     <v-card color="grey lighten-4" light>
                       <v-card-text>
                         <h2>상품명 : {{mainItem.item_name}}</h2>
-                        <hr>
                         <br>
                         판매가격 : {{mainItem.price}}
                         <br>
-                        대여가격 : {{mainItem.rental}}(1일)
+                        1일당 : {{mainItem.rental}}
                         <br>
                         <br>
                         <v-flex xs12 sm6>
@@ -80,10 +79,10 @@
                               :key="i"
                             >#{{t}}</v-chip>
                           </div>
-                          <div v-if="mainItem.status!=2">
-                          <v-flex xs5>
+                          <v-flex xs3>
                             <v-select :items="['렌탈', '구매']" label="구매방법" v-model="statusFilter"></v-select>
                           </v-flex>
+
                           <v-menu
                             ref="menu"
                             v-model="menu"
@@ -116,7 +115,6 @@
                               <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
                               <v-btn flat color="primary" @click="$refs.menu.save(dates)">OK</v-btn>
                             </v-date-picker>
-                            
                           </v-menu>
                           <v-menu
                             ref="menu2"
@@ -151,15 +149,12 @@
                               <v-btn flat color="primary" @click="$refs.menu2.save(datesend)">OK</v-btn>
                             </v-date-picker>
                           </v-menu>
-                        <v-btn @click="requestPay">결제하기</v-btn>
-                        <v-btn @click="makeTrade">찜하기</v-btn>
-                        </div>
-                        <div v-else>
-                          <br>
-                          <h2>판매완료 상품입니다.</h2>
-                          </div>
                         </v-flex>
-                        
+                        <v-btn @click="requestPay">결제하기</v-btn>
+                          <v-btn fab dark small color="white" @click="likeitToggle()">
+                            <v-icon v-if="likeit == true" color="pink">favorite</v-icon>
+                            <v-icon v-if="likeit == false" color="black">favorite_border</v-icon>
+                          </v-btn>
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -175,6 +170,7 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
+import { mapState } from 'vuex'
 
 export default {
   data() {
@@ -194,7 +190,9 @@ export default {
       daylength: null,
       statusFilter: "",
       t_method: "",
-      t_price:0
+      t_price:0,
+      likeit : false,
+      likeitList : []
     };
   },
   async created() {
@@ -211,13 +209,55 @@ export default {
         this.$route.params.id
       }`
     );
+    // 로그인이 안되어 있다면, likeit 해제
+    if(this.Token !== null)
+    {
+      var user = await this.$http.get(
+        `http://localhost:3000/user/${
+          sessionStorage.getItem('id')
+        }`
+      );
+      if(user.data.response.likeit.includes(this.$route.params.id))
+        this.likeit = true;
+      else
+        this.likeit = false;
+      this.likeitList = user.data.response.likeit;
+    }
+    else this.likeit = false;
+
     this.mainItem = res.data.response;
     this.items = this.mainItem.imageUrl;
     this.tradeList = rest.data.response;
     console.log("ddd", this.mainItem);
   },
-
+  computed: {
+    ...mapState(['Token']),
+  },
   methods: {
+    likeitToggle()
+    {
+      if(this.Token === null)
+      {
+        alert("로그인이 필요한 서비스입니다.");
+      }
+      else
+      {
+        if(this.likeit === true)
+        {
+          const idx = this.likeitList.indexOf(this.$route.params.id)
+          this.likeitList.splice(idx, 1)
+        }
+        else
+        {
+          this.likeitList.push(this.$route.params.id);
+        }
+        this.likeit = !this.likeit;
+        this.$http.post("http://localhost:3000/user/likeit", {
+        id: sessionStorage.getItem('id'),
+        body : { likeit : this.likeitList }
+      });
+      }
+    },
     submit() {
       //보내고 싶은 번호와 메세지
       this.$http.post("http://localhost:3000/sens/sendMessage", {
@@ -225,8 +265,8 @@ export default {
         message: "wearever에서 대여 접수가 완료되었습니다."
       });
     },
-    async makeTrade() {
-      await this.$http.post("http://localhost:3000/trade/makeTrade", {
+    makeTrade() {
+      this.$http.post("http://localhost:3000/trade/makeTrade", {
         buyer_id: this.$store.state.id,
         seller_id: this.mainItem.shop_id,
         item_id: this.$route.params.id,
@@ -236,13 +276,6 @@ export default {
         trade_method: this.t_method,
         total_price:this.t_price
       });
-
-      if(this.t_method=="buy"){
-        await this.$http.post("http://localhost:3000/item/itemStatusUpdate",{
-          id: this.$route.params.id,
-          status: 2
-        })
-      }
     },
     computeDate() {
       console.log("dd", this.dates, "dd", this.datesend);
@@ -318,39 +351,37 @@ export default {
         totalPrice = this.mainItem.rental * (this.daylength+1);
       }
       this.t_price=totalPrice
-      // Vue.IMP().request_pay(
-      //   {
-      //     pg: "html5_inicis",
-      //     pay_method: "card",
-      //     merchant_uid: "merchant_" + new Date().getTime(),
-      //     name: this.mainItem.item_name,
-      //     amount: totalPrice,
-      //     buyer_email: "iamport@siot.do",
-      //     buyer_name: "구매자이름",
-      //     buyer_tel: "010-1234-5678",
-      //     buyer_addr: "temp",
-      //     buyer_postcode: "123-456"
-      //   },
-      //   result_success => {
-      //     //성공할 때 실행 될 콜백 함수
-      //     var msg = "결제가 완료되었습니다.";
-      //     // msg += "고유ID : " + result_success.imp_uid;
-      //     //msg += "상점 거래ID : " + result_success.merchant_uid;
-      //     // msg += "결제 금액 : " + result_success.paid_amount;
-      //     // msg += "카드 승인번호 : " + result_success.apply_num;
-      //     alert(msg);
-      //     this.makeTrade();
-      //   },
-      //   result_failure => {
-      //     //실패시 실행 될 콜백 함수
-      //     var msg = "결제에 실패하였습니다.";
-      //     msg += "에러내용 : " + result_failure.error_msg;
-      //     alert(msg);
-      //   }
-      // );
-      this.makeTrade();
+      Vue.IMP().request_pay(
+        {
+          pg: "html5_inicis",
+          pay_method: "card",
+          merchant_uid: "merchant_" + new Date().getTime(),
+          name: this.mainItem.item_name,
+          amount: totalPrice,
+          buyer_email: "iamport@siot.do",
+          buyer_name: "구매자이름",
+          buyer_tel: "010-1234-5678",
+          buyer_addr: "temp",
+          buyer_postcode: "123-456"
+        },
+        result_success => {
+          //성공할 때 실행 될 콜백 함수
+          var msg = "결제가 완료되었습니다.";
+          // msg += "고유ID : " + result_success.imp_uid;
+          //msg += "상점 거래ID : " + result_success.merchant_uid;
+          // msg += "결제 금액 : " + result_success.paid_amount;
+          // msg += "카드 승인번호 : " + result_success.apply_num;
+          alert(msg);
+          this.makeTrade();
+        },
+        result_failure => {
+          //실패시 실행 될 콜백 함수
+          var msg = "결제에 실패하였습니다.";
+          msg += "에러내용 : " + result_failure.error_msg;
+          alert(msg);
+        }
+      );
     }
   }
 };
 </script>
-
