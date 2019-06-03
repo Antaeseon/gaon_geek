@@ -668,7 +668,8 @@
     },
     addMarker() {
       if (this.currentPlace) {
-        this.location = this.currentPlace.name.slice(); //JSON.stringify();
+        // console.log(this.currentPlace.formatted_address)
+        this.location = this.currentPlace.formatted_address.slice(); //JSON.stringify();
         //   console.log("current:"+JSON.stringify(this.currentPlace.name))
         const marker = {
           lat: this.currentPlace.geometry.location.lat(),
