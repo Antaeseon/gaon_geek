@@ -173,8 +173,6 @@ router.post('/accept', async function(req, res, next) {
         }
     });
 });
-
-
 /* Reject the enrollSeller */
 /*
     관리자 query

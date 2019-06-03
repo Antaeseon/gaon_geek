@@ -8,6 +8,8 @@ import AccountKit from 'vue-facebook-account-kit'
 import LoadScript from 'vue-plugin-load-script';
 import IMP from 'vue-iamport'
 import * as VueGoogleMaps from "vue2-google-maps";
+import Chat from 'vue-beautiful-chat'
+Vue.use(Chat)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios

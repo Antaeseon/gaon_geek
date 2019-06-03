@@ -23,7 +23,7 @@
     <form>
       <v-text-field
         v-model="item_name"
-        :error-messages="item_nameErrors"
+        :error-messagesd="item_nameErrors"
         label="Item Name"
         required
         @input="$v.item_name.$touch()"
