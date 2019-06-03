@@ -45,7 +45,7 @@
               <template v-slot:items="props">
                 <td>{{ props.item.item_name }}</td>
                 <td class="text-xs-left">{{ props.item.brand }}</td>
-                <td class="text-xs-left">{{ props.item.color }}</td>
+                <td class="text-xs-left">{{ props.item.category }}</td>
                 <td class="text-xs-left">{{ props.item.srental }}(Won/Day)</td>
                 <td class="text-xs-left">{{ props.item.sprice }}(Won)</td>
                 <td class="text-xs-left">
@@ -98,7 +98,7 @@ export default {
           value: "id"
         },
         { text: "브랜드", sortable: false },
-        { text: "색상", sortable: false },
+        { text: "종류", sortable: false },
         { text: "렌탈 가격", sortable: false },
         { text: "구매 가격", sortable: false }
       ],
