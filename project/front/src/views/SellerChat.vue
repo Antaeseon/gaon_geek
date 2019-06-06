@@ -52,8 +52,8 @@ export default {
   async created() {
     let tempRoomNum=await this.$http.post(
       `http://localhost:3000/chat/getRoomNumber`,{
-        buyer_id:this.$store.state.id,
-        seller_id:"1324"
+        buyer_id:this.$route.params.id,
+        seller_id:this.$store.state.id,
       }
     );
     console.log(tempRoomNum.data.data)

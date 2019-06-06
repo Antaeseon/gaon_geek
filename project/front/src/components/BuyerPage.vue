@@ -32,6 +32,7 @@
                 <td class="text-xs-left">{{ props.item.total_price }}(Won)</td>
                 <td class="text-xs-left">
                   <v-btn small color="primary" :to="{name: 'detail',params: { id: props.item.item_id._id }  }">Detail</v-btn>
+                  <v-btn small color="primary" :to="{name: 'BuyerChat',params: { id: props.item.item_id.shop_id }}">chatting</v-btn>
                 </td>
               </template>
             </v-data-table>

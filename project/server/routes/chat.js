@@ -14,6 +14,7 @@ router.post('/getRoomNumber', function(req, res, next) {
                 seller_id : req.body.seller_id
             })
 
+            
             saveChat.save(function(err){
                 if(err){
                     res.status(500).send({ "Response": 500, "tag": err });
@@ -30,5 +31,14 @@ router.post('/getRoomNumber', function(req, res, next) {
     })   
 });
 
+router.post('/getBuyerRoomList', function(req, res, next) {
+    chat.find({seller_id:req.body.seller_id},function(err,result){
+        if(err){
+            res.status(500).send(err)
+        }else{
+            res.status(200).send(result)
+        }
+    })
+})
 // app.js로 모듈 연결
 module.exports = router;
