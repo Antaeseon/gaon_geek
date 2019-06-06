@@ -9,12 +9,15 @@ import LoadScript from 'vue-plugin-load-script';
 import IMP from 'vue-iamport'
 import * as VueGoogleMaps from "vue2-google-maps";
 import Chat from 'vue-beautiful-chat'
+import PubNubVue from 'pubnub-vue';
+
 Vue.use(Chat)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 Vue.use(AccountKit)
 Vue.use(LoadScript);
+Vue.use(PubNubVue, { subscribeKey: 'sub-c-1987dc0c-8826-11e9-9f15-ba4fa582ffed', publishKey: 'pub-c-c5d32a16-ca52-4f78-9e95-2b5940e8fe42' });
 
 Vue.loadScript("https://code.jquery.com/jquery-1.12.4.min.js")
 
