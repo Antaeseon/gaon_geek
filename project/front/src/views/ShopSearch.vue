@@ -391,7 +391,7 @@ export default {
       this.startLocation.lat = middle_lat;
       this.startLocation.lng = middle_lon;
 
-      console.log("A:"+this.startLocation.lat, this.startLocation.lng);
+      console.log("coordinates:"+this.coordinates);
       //   const marker = {
       //     // lat: this.currentPlace.geometry.location.lat(),
       //     // lng: this.currentPlace.geometry.location.lng() v
@@ -417,8 +417,14 @@ export default {
     
     openWindow (index) {
         this.markers.map(marker => {
+
           this.$set(this.window_open[index], 'open', true);
         });
+
+          //  marker = new google.maps.Marker({
+          //       position : position,
+          //       setMap : map
+          //   }); 
         console.log("windows:"+this.window_open[index].open);
         // console.log("index:"+index)
         // this.window_open[index]=true;

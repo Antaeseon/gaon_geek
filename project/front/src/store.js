@@ -23,12 +23,21 @@ export default new Vuex.Store({
 
         // Item list for Seller Mypage
         itemlist: [],
+        chats: null,
+        handle: ""
     },
     getters: {
         id: state => state.id,
         Token: state => state.Token,
-        isSeller: state => state.isSeller
-            //teamName: state => state.teamName
+        isSeller: state => state.isSeller,
+        CHATS: state => {
+            return state.chats
+        },
+        HANDLE: state => {
+            return state.handle
+        }
+
+
     },
     mutations: {
         login(state, {
@@ -52,11 +61,11 @@ export default new Vuex.Store({
             sessionStorage.removeItem('Token')
             sessionStorage.removeItem('id')
             sessionStorage.removeItem('isSeller')
-                // localStorage로 하면 F5누를때, 다시 로그인 상태로 됨...
-                // localStorage.removeItem('Token')
-                // localStorage.removeItem('id')
-                // localStorage.removeItem('isSeller')
-                // console.log('token 삭제')
+            // localStorage로 하면 F5누를때, 다시 로그인 상태로 됨...
+            // localStorage.removeItem('Token')
+            // localStorage.removeItem('id')
+            // localStorage.removeItem('isSeller')
+            // console.log('token 삭제')
         },
         enrollDup(state) {
             state.isSubmitDup = true;
@@ -127,10 +136,10 @@ export default new Vuex.Store({
             }
             // 정렬 및 중복 제거 
             state.cnt_length = state.cnt_length.slice() // 정렬하기 전에 복사본을 만든다.
-                .sort(function(a, b) {
+                .sort(function (a, b) {
                     return a - b;
                 })
-                .reduce(function(a, b) {
+                .reduce(function (a, b) {
                     if (a.slice(-1)[0] !== b) a.push(b); // slice(-1)[0] 을 통해 마지막 아이템을 가져온다.
                     return a;
                 }, []);
@@ -138,11 +147,32 @@ export default new Vuex.Store({
         select_item(state, payload) {
             state.selected_item_id = payload.id;
             // console.log(state.selected_item_id);
-            router.push({ name: 'detail', params: { "id": payload.id } });
+            router.push({
+                name: 'detail',
+                params: {
+                    "id": payload.id
+                }
+            });
+        },
+        SET_CHAT: (state, payload) => {
+            state.chats = payload;
+        },
+        ADD_CHAT: (state, payload) => {
+            state.chats.push(payload);
+        },
+        SET_HANDLE: (state, payload) => {
+            state.handle = payload;
         }
+
     },
     actions: {
-        login({ dispatch, commit }, { id, pwd }) {
+        login({
+            dispatch,
+            commit
+        }, {
+            id,
+            pwd
+        }) {
             // console.log('여기들어옴')
             console.log(id)
             console.log(pwd)
@@ -214,7 +244,9 @@ export default new Vuex.Store({
                 })
         },
         // Seller 정보 받아오기
-        getSellerInfo({ commit }, form) {
+        getSellerInfo({
+            commit
+        }, form) {
             // 아직 Seller가 아닐때 올림.
             axios.post('http://localhost:3000/enrollSeller/getSellerInfo', form)
                 .then(res => {
@@ -258,7 +290,9 @@ export default new Vuex.Store({
                     commit('modifyError');
                 });
         },
-        getItemList({ commit }, form) {
+        getItemList({
+            commit
+        }, form) {
             axios.post('http://localhost:3000/enrollItem/lists', form)
                 .then(res => {
                     let result = res.data.body;
@@ -267,7 +301,9 @@ export default new Vuex.Store({
                     console.log(err);
                 })
         },
-        deleteItem({ commit }, form) {
+        deleteItem({
+            commit
+        }, form) {
             form['shop_id'] = sessionStorage.getItem('id');
             axios.post('http://localhost:3000/enrollItem/deleteItem', form)
                 .then(res => {
@@ -310,14 +346,47 @@ export default new Vuex.Store({
                     commit('enrollError');
                 })
         },
-        getNationShoplist({ commit }, form) {
-            router.push({ name: "shopsearch", params: { "nation": form.nation } });
+        getNationShoplist({
+            commit
+        }, form) {
+            router.push({
+                name: "shopsearch",
+                params: {
+                    "nation": form.nation
+                }
+            });
         },
-        getItemlistforSearch({ commit }, form) {
-            router.push({ name: "itemsearch", params: { "shop_id": form.shop_id } });
+        getItemlistforSearch({
+            commit
+        }, form) {
+            router.push({
+                name: "itemsearch",
+                params: {
+                    "shop_id": form.shop_id
+                }
+            });
         },
-        pass_id({ commit }, id) {
-            commit('select_item', { id: id })
+        pass_id({
+            commit
+        }, id) {
+            commit('select_item', {
+                id: id
+            })
         },
+        SET_CHAT: async (context, payload) => {
+            let {
+                data
+            } = await axios.get('http://localhost:3000/chat');
+            console.log(data);
+            context.commit("SET_CHAT", data);
+        },
+        ADD_CHAT: (context, payload) => {
+            context.commit("ADD_CHAT", payload);
+        },
+        SET_HANDLE: (context, payload) => {
+            context.commit("SET_HANDLE", payload);
+        }
+
+
     }
 })

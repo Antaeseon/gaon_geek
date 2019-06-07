@@ -42,14 +42,6 @@
             multiple
             persistent-hint
         >
-          <!-- <template slot="item" slot-scope="data">
-            <v-list-tile-avatar>
-              <img :src="'https://s3.ap-northeast-2.amazonaws.com/wearever1/' + data.item.url" />
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title v-html="data.item.color"></v-list-tile-title>
-            </v-list-tile-content>
-          </template> -->
         </v-select>
             </v-flex>
           </v-layout>

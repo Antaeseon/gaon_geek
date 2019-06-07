@@ -75,6 +75,7 @@
                       <v-btn
                         color="primary"
                         @click="e1 = 2"
+          
                       >
                         Continue
                       </v-btn>
@@ -104,15 +105,161 @@
                           @input="$v.nation.$touch()"
                           @blur="$v.nation.$touch()"
                           ></v-select>
+
                           <v-text-field
                               v-model="location"
                               :error-messages="locationErrors"
                               required
+                              readonly
                               label="업체의 정확한 위치를 입력하세요."
                               @input="$v.location.$touch()"
                               @blur="$v.location.$touch()"
                           >
                           </v-text-field>
+                           
+                           
+                            <div class="text-xs-center">
+    <v-dialog
+      v-model="dialog"
+      width="500"
+    >
+      <template v-slot:activator="{ on }">
+        <v-btn
+          color="primary"
+          dark
+          v-on="on"
+        >
+          위치 검색
+        </v-btn>
+      </template>
+
+      <v-card>
+        
+
+        <v-card-text>
+        
+        <div>
+            <label>
+              
+              <gmap-autocomplete
+                placeholder="Search..." 
+              style="
+                  width: 100%;
+                  font-size: 15px;
+                  font-weight: bold;
+                  outline: primary;
+                  background-color: #E2E2E2;
+                  height: 20px;
+                  line-height: normal;
+                  text-align: left;
+                  padding: .8em .5em;
+                  border-radius: 2px;
+                  border: primary;  
+                "
+                @place_changed="setPlace">
+                
+              </gmap-autocomplete>
+              <div class="text-xs-right">
+              <v-spacer></v-spacer>
+              <v-btn 
+              @click="addMarker();" 
+              color="primary"
+              >위치 확인</v-btn>
+              </div>
+              
+            </label>
+           
+          <gmap-map
+            :center="center"
+            
+            :zoom="12"
+            style="width:100%;  height: 400px;"
+            :options="{
+              zoomControl: false,
+              mapTypeControl: false,
+              scaleControl: false,
+              streetViewControl: false,
+              rotateControl: false,
+              fullscreenControl: false,
+              disableDefaultUi: false,
+            }"
+          >
+            <gmap-marker
+              :key="index"
+              v-for="(m, index) in markers"
+              :position="m.position"
+              @click="center=m.position"
+            ></gmap-marker>
+          </gmap-map>
+        </div>
+        
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            flat
+            @click="dialog = false"
+          >
+            확인
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </div>
+                            <!-- <div>
+                              <div>
+                                <label>
+                                  <gmap-autocomplete
+                                    placeholder="업체의 정확한 위치를 입력하세요." 
+                                  style="
+
+                                   display: block;
+                                          width: 60vw;
+                                          font-size: 20px;
+                                          font-weight: 100;
+                                          outline: primary;
+                                          height: 20px;
+                                          line-height: 20px;
+                                          text-align: left;
+                                          "
+                                    @place_changed="setPlace">
+                                  </gmap-autocomplete>
+                                  <v-btn @click="addMarker" color="primary">위치 확인</v-btn>
+                                </label>
+                                <br/>
+
+                              </div>
+                              <br>
+                              <gmap-map
+                                :center="center"
+                                
+                                :zoom="12"
+                                style="width:100%;  height: 400px;"
+                                :options="{
+                                  zoomControl: false,
+                                  mapTypeControl: false,
+                                  scaleControl: false,
+                                  streetViewControl: false,
+                                  rotateControl: false,
+                                  fullscreenControl: false,
+                                  disableDefaultUi: false,
+                                }"
+                              >
+                                <gmap-marker
+                                  :key="index"
+                                  v-for="(m, index) in markers"
+                                  :position="m.position"
+                                  @click="center=m.position"
+                                ></gmap-marker>
+                              </gmap-map>
+                            </div> -->
+
+                          
+                          
                           <v-text-field
                               v-model="about_us"
                               :error-messages="aboutusErrors"
@@ -262,9 +409,11 @@
     import router from './../router'
     import attribute from './../attribute'
     import terms from './../terms'
+    import GoogleMap from "./../components/GoogleMap";
 
     export default {
     mixins: [validationMixin],
+  
 
     validations: {
         name: { required },
@@ -312,7 +461,11 @@
           {
             src: 'https://s3.ap-northeast-2.amazonaws.com/wearever1/wearever3.PNG'
           }
-        ]
+        ],
+        center: { lat: 45.508, lng: -73.587 },
+        markers: [],
+        places: [],
+        currentPlace: null
     }),
 
     computed: {
@@ -367,7 +520,9 @@
           return errors
         },
     },
-
+    mounted() {
+      this.geolocate();
+    },
     methods: {
         ...mapActions(['requestEnrollSeller']),
         async submit () {
@@ -506,6 +661,33 @@
         store.state.isSubmitDup = false,
         store.state.isSubmitError = false
         router.push({name:"home"});
+    },
+     setPlace(place) {
+      this.currentPlace = place;
+      
+    },
+    addMarker() {
+      if (this.currentPlace) {
+        // console.log(this.currentPlace.formatted_address)
+        this.location = this.currentPlace.formatted_address.slice(); //JSON.stringify();
+        //   console.log("current:"+JSON.stringify(this.currentPlace.name))
+        const marker = {
+          lat: this.currentPlace.geometry.location.lat(),
+          lng: this.currentPlace.geometry.location.lng()
+        };
+        this.markers.push({ position: marker });
+        this.places.push(this.currentPlace);
+        this.center = marker;
+        this.currentPlace = null;
+      }
+    },
+    geolocate: function() {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.center = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+      });
     }
     }
     }

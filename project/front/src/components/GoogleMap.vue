@@ -1,12 +1,11 @@
 <template>
   <div>
     <div>
-      <h2>Search and add a pin</h2>
       <label>
         <gmap-autocomplete
           @place_changed="setPlace">
         </gmap-autocomplete>
-        <button @click="addMarker">Add</button>
+        <button @click="addMarker">위치 확인</button>
       </label>
       <br/>
 
@@ -28,31 +27,36 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   name: "GoogleMap",
-   data: () => ({
-
-     // default to Montreal to keep it simple
+  data() {
+    return {
+      // default to Montreal to keep it simple
       // change this to whatever makes sense
       center: { lat: 45.508, lng: -73.587 },
-      markers: [ ],
+      markers: [],
       places: [],
       currentPlace: null
-    
-  }),
- 
+    };
+  },
+
   mounted() {
     this.geolocate();
   },
-
+    computed : {
+        ...mapState(['googlemapSearch'])
+    },
   methods: {
     // receives a place object via the autocomplete component
     setPlace(place) {
       this.currentPlace = place;
+      
     },
     addMarker() {
       if (this.currentPlace) {
-     
+          this.googlemapSearch = JSON.stringify(this.currentPlace.name).slice();
+        //   console.log("current:"+JSON.stringify(this.currentPlace.name))
         const marker = {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng()
