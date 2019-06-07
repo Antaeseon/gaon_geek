@@ -33,6 +33,42 @@
                 <td class="text-xs-left">
                   <v-btn small color="primary" :to="{name: 'detail',params: { id: props.item.item_id._id }  }">Detail</v-btn>
                 </td>
+                <td class="text-xs-left">
+                  
+                  <v-dialog v-model="dialog" persistent max-width="600px">
+      <template v-slot:activator="{ on }">
+        <v-btn small color="primary" dark v-on="on" @click="reviewRating">Review</v-btn>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">리뷰 작성</span>
+         
+        </v-card-title>
+        <hr><hr>
+        <v-card-text>
+          <v-container grid-list-md>
+            <v-layout wrap>
+              <v-flex xs12 sm6 md12>
+                상품은 만족하셨나요?*
+                <v-rating v-model="itemrating" background-color="red lighten-3" color="red" x-large></v-rating>상점은 만족하셨나요?*
+                <v-rating v-model="shoprating" background-color="red lighten-3" color="red" x-large></v-rating>
+                <hr><br>
+                리뷰*
+                <v-textarea box placeholder="최소 10자리 이상 입력해주세요"></v-textarea>
+              </v-flex>
+               <small>*필수 입력<br> 상품과 무관한 사진/동영상을 첨부한 리뷰는 통보없이 삭제 및 적립 혜택이 회수될 수 있습니다.</small>
+            </v-layout>
+          </v-container>
+         
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
+          <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+                </td>
               </template>
             </v-data-table>
           </v-card-text>
@@ -51,6 +87,9 @@ var _ = require('lodash');
 export default {
   data() {
     return {
+       
+    itemrating: 5,
+    shoprating: 5,
       active: null,
       dialog: false,
       mainItem: [],
@@ -64,7 +103,8 @@ export default {
         { text: "대여일", sortable: false },
         { text: "반납일", sortable: false },
         { text: "금액", sortable: false },
-        { text: "상세정보", sortable: false }
+        { text: "상세정보", sortable: false },
+        { text: "리뷰작성", sortable: false }
       ],
             headers2: [
         {
@@ -75,7 +115,8 @@ export default {
         },
         { text: "구매일", sortable: false },
         { text: "금액", sortable: false },
-        { text: "상세정보", sortable: false }
+        { text: "상세정보", sortable: false },
+        { text: "리뷰작성", sortable: false }
       ],
 
       buyItem: [],
