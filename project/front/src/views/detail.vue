@@ -4,7 +4,7 @@
       <v-flex d-flex xs12 order-xs5>
         <v-layout column>
           <v-flex d-flex>
-            <v-tabs v-model="active" color="blue lighten-5" light slider-color="blue">
+            <v-tabs v-model="active" color="grey lighten-1" light slider-color="blue">
               <v-tab ripple>상세설명</v-tab>
               <v-tab ripple>판매문의</v-tab>
               <v-tab ripple>리뷰</v-tab>
@@ -16,7 +16,9 @@
               </v-tab-item>
               <v-tab-item>
                 <v-card flat>
+                  <board :childid="this.$store.state.id"></board>
                   <v-card-text>{{ qna }}</v-card-text>
+                  
                 </v-card>
               </v-tab-item>
               <v-tab-item>
@@ -54,20 +56,41 @@
                       <v-card-text>
                         <h2>상품명 : {{mainItem.item_name}}</h2>
                         <br>
-                        판매가격 : {{mainItem.price}}
+                        <hr>
+                        <hr>
+
                         <br>
-                        1일당 : {{mainItem.rental}}
+                        <v-chip color="white" text-color="secondary">
+                          <v-icon left>mdi-cash-multiple</v-icon>price
+                        </v-chip>
+                        {{mainItem.price}}원
                         <br>
-                        <br>
-                        <v-flex xs12 sm6>
+
+                        <v-chip color="white" text-color="secondary">
+                          <v-icon left>mdi-cash</v-icon>rental fee per day
+                        </v-chip>
+
+                        {{mainItem.rental}}원/day
+                        <v-flex xs12 sm6 md12>
+                          <v-chip color="white" text-color="secondary">
+                            <v-icon left>mdi-palette-outline</v-icon>Color
+                          </v-chip>
+                          {{mainItem.color}}
                           <br>
-                          색깔 : {{mainItem.color}}
+                          <v-chip color="white" text-color="secondary">
+                            <v-icon left>mdi-tshirt-crew-outline</v-icon>size
+                          </v-chip>
+                          {{mainItem.size}}
                           <br>
-                          사이즈 : {{mainItem.size}}
+                          <v-chip color="white" text-color="secondary">
+                            <v-icon left>mdi-wrench-outline</v-icon>item state
+                          </v-chip>
+                          {{mainItem.state}}
                           <br>
-                          상태 : {{mainItem.state}}
-                          <br>
-                          소재 : {{mainItem.material}}
+                          <v-chip color="white" text-color="secondary">
+                            <v-icon left>mdi-zodiac-aquarius</v-icon>item material
+                          </v-chip>
+                          {{mainItem.material}}
                           <div>
                             <v-chip label color="pink" text-color="white">
                               <v-icon left>label</v-icon>Tags
@@ -79,7 +102,11 @@
                               :key="i"
                             >#{{t}}</v-chip>
                           </div>
-                          <v-flex xs3>
+                          <br>
+                          <hr>
+                          <hr>
+                          <br>
+                          <v-flex xs5>
                             <v-select :items="['렌탈', '구매']" label="구매방법" v-model="statusFilter"></v-select>
                           </v-flex>
 
@@ -150,11 +177,11 @@
                             </v-date-picker>
                           </v-menu>
                         </v-flex>
-                        <v-btn @click="requestPay">결제하기</v-btn>
-                          <v-btn fab dark small color="white" @click="likeitToggle()">
-                            <v-icon v-if="likeit == true" color="pink">favorite</v-icon>
-                            <v-icon v-if="likeit == false" color="black">favorite_border</v-icon>
-                          </v-btn>
+                        <v-btn fab dark small color="white" @click="requestPay"><v-icon color="green">mdi-currency-usd</v-icon></v-btn>
+                        <v-btn fab dark small color="white" @click="likeitToggle()">
+                          <v-icon v-if="likeit == true" color="pink">favorite</v-icon>
+                          <v-icon v-if="likeit == false" color="pink">favorite_border</v-icon>
+                        </v-btn>
                       </v-card-text>
                     </v-card>
                   </v-flex>
@@ -170,9 +197,10 @@
 <script>
 import Vue from "vue";
 import axios from "axios";
-import { mapState } from 'vuex'
-
+import { mapState } from "vuex";
+import board from "../components/Board";
 export default {
+  name:'Board',
   data() {
     return {
       tradeList: [],
@@ -190,9 +218,9 @@ export default {
       daylength: null,
       statusFilter: "",
       t_method: "",
-      t_price:0,
-      likeit : false,
-      likeitList : []
+      t_price: 0,
+      likeit: false,
+      likeitList: []
     };
   },
   async created() {
@@ -210,52 +238,43 @@ export default {
       }`
     );
     // 로그인이 안되어 있다면, likeit 해제
-    if(this.Token !== null)
-    {
+    if (this.Token !== null) {
       var user = await this.$http.get(
-        `http://localhost:3000/user/${
-          sessionStorage.getItem('id')
-        }`
+        `http://localhost:3000/user/${sessionStorage.getItem("id")}`
       );
-      if(user.data.response.likeit.includes(this.$route.params.id))
+      if (user.data.response.likeit.includes(this.$route.params.id))
         this.likeit = true;
-      else
-        this.likeit = false;
+      else this.likeit = false;
       this.likeitList = user.data.response.likeit;
-    }
-    else this.likeit = false;
+    } else this.likeit = false;
 
     this.mainItem = res.data.response;
     this.items = this.mainItem.imageUrl;
     this.tradeList = rest.data.response;
     console.log("ddd", this.mainItem);
   },
+  components: {
+    board
+  },
   computed: {
-    ...mapState(['Token']),
+    ...mapState(["Token"])
   },
   methods: {
-    likeitToggle()
-    {
-      if(this.Token === null)
-      {
+    likeitToggle() {
+      if (this.Token === null) {
         alert("로그인이 필요한 서비스입니다.");
-      }
-      else
-      {
-        if(this.likeit === true)
-        {
-          const idx = this.likeitList.indexOf(this.$route.params.id)
-          this.likeitList.splice(idx, 1)
-        }
-        else
-        {
+      } else {
+        if (this.likeit === true) {
+          const idx = this.likeitList.indexOf(this.$route.params.id);
+          this.likeitList.splice(idx, 1);
+        } else {
           this.likeitList.push(this.$route.params.id);
         }
         this.likeit = !this.likeit;
         this.$http.post("http://localhost:3000/user/likeit", {
-        id: sessionStorage.getItem('id'),
-        body : { likeit : this.likeitList }
-      });
+          id: sessionStorage.getItem("id"),
+          body: { likeit: this.likeitList }
+        });
       }
     },
     submit() {
@@ -274,7 +293,7 @@ export default {
         return_date: this.datesend,
         is_buy: false,
         trade_method: this.t_method,
-        total_price:this.t_price
+        total_price: this.t_price
       });
     },
     computeDate() {
@@ -290,49 +309,52 @@ export default {
       );
       this.daylength = between;
     },
-    allowedDates: function(val) { 
-        console.log('gg')
-        console.log(val)
-        var temp = val.substring(0, 10).split("-");
-        var temp_date = temp[0] + temp[1] + temp[2];
-        console.log(this.tradeList.length)
-        for (var i = 0; i < this.tradeList.length; i++) {
-          if(this.tradeList[i].borrow_date==null||this.tradeList[i].return_date==null)
-            continue
-          var sarray = this.tradeList[i].borrow_date.substring(0, 10).split("-");
-          var tarray = sarray[0] + sarray[1] + sarray[2];
-          var endarray = this.tradeList[i].return_date
-            .substring(0, 10)
-            .split("-");
-          var tearray = endarray[0] + endarray[1] + endarray[2];
-          if (temp_date >= tarray && temp_date <= tearray) return false;
-        }
+    allowedDates: function(val) {
+      console.log("gg");
+      console.log(val);
+      var temp = val.substring(0, 10).split("-");
+      var temp_date = temp[0] + temp[1] + temp[2];
+      console.log(this.tradeList.length);
+      for (var i = 0; i < this.tradeList.length; i++) {
         if (
-          parseInt(val.substring(5, 7)) <
-          parseInt(new Date().toISOString().substring(5, 7))
+          this.tradeList[i].borrow_date == null ||
+          this.tradeList[i].return_date == null
         )
-          return false;
-        else if (
-          parseInt(val.substring(5, 7)) >
-          parseInt(new Date().toISOString().substring(5, 7))
+          continue;
+        var sarray = this.tradeList[i].borrow_date.substring(0, 10).split("-");
+        var tarray = sarray[0] + sarray[1] + sarray[2];
+        var endarray = this.tradeList[i].return_date
+          .substring(0, 10)
+          .split("-");
+        var tearray = endarray[0] + endarray[1] + endarray[2];
+        if (temp_date >= tarray && temp_date <= tearray) return false;
+      }
+      if (
+        parseInt(val.substring(5, 7)) <
+        parseInt(new Date().toISOString().substring(5, 7))
+      )
+        return false;
+      else if (
+        parseInt(val.substring(5, 7)) >
+        parseInt(new Date().toISOString().substring(5, 7))
+      )
+        return true;
+      if (
+        parseInt(val.split("-")[2], 10) >
+        parseInt(
+          new Date()
+            .toISOString()
+            .substr(0, 10)
+            .split("-")[2],
+          10
         )
-          return true;
-        if (
-          parseInt(val.split("-")[2], 10) >
-          parseInt(
-            new Date()
-              .toISOString()
-              .substr(0, 10)
-              .split("-")[2],
-            10
-          )
-        )
-          return true;
+      )
+        return true;
     },
     requestPay: function() {
-      if(this.$store.state.Token==null){
-        alert("로그인을 해 주세요.")
-        return
+      if (this.$store.state.Token == null) {
+        alert("로그인을 해 주세요.");
+        return;
       }
       // IMP.request_pay(param, callback) 호출
       var totalPrice;
@@ -348,9 +370,9 @@ export default {
           alert("날짜 설정이 잘못되었습니다.");
           return;
         }
-        totalPrice = this.mainItem.rental * (this.daylength+1);
+        totalPrice = this.mainItem.rental * (this.daylength + 1);
       }
-      this.t_price=totalPrice
+      this.t_price = totalPrice;
       Vue.IMP().request_pay(
         {
           pg: "html5_inicis",
@@ -385,3 +407,10 @@ export default {
   }
 };
 </script>
+<style>
+h2 {
+  font-family: NanumGothicRegular;
+  font-style: normal;
+  font-weight: normal;
+}
+</style>

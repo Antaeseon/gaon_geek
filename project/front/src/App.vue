@@ -77,7 +77,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
-    <v-toolbar color="indigo" dark fixed app>
+    <v-toolbar color="blue-grey darken-4" dark fixed app>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title>Wearever</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -160,7 +160,7 @@
     <v-content>
       <router-view></router-view>
     </v-content>
-    <v-footer color="indigo" app>
+    <v-footer color="blue-grey darken-4" app>
       <span class="white--text">&copy; 2019</span>
     </v-footer>
   </v-app>
