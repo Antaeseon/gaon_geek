@@ -160,9 +160,7 @@
     <v-content>
       <router-view></router-view>
     </v-content>
-    <v-footer color="blue-grey darken-4" app>
-      <span class="white--text">&copy; 2019</span>
-    </v-footer>
+    <core-footer />
   </v-app>
 </template>
 
@@ -172,6 +170,10 @@ import store from "./store";
 import router from "./router";
 
 export default {
+  name: 'App',
+    components: {
+      CoreFooter: () => import('@/components/core/Footer'),
+      },
   data() {
     return {
       dialog: store.state.login_dialog,

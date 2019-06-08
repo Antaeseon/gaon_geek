@@ -17,16 +17,16 @@
             <v-container grid-list-md>
               <v-layout wrap>
                 <v-flex xs12 sm6 md12>
-                  <v-text-field v-model="childid" label="작성자"></v-text-field>
+                  <v-text-field v-model="childid" label="작성자" readonly></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md12>
-                  <v-text-field v-model="editedItem.date" label="작성일"></v-text-field>
+                  <v-text-field v-model="editedItem.date" label="작성일" readonly></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md12>
-                  <v-text-field v-model="editedItem.title" label="제목"></v-text-field>
+                  <v-text-field v-model="editedItem.title" label="제목" placdholder="제목없음"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md12>
-                  <v-textarea box name="input-7-4" label="글쓰기" v-model="editedItem.content"></v-textarea>
+                  <v-textarea box name="input-7-4" label="글쓰기" v-model="editedItem.content" placeholder="내용없음" ></v-textarea>
                 </v-flex>
               </v-layout>
             </v-container>
@@ -124,15 +124,15 @@ export default {
     editedItem: {
      
       date: new Date().toISOString().substr(0, 10),
-      title: "제목없음",
-      content: "내용없음",
+      title: "",
+      content: "",
       
     },
     defaultItem: {
      
       date: new Date().toISOString().substr(0, 10),
-      title: "제목없음",
-      content: "내용없음",
+      title: "",
+      content: "",
       
     }
   }),
