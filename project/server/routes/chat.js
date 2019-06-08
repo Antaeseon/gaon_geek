@@ -36,5 +36,18 @@ router.post('/getBuyerRoomList', function(req, res, next) {
         }
     })
 })
+
+
+router.post('/getSellerRoomList', function(req, res, next) {
+    chat.find({buyer_id:req.body.buyer_id},function(err,result){
+        if(err){
+            res.status(500).send(err)
+        }else{
+            res.status(200).send(result)
+        }
+    })
+})
+
+
 // app.js로 모듈 연결
 module.exports = router;

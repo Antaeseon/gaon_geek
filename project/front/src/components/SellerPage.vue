@@ -14,6 +14,40 @@
         <v-rating v-model="rating" readonly></v-rating>
         <br>
         <h2 style="color:black;">등록날짜: {{enroll_Date.slice(0,10)}}</h2>
+        <!--  -->
+        <v-dialog v-model="chatDialog" max-width="500px">
+          <br>
+          <template v-slot:activator="{ on }">
+            <v-btn dark class="mb-2" v-on="on">chattingList</v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">ChatRoom</span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-data-table :headers="headers" :items="buyerRoomId" class="elevation-1">
+                <template v-slot:items="buyer">
+                  <td class="text-xs-left">{{ buyer.item.buyer_id }}</td>
+                  <td class="text-xs-left">
+                    <v-btn
+                      small
+                      color="primary"
+                      :to="{name: 'SellerChat',params: { id: buyer.item.buyer_id }}"
+                    >Go!!</v-btn>
+                  </td>
+                </template>
+              </v-data-table>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" flat @click="chatClose">Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <!--  -->
         <br>
       </v-layout>
     </v-parallax>
@@ -133,11 +167,6 @@
         </v-card>
       </v-dialog>
     </v-container>
-    <div>
-      <span :key="buyer" v-for="buyer in buyerRoomId">
-                  <v-btn small color="primary" :to="{name: 'SellerChat',params: { id: buyer.buyer_id }}">chatting</v-btn>
-      </span>
-    </div>
   </div>
 </template>
 
@@ -183,7 +212,21 @@ export default {
       imageUrl_copy: ["wearever.png"],
       status_copy: "",
       index_copy: 0,
-      buyerRoomId: []
+      buyerRoomId: [],
+      chatDialog: false,
+      headers: [
+        {
+          text: "Buyer ID",
+          align: "left",
+          sortable: false,
+          value: "name"
+        },
+        {
+          text: "Go ChatRoom",
+          sortable: false,
+          align: "left"
+        }
+      ]
     };
   },
   computed: {
@@ -217,6 +260,9 @@ export default {
     close() {
       this.dialog = false;
       this.clear();
+    },
+    chatClose() {
+      this.chatDialog = false;
     },
     item_detail(index) {
       this.index_copy = index;
