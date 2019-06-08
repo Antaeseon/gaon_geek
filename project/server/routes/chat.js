@@ -13,8 +13,6 @@ router.post('/getRoomNumber', function(req, res, next) {
                 buyer_id : req.body.buyer_id,
                 seller_id : req.body.seller_id
             })
-
-            
             saveChat.save(function(err){
                 if(err){
                     res.status(500).send({ "Response": 500, "tag": err });
@@ -23,8 +21,6 @@ router.post('/getRoomNumber', function(req, res, next) {
                     res.status(200).json({data:saveChat})
                 }
             })
-            
-
         }else{
             res.status(200).json({data:result[0]})
         }
