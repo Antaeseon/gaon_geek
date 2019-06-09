@@ -122,7 +122,7 @@
           <span>Sign Up</span>
         </v-tooltip>
 
-        <v-dialog v-model="dialog" max-width="290">
+        <v-dialog persistent @keydown.esc="cancel" v-model="dialog" max-width="290">
           <v-card >
             <v-card-title class="headline">Log in</v-card-title>
             <v-form>
@@ -245,6 +245,19 @@ export default {
       // 로그인 되있을 경우
       else {
         router.push({ name: "myPage" });
+      }
+    }
+  },
+  watch: {
+    dialog () {
+      const handler = e => {
+        if (e.keyCode === 27) {
+          this.cancel();
+          window.removeEventListener('keydown', handler)
+        }
+      }
+      if (this.dialog) {
+        window.addEventListener('keydown', handler)
       }
     }
   },
