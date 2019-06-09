@@ -1,13 +1,13 @@
 <template>
   <div class="container chat">
-    <h2 class="text-primary text-center">WearEver</h2>
-    <h5 class="text-secondary text-center">Enjoy your life</h5>
+    <h1 class="text-xs-center">WearEver</h1>
+    <h4 class="text-xs-center">Enjoy your life</h4>
     <div class="card">
       <div class="card-body">
         <p class="text-secondary nomessages" v-if="messages.length == 0">[No messages yet!]</p>
         <div class="messages" v-chat-scroll="{always: false, smooth: true}">
           <div v-for="message in messages" :key="message.id">
-            <span class="text-info">[{{ message.name }}]:</span>
+            <span class="blue--text">[{{ message.name }}]:</span>
             <span>{{message.message}}</span>
             <span class="text-secondary time">{{message.timestamp}}</span>
           </div>
@@ -18,16 +18,12 @@
         <div class="container" style="margin-bottom: 30px">
           <form @submit.prevent="createMessage">
             <div class="form-group">
-              <input
-                type="text"
-                name="message"
-                class="form-control"
-                placeholder="Enter message ..."
-                v-model="newMessage"
-              >
+              <v-text-field label="Input" placeholder="Enter message ..."
+                v-model="newMessage"></v-text-field>
               <p class="text-danger" v-if="errorText">{{ errorText }}</p>
             </div>
-            <button class="btn btn-primary" type="submit" name="action">Submit</button>
+            <v-btn flat small color="primary" type="submit">Submit</v-btn>
+
           </form>
         </div>
       </div>
@@ -46,19 +42,20 @@ export default {
       messages: [],
       newMessage: null,
       errorText: null,
-      roomNumber:null
+      roomNumber: null
     };
   },
   async created() {
-    let tempRoomNum=await this.$http.post(
-      `http://localhost:3000/chat/getRoomNumber`,{
-        buyer_id:this.$store.state.id,
-        seller_id:this.$route.params.id
+    let tempRoomNum = await this.$http.post(
+      `http://localhost:3000/chat/getRoomNumber`,
+      {
+        buyer_id: this.$store.state.id,
+        seller_id: this.$route.params.id
       }
     );
-    console.log(tempRoomNum.data.data)
-    this.roomNumber=tempRoomNum.data.data._id
-    console.log('aaaa',this.roomNumber)
+    console.log(tempRoomNum.data.data);
+    this.roomNumber = tempRoomNum.data.data._id;
+    console.log("aaaa", this.roomNumber);
     let ref = fb.collection(this.roomNumber).orderBy("timestamp");
     ref.onSnapshot(snapshot => {
       snapshot.docChanges().forEach(change => {
