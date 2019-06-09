@@ -123,7 +123,7 @@
         </v-tooltip>
 
         <v-dialog v-model="dialog" max-width="290">
-          <v-card>
+          <v-card >
             <v-card-title class="headline">Log in</v-card-title>
             <v-form>
               <v-container>
@@ -135,6 +135,7 @@
                       label="Login"
                       type="text"
                       v-model="uid"
+                      v-on:keyup.enter="login" 
                     ></v-text-field>
                     <v-text-field
                       prepend-icon="lock"
@@ -143,6 +144,7 @@
                       id="password"
                       type="password"
                       v-model="pwd"
+                      v-on:keyup.enter="login"
                     ></v-text-field>
                   </v-form>
                 </v-layout>
@@ -245,6 +247,6 @@ export default {
         router.push({ name: "myPage" });
       }
     }
-  }
+  },
 };
 </script>
