@@ -7,7 +7,7 @@
 
       <!--  -->
 
-      <v-dialog v-model="chatDialog" max-width="500px">
+      <v-dialog right v-model="chatDialog" max-width="500px">
         <br>
         <template v-slot:activator="{ on }">
           <v-btn dark class="mb-2" v-on="on">chattingList</v-btn>
