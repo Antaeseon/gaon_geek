@@ -209,57 +209,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </div>
-                            <!-- <div>
-                              <div>
-                                <label>
-                                  <gmap-autocomplete
-                                    placeholder="업체의 정확한 위치를 입력하세요." 
-                                  style="
-
-                                   display: block;
-                                          width: 60vw;
-                                          font-size: 20px;
-                                          font-weight: 100;
-                                          outline: primary;
-                                          height: 20px;
-                                          line-height: 20px;
-                                          text-align: left;
-                                          "
-                                    @place_changed="setPlace">
-                                  </gmap-autocomplete>
-                                  <v-btn @click="addMarker" color="primary">위치 확인</v-btn>
-                                </label>
-                                <br/>
-
-                              </div>
-                              <br>
-                              <gmap-map
-                                :center="center"
-                                
-                                :zoom="12"
-                                style="width:100%;  height: 400px;"
-                                :options="{
-                                  zoomControl: false,
-                                  mapTypeControl: false,
-                                  scaleControl: false,
-                                  streetViewControl: false,
-                                  rotateControl: false,
-                                  fullscreenControl: false,
-                                  disableDefaultUi: false,
-                                }"
-                              >
-                                <gmap-marker
-                                  :key="index"
-                                  v-for="(m, index) in markers"
-                                  :position="m.position"
-                                  @click="center=m.position"
-                                ></gmap-marker>
-                              </gmap-map>
-                            </div> -->
-
-                          
-                          
+    </div>
                           <v-text-field
                               v-model="about_us"
                               :error-messages="aboutusErrors"

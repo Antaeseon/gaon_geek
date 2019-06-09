@@ -14,7 +14,7 @@
         <v-rating v-model="rating" readonly></v-rating>
         <br>
         <h2 style="color:black;">등록날짜: {{enroll_Date.slice(0,10)}}</h2>
-        <!--  -->
+     
         <v-dialog v-model="chatDialog" max-width="500px">
           <br>
           <template v-slot:activator="{ on }">
@@ -47,7 +47,7 @@
           </v-card>
         </v-dialog>
 
-        <!--  -->
+      
         <br>
       </v-layout>
     </v-parallax>
