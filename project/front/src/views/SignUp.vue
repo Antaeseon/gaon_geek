@@ -90,7 +90,7 @@ import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
 const axios = require("axios");
 ;window.channelPluginSettings = {
-    "pluginKey": "1d293508-80c2-484c-910a-4d0b31679991" //please fill with your plugin key
+    "pluginKey": "cae3e8e9-3d9d-4da3-a757-b0d1157b1f26" //please fill with your plugin key
   };
   (function() {
     var w = window;
