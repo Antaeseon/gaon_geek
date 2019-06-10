@@ -152,7 +152,7 @@ export default new Router({
             name: 'event',
 
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/event.vue')
+                import ( /* webpackChunkName: "about" */ './views/event.vue')
         },
     ]
 })
