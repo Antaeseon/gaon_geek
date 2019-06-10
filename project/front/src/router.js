@@ -57,42 +57,42 @@ export default new Router({
             path: '/',
             name: 'home',
             component: () =>
-                import( /* webpackChunkName: "Home" */ './views/Home.vue')
+                import ( /* webpackChunkName: "Home" */ './views/Home.vue')
         },
         {
             path: '/BuyerChat/:id',
             name: 'BuyerChat',
             props: true,
             component: () =>
-                import( /* webpackChunkName: "chat" */ './views/BuyerChat.vue')
+                import ( /* webpackChunkName: "chat" */ './views/BuyerChat.vue')
         },
         {
             path: '/SellerChat/:id',
             name: 'SellerChat',
             props: true,
             component: () =>
-                import( /* webpackChunkName: "chat" */ './views/SellerChat.vue')
+                import ( /* webpackChunkName: "chat" */ './views/SellerChat.vue')
         },
 
         {
             path: '/signup',
             name: 'SignUp',
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/SignUp.vue')
+                import ( /* webpackChunkName: "about" */ './views/SignUp.vue')
         },
         {
             path: '/detail/:id',
             name: 'detail',
             props: true,
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/detail.vue')
+                import ( /* webpackChunkName: "about" */ './views/detail.vue')
         },
         {
             path: '/googlemap',
             name: 'googlemap',
             beforeEnter: checkSeller,
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/GoogleMap.vue')
+                import ( /* webpackChunkName: "about" */ './views/GoogleMap.vue')
         },
         {
             path: '/enrollSeller',
@@ -100,46 +100,60 @@ export default new Router({
             // enrollSeller 들어가기 전에 로그인 되어있는 지 확인하고, 안되있으면 로그인 페이지 표시.
             beforeEnter: enrollSellerInitial,
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/enrollSeller.vue')
+                import ( /* webpackChunkName: "about" */ './views/enrollSeller.vue')
         },
         {
             path: '/modifySeller',
             name: 'modifySeller',
             beforeEnter: checkSeller,
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/modifySeller.vue')
+                import ( /* webpackChunkName: "about" */ './views/modifySeller.vue')
         },
         {
             path: '/myPage',
             name: 'myPage',
             beforeEnter: checkmypage,
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/myPage.vue')
+                import ( /* webpackChunkName: "about" */ './views/myPage.vue')
         },
         {
             path: '/selectcountry',
             name: 'selectcountry',
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/SelectCountry.vue')
+                import ( /* webpackChunkName: "about" */ './views/SelectCountry.vue')
         },
         {
             path: '/shopsearch/:nation',
             name: 'shopsearch',
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/ShopSearch.vue')
+                import ( /* webpackChunkName: "about" */ './views/ShopSearch.vue')
         },
         {
             path: '/itemsearch/:shop_id',
             name: 'itemsearch',
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/ItemSearch.vue')
+                import ( /* webpackChunkName: "about" */ './views/ItemSearch.vue')
         },
         {
             path: '/enrollItem',
             name: 'enrollItem',
             beforeEnter: checkSeller,
             component: () =>
-                import( /* webpackChunkName: "about" */ './views/enrollItem.vue')
+                import ( /* webpackChunkName: "about" */ './views/enrollItem.vue')
+        },
+        {
+            path: '/aboutus',
+            name: 'aboutus',
+            beforeEnter: checkSeller,
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/Aboutus.vue')
+        },
+        {
+            path: '/event',
+            name: 'event',
+
+            component: () =>
+                import( /* webpackChunkName: "about" */ './views/event.vue')
         },
     ]
 })
