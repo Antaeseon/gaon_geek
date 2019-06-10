@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import router from "./router"
+const config = require('./config')
 
 
 Vue.use(Vuex);
@@ -20,7 +21,6 @@ export default new Vuex.Store({
         modifySellerError: false,
         sellerInfo: null,
         login_dialog: false,
-
         // Item list for Seller Mypage
         itemlist: [],
         chats: null,
@@ -36,8 +36,6 @@ export default new Vuex.Store({
         HANDLE: state => {
             return state.handle
         }
-
-
     },
     mutations: {
         login(state, {
@@ -174,15 +172,14 @@ export default new Vuex.Store({
             pwd
         }) {
             // console.log('여기들어옴')
-            console.log(id)
             console.log(pwd)
             return new Promise((resolve, reject) => {
-                axios.post(`http://localhost:3000/user/login`, {
+                axios.post(`${config.serverUri}/user/login`, {
                         id: id,
                         pwd: pwd
                     })
                     .then(res => {
-                        axios.post(`http://localhost:3000/user/isSeller`, {
+                        axios.post(`${config.serverUri}/user/isSeller`, {
                                 id: id
                             })
                             .then(resS => {
@@ -224,7 +221,7 @@ export default new Vuex.Store({
             commit
         }, form) {
             // 아직 Seller가 아닐때 올림.
-            axios.post('http://localhost:3000/enrollSeller', form)
+            axios.post(`${config.serverUri}/enrollSeller`, form)
                 .then(res => {
                     if (res.data.tag === "Duplicate") {
                         commit('enrollDup');
@@ -248,7 +245,7 @@ export default new Vuex.Store({
             commit
         }, form) {
             // 아직 Seller가 아닐때 올림.
-            axios.post('http://localhost:3000/enrollSeller/getSellerInfo', form)
+            axios.post(`${config.serverUri}/enrollSeller/getSellerInfo`, form)
                 .then(res => {
                     let current = {
                         id: res.data.body[0].id,
@@ -274,7 +271,7 @@ export default new Vuex.Store({
             commit
         }, form) {
             // 아직 Seller가 아닐때 올림.
-            axios.post('http://localhost:3000/enrollSeller/modifySellerInfo', form)
+            axios.post(`${config.serverUri}/enrollSeller/modifySellerInfo`, form)
                 .then(res => {
                     if (res.data.tag === "You are not Seller") {
                         commit('modifyError');
@@ -293,7 +290,7 @@ export default new Vuex.Store({
         getItemList({
             commit
         }, form) {
-            axios.post('http://localhost:3000/enrollItem/lists', form)
+            axios.post(`${config.serverUri}/enrollItem/lists`, form)
                 .then(res => {
                     let result = res.data.body;
                     commit('getItemListSuccess', result);
@@ -305,7 +302,7 @@ export default new Vuex.Store({
             commit
         }, form) {
             form['shop_id'] = sessionStorage.getItem('id');
-            axios.post('http://localhost:3000/enrollItem/deleteItem', form)
+            axios.post(`${config.serverUri}/enrollItem/deleteItem`, form)
                 .then(res => {
                     let result = res.data.body;
                     commit('getItemListSuccess', result);
@@ -316,7 +313,7 @@ export default new Vuex.Store({
         enrollItem({
             commit
         }, form) {
-            axios.post('http://localhost:3000/enrollItem', form)
+            axios.post(`${config.serverUri}/enrollItem`, form)
                 .then(res => {
                     if (res.data.tag === "Success") {
                         alert("제출이 완료되었습니다!");
@@ -333,7 +330,7 @@ export default new Vuex.Store({
         modifyItem({
             commit
         }, form) {
-            axios.post('http://localhost:3000/enrollItem/modify', form)
+            axios.post(`${config.serverUri}/enrollItem/modify`, form)
                 .then(res => {
                     if (res.data.tag === "Success") {
                         commit('changeItemInfo', {
@@ -373,20 +370,6 @@ export default new Vuex.Store({
                 id: id
             })
         },
-        SET_CHAT: async (context, payload) => {
-            let {
-                data
-            } = await axios.get('http://localhost:3000/chat');
-            console.log(data);
-            context.commit("SET_CHAT", data);
-        },
-        ADD_CHAT: (context, payload) => {
-            context.commit("ADD_CHAT", payload);
-        },
-        SET_HANDLE: (context, payload) => {
-            context.commit("SET_HANDLE", payload);
-        }
-
 
     }
 })

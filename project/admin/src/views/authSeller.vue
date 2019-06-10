@@ -35,6 +35,8 @@
 </template>
 
 <script>
+const config = require('../config')
+
 export default {
   data() {
     return {
@@ -56,7 +58,7 @@ export default {
     };
   },
   async created() {
-    var tt = await this.$http.get("http://localhost:3000/enrollSeller/lists");
+    var tt = await this.$http.get(`${config.serverUri}/enrollSeller/lists`);
     this.dets = tt.data.body;
     console.log("이건", this.dets);
   },
@@ -67,19 +69,19 @@ export default {
     sendSMS(phoneNum, messageS) {
       //보내고 싶은 번호와 메세지
       console.log(phoneNum, messageS);
-      this.$http.post("http://localhost:3000/sens/sendMessage", {
+      this.$http.post(`${config.serverUri}/sens/sendMessage`, {
         phone: phoneNum,
         message: messageS
       });
     },
     async Auth(prop) {
       console.log(prop);
-      var getUser = await this.$http.get(`http://localhost:3000/user/${prop}`);
+      var getUser = await this.$http.get(`${config.serverUri}/user/${prop}`);
       console.log(getUser.data.response.phoneNum);
-      await this.$http.post("http://localhost:3000/enrollSeller/accept", {
+      await this.$http.post(`${config.serverUri}/enrollSeller/accept`, {
         id: prop
       });
-      var tt = await this.$http.get("http://localhost:3000/enrollSeller/lists");
+      var tt = await this.$http.get(`${config.serverUri}/enrollSeller/lists`);
       this.dets = tt.data.body;
       alert("승인되었습니다.");
       this.sendSMS(
@@ -88,12 +90,12 @@ export default {
       );
     },
     async Reject(prop) {
-      var getUser = await this.$http.get(`http://localhost:3000/user/${prop}`);
+      var getUser = await this.$http.get(`${config.serverUri}/user/${prop}`);
 
-      await this.$http.post("http://localhost:3000/enrollSeller/reject", {
+      await this.$http.post(`${config.serverUri}/enrollSeller/reject`, {
         id: prop
       });
-      var tt = await this.$http.get("http://localhost:3000/enrollSeller/lists");
+      var tt = await this.$http.get(`${config.serverUri}/enrollSeller/lists`);
       this.dets = tt.data.body;
       alert("승인 거절 되었습니다.");
       this.sendSMS(

@@ -172,6 +172,7 @@
 import { mapGetters, mapState } from "vuex";
 import store from "./store";
 import router from "./router";
+const config = require('./config')
 
 export default {
   data() {
@@ -191,7 +192,7 @@ export default {
   },
   async created(){
     if(this.$store.state.Token!=null){
-      var temp=await this.$http.get(`http://localhost:3000/user/${this.$store.state.id}`)
+      var temp=await this.$http.get(`${config.serverUri}/user/${this.$store.state.id}`)
       if(temp.data.response.isSeller)
         this.$store.state.isSeller=true
     }

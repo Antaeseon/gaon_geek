@@ -34,6 +34,7 @@
 <script>
 import fb from "../firebase/init";
 import moment from "moment";
+const config = require('../config')
 
 export default {
   name: "Chat",
@@ -47,7 +48,7 @@ export default {
   },
   async created() {
     let tempRoomNum = await this.$http.post(
-      `http://localhost:3000/chat/getRoomNumber`,
+      `${config.serverUri}/chat/getRoomNumber`,
       {
         buyer_id: this.$store.state.id,
         seller_id: this.$route.params.id

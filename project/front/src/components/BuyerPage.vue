@@ -168,6 +168,7 @@
   </div>
 </template>
 <script>
+const config = require('../config')
 var _ = require("lodash");
 export default {
   data() {
@@ -240,7 +241,7 @@ export default {
   },
   async created() {
     let chatRoomNum = await this.$http.post(
-      `http://localhost:3000/chat/getSellerRoomList`,
+      `${config.serverUri}/chat/getSellerRoomList`,
       {
         buyer_id: this.$store.state.id
       }
@@ -249,16 +250,16 @@ export default {
     this.sellerRoomId = chatRoomNum.data;
 
     var tlist = await this.$http.post(
-      `http://localhost:3000/trade/getItemListByUserId`,
+      `${config.serverUri}/trade/getItemListByUserId`,
       {
         id: this.$store.state.id
       }
     );
     var user = await this.$http.get(
-      `http://localhost:3000/user/${sessionStorage.getItem("id")}`
+      `${config.serverUri}/user/${sessionStorage.getItem("id")}`
     );
     var items = await this.$http.post(
-      `http://localhost:3000/search/getItemLikeit`,
+      `${config.serverUri}/search/getItemLikeit`,
       {
         likeit: user.data.response.likeit
       }

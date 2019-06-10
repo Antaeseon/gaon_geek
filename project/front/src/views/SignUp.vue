@@ -85,6 +85,7 @@
 </template>
 
 <script>
+const config = require('../config')
 import { validationMixin } from "vuelidate";
 import { required, maxLength, email } from "vuelidate/lib/validators";
 const axios = require("axios");
@@ -148,7 +149,7 @@ export default {
   data: () => ({
     creds: {
       fbAppEventsEnabled: true,
-      redirect: "http://localhost:8080",
+      redirect: `${config.serverUri}`,
       display: "popup",
       debug: true
     },
@@ -266,7 +267,7 @@ export default {
     async doLogin(code, state) {
       try {
         const response = await axios.post(
-          "http://localhost:3030/api/otp/success",
+          `${config.serverUri}/api/otp/success`,
           { code, state }
         );
         // server validation successful with response.data.phone
@@ -280,7 +281,7 @@ export default {
     async getSession() {
       try {
         const response = await axios.get(
-          `http://localhost:3030/api/otp/session`
+          `${config.serverUri}/api/otp/session`
         );
         this.creds.state = response.data.csrf;
         this.creds.appId = response.data.appId;
@@ -315,7 +316,7 @@ export default {
         }
 
         try {
-          await this.$http.post(`http://localhost:3000/user/signup`, {
+          await this.$http.post(`${config.serverUri}/user/signup`, {
             id: this.id,
             pwd: this.password,
             name: this.name,

@@ -199,6 +199,8 @@ import Vue from "vue";
 import axios from "axios";
 import { mapState } from "vuex";
 import board from "../components/Board";
+const config = require('../config')
+
 export default {
   name:'Board',
   data() {
@@ -227,20 +229,20 @@ export default {
     console.log("여여여여", this.$route.params.id);
 
     await this.$http.get(
-      `http://localhost:3000/trade/plusVisitor/${this.$route.params.id}`
+      `${config.serverUri}/trade/plusVisitor/${this.$route.params.id}`
     );
     var res = await this.$http.get(
-      `http://localhost:3000/search/getOneItem/${this.$route.params.id}`
+      `${config.serverUri}/search/getOneItem/${this.$route.params.id}`
     );
     var rest = await this.$http.get(
-      `http://localhost:3000/trade/getTradeListByItemId/${
+      `${config.serverUri}/trade/getTradeListByItemId/${
         this.$route.params.id
       }`
     );
     // 로그인이 안되어 있다면, likeit 해제
     if (this.Token !== null) {
       var user = await this.$http.get(
-        `http://localhost:3000/user/${sessionStorage.getItem("id")}`
+        `${config.serverUri}/user/${sessionStorage.getItem("id")}`
       );
       if (user.data.response.likeit.includes(this.$route.params.id))
         this.likeit = true;
@@ -271,7 +273,7 @@ export default {
           this.likeitList.push(this.$route.params.id);
         }
         this.likeit = !this.likeit;
-        this.$http.post("http://localhost:3000/user/likeit", {
+        this.$http.post(`${config.serverUri}/user/likeit`, {
           id: sessionStorage.getItem("id"),
           body: { likeit: this.likeitList }
         });
@@ -279,13 +281,13 @@ export default {
     },
     submit() {
       //보내고 싶은 번호와 메세지
-      this.$http.post("http://localhost:3000/sens/sendMessage", {
+      this.$http.post(`${config.serverUri}/sens/sendMessage`, {
         phone: "01052817702",
         message: "wearever에서 대여 접수가 완료되었습니다."
       });
     },
     makeTrade() {
-      this.$http.post("http://localhost:3000/trade/makeTrade", {
+      this.$http.post(`${config.serverUri}/trade/makeTrade`, {
         buyer_id: this.$store.state.id,
         seller_id: this.mainItem.shop_id,
         item_id: this.$route.params.id,

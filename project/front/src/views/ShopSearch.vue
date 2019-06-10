@@ -206,6 +206,7 @@ import store from "./../store.js";
 import attribute from "./../attribute.js";
 import { mapActions, mapState } from "vuex";
 import GmapCustomMarker from 'vue2-gmap-custom-marker';
+const config = require('../config')
 
 
 export default {
@@ -254,7 +255,7 @@ export default {
   },
   async created() {
     var res = await this.$http.post(
-      `http://localhost:3000/search/getNationShoplist/`, { nation: this.$route.params.nation }
+      `${config.serverUri}/search/getNationShoplist/`, { nation: this.$route.params.nation }
     );
     this.shoplist = res.data.data;
     for(let i = 0; i < this.shoplist.length; i++)

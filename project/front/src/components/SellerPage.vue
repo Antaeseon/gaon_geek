@@ -178,8 +178,9 @@ import store from "./../store";
 import attribute from "./../attribute";
 import { mapState, mapActions, mapMutations } from "vuex";
 const axios = require("axios");
-
+const config = require('../config')
 export default {
+  
   data() {
     return {
       dialog: false,
@@ -316,7 +317,7 @@ export default {
   async created() {
     console.log("들어오");
     let chatRoomNum = await this.$http.post(
-      `http://localhost:3000/chat/getBuyerRoomList`,
+      `${config.serverUri}/chat/getBuyerRoomList`,
       {
         seller_id: this.$store.state.id
       }

@@ -159,6 +159,8 @@
   import store from './../store.js'
   import attribute from './../attribute.js'
   import { mapActions, mapMutations } from 'vuex';
+  const config = require('../config')
+
   var _ = require('lodash');
   export default {
     name: 'paginated-list',
@@ -185,7 +187,7 @@
     }),
   async created() {
     var res = await this.$http.post(
-      `http://localhost:3000/search/getItemlist/`, { shop_id: this.$route.params.shop_id }
+      `${config.serverUri}/search/getItemlist/`, { shop_id: this.$route.params.shop_id }
     );
     let cnt = 0;
     this.searchItemlist = res.data.data;

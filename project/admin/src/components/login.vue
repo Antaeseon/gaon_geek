@@ -27,7 +27,10 @@
 </template>
 
 <script>
+const config = require('../config')
+
 export default {
+  
   data: () => ({
     id:"",
     password:"",
@@ -35,7 +38,7 @@ export default {
   methods:{
     login(){
       try{
-        this.$http.post('http://localhost:3000/admin/login',{id:this.id, password : this.password})
+        this.$http.post(`${config.serverUri}/admin/login`,{id:this.id, password : this.password})
         this.$store.state.isLogin=true
       }
       catch(err){
