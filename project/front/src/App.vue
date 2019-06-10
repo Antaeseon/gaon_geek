@@ -90,8 +90,14 @@
             <v-list-tile-title>물품 등록</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        
-      
+        <v-list-tile router :to="{name: 'aboutus'}">
+          <v-list-tile-action>
+              <v-icon>mdi-briefcase-plus</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>About us</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar color="blue-grey darken-4" dark fixed app>
