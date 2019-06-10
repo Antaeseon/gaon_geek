@@ -141,5 +141,12 @@ export default new Router({
             component: () =>
                 import( /* webpackChunkName: "about" */ './views/enrollItem.vue')
         },
+        {
+            path: '/event',
+            name: 'event',
+
+            component: () =>
+                import( /* webpackChunkName: "about" */ './views/event.vue')
+        },
     ]
 })
