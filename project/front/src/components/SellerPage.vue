@@ -293,7 +293,7 @@ export default {
       else return false;
     },
     beforedeleteItem(form) {
-      this.deleteItem({ _id: id_copy });
+      this.deleteItem({ _id: this.id_copy });
       this.close();
     },
     clear() {
