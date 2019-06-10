@@ -286,8 +286,8 @@ export default {
         message: "wearever에서 대여 접수가 완료되었습니다."
       });
     },
-    makeTrade() {
-      this.$http.post(`${config.serverUri}/trade/makeTrade`, {
+    async makeTrade() {
+      await this.$http.post(`${config.serverUri}/trade/makeTrade`, {
         buyer_id: this.$store.state.id,
         seller_id: this.mainItem.shop_id,
         item_id: this.$route.params.id,
@@ -297,6 +297,15 @@ export default {
         trade_method: this.t_method,
         total_price: this.t_price
       });
+
+      if(this.t_method=="buy"){
+        await this.$http.post(`${config.serverUri}/item/itemStatusUpdate`,{
+          id: this.$route.params.id,
+          status: 2
+        })
+      }
+
+
     },
     computeDate() {
       console.log("dd", this.dates, "dd", this.datesend);

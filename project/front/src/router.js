@@ -144,7 +144,6 @@ export default new Router({
         {
             path: '/aboutus',
             name: 'aboutus',
-            beforeEnter: checkSeller,
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/Aboutus.vue')
         },
