@@ -310,10 +310,10 @@ export default {
       if (this.$v.$invalid) {
         //인증 안될때
       } else {
-        if (!this.isAuthentificated) {
-          alert("Please authentificate phone");
-          return;
-        }
+        // if (!this.isAuthentificated) {
+        //   alert("Please authentificate phone");
+        //   return;
+        // }
 
         try {
           await this.$http.post(`${config.serverUri}/user/signup`, {
