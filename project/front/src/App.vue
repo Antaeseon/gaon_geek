@@ -49,6 +49,9 @@
           </v-list-tile-content>
         </v-list-tile>
 
+
+        
+
         <!-- router :to="{name: 'enrollSeller'}" -->
         <!-- v-if="Token !== null" -->
         <v-list-tile @click="convert_login_status" v-if="!isSeller">
@@ -59,6 +62,17 @@
             <v-list-tile-title>판매자 등록</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+
+        <!-- mypage router로 지시 -->
+        <v-list-tile router :to="{name: 'event'}" >
+          <v-list-tile-action>
+            <v-icon>event_available</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Event</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        
         <v-list-tile v-if="isSeller" router :to="{name: 'modifySeller'}">
           <v-list-tile-action>
               <v-icon>mdi-account-edit</v-icon>
@@ -67,6 +81,7 @@
             <v-list-tile-title>판매자 정보 수정</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        
         <v-list-tile v-if="isSeller" router :to="{name: 'enrollItem'}">
           <v-list-tile-action>
               <v-icon>mdi-briefcase-plus</v-icon>
@@ -75,6 +90,8 @@
             <v-list-tile-title>물품 등록</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        
+      
       </v-list>
     </v-navigation-drawer>
     <v-toolbar color="blue-grey darken-4" dark fixed app>
@@ -101,6 +118,7 @@
               <v-list-tile-title>Log Out</v-list-tile-title>
             </v-list-tile>
           </v-list>
+          
         </v-menu>
         <!-- 로그인이 안되어있으면 로그인 버튼이 우측 상단에 표시 -->
         <!-- <v-btn flat v-else router :to="{name: 'login'}">Log In</v-btn> -->
@@ -156,6 +174,7 @@
         </v-dialog>
       </v-toolbar-items>
     </v-toolbar>
+     
     <!-- <img src= "https://s3.ap-northeast-2.amazonaws.com/wearever1/1557662747517.png"/> -->
     <v-content>
       <router-view></router-view>
