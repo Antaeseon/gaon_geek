@@ -88,7 +88,7 @@ router.post('/getItemLikeit', function(req, res, next) {
 
 /* List just one Item for using detail */
 /*
-    POST /search/getNationItemlist
+    POST /search/getOneItem
     {
         nation
     }

@@ -154,5 +154,14 @@ export default new Router({
             component: () =>
                 import ( /* webpackChunkName: "about" */ './views/event.vue')
         },
+        {
+            path: '/review/:id',
+            name: 'review',
+            props: true,
+
+            component: () =>
+                import ( /* webpackChunkName: "about" */ './views/Review.vue')
+        },
+
     ]
 })

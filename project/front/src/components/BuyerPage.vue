@@ -62,6 +62,13 @@
                     :to="{name: 'detail',params: { id: props.item.item_id._id }  }"
                   >Detail</v-btn>
                 </td>
+                <td class="text-xs-left">
+                  <v-btn
+                    small
+                    color="primary"
+                    :to="{name: 'review',params: { id: props.item.item_id._id }  }"
+                  >Reveiw</v-btn>
+                </td>
               </template>
             </v-data-table>
           </v-card-text>
@@ -91,51 +98,11 @@
                   >chatting</v-btn>
                 </td>
                 <td class="text-xs-left">
-                  <v-dialog v-model="dialog" persistent max-width="600px">
-                    <template v-slot:activator="{ on }">
-                      <v-btn small color="primary" dark v-on="on" @click="reviewRating">Review</v-btn>
-                    </template>
-                    <v-card>
-                      <v-card-title>
-                        <span class="headline">리뷰 작성</span>
-                      </v-card-title>
-                      <hr>
-                      <hr>
-                      <v-card-text>
-                        <v-container grid-list-md>
-                          <v-layout wrap>
-                            <v-flex xs12 sm6 md12>
-                              상품은 만족하셨나요?*
-                              <v-rating
-                                v-model="itemrating"
-                                background-color="red lighten-3"
-                                color="red"
-                                x-large
-                              ></v-rating>상점은 만족하셨나요?*
-                              <v-rating
-                                v-model="shoprating"
-                                background-color="red lighten-3"
-                                color="red"
-                                x-large
-                              ></v-rating>
-                              <hr>
-                              <br>리뷰*
-                              <v-textarea box placeholder="최소 10자리 이상 입력해주세요"></v-textarea>
-                            </v-flex>
-                            <small>
-                              *필수 입력
-                              <br>상품과 무관한 사진/동영상을 첨부한 리뷰는 통보없이 삭제 및 적립 혜택이 회수될 수 있습니다.
-                            </small>
-                          </v-layout>
-                        </v-container>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-                        <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
+                  <v-btn
+                    small
+                    color="primary"
+                    :to="{name: 'review',params: { id: props.item.item_id._id }}"
+                  >Reveiw</v-btn>
                 </td>
               </template>
             </v-data-table>
@@ -168,18 +135,20 @@
   </div>
 </template>
 <script>
-const config = require('../config')
+const config = require("../config");
 var _ = require("lodash");
 export default {
   data() {
     return {
-      itemrating: 5,
       shoprating: 5,
+      contents: '',
       active: null,
       dialog: false,
+      reviewDialog:false,
+      reviewDialog1:false,
       mainItem: [],
       sellerRoomId: [],
-      chatDialog:false,
+      chatDialog: false,
       headers: [
         {
           text: "상품명",
@@ -283,6 +252,19 @@ export default {
     },
     chatClose() {
       this.chatDialog = false;
+    },
+    async saveReview(sellerId,itemId) {
+      await this.$http.post(`${config.serverUri}/review/saveReview`, {
+        shop_id: sellerId,
+        buyer_id: this.$store.state.id,
+        item_id: itemId,
+        contents: this.contents,
+        rating:this.shoprating        
+      });
+      console.log('ggg',itemId)
+      this.contents='';
+      this.shoprating=5
+      this.reviewDialog = false;
     }
   }
 };
