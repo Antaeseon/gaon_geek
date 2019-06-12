@@ -45,4 +45,11 @@ router.post('/saveReview', async (req, res) => {
 
 })
 
+router.get('/getReview/:id', async (req, res) => {
+    var reviewList = await review.find({item_id:req.params.id})
+    res.send({data:reviewList})
+})
+
+
+
 module.exports = router;

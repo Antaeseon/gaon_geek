@@ -18,12 +18,31 @@
                 <v-card flat>
                   <board :childid="this.$store.state.id"></board>
                   <v-card-text>{{ qna }}</v-card-text>
-                  
                 </v-card>
               </v-tab-item>
+
+              <!-- 리뷰 -->
+
               <v-tab-item>
                 <v-card flat>
-                  <v-card-text>{{ review }}</v-card-text>
+                  <v-card-text>
+                    <v-data-table :headers="headers" :items="reviewList" class="elevation-1">
+                      <template v-slot:items="props">
+                        <td>{{ props.item.buyer_id }}</td>
+                        <td class="text-xs-left">{{ props.item.contents }}</td>
+                        <td class="text-xs-left">
+                          <v-rating
+                            v-model="props.item.rating"
+                            background-color="grey lighten-1"
+                            color="purple"
+                            small
+                            :readonly="true"
+                          ></v-rating>
+                        </td>
+                        <td class="text-xs-left">{{ props.item.date.substr(0,10) }}</td>
+                      </template>
+                    </v-data-table>
+                  </v-card-text>
                 </v-card>
               </v-tab-item>
             </v-tabs>
@@ -58,7 +77,6 @@
                         <br>
                         <hr>
                         <hr>
-
                         <br>
                         <v-chip color="white" text-color="secondary">
                           <v-icon left>mdi-cash-multiple</v-icon>price
@@ -69,7 +87,6 @@
                         <v-chip color="white" text-color="secondary">
                           <v-icon left>mdi-cash</v-icon>rental fee per day
                         </v-chip>
-
                         {{mainItem.rental}}원/day
                         <v-flex xs12 sm6 md12>
                           <v-chip color="white" text-color="secondary">
@@ -177,7 +194,9 @@
                             </v-date-picker>
                           </v-menu>
                         </v-flex>
-                        <v-btn fab dark small color="white" @click="requestPay"><v-icon color="green">mdi-currency-usd</v-icon></v-btn>
+                        <v-btn fab dark small color="white" @click="requestPay">
+                          <v-icon color="green">mdi-currency-usd</v-icon>
+                        </v-btn>
                         <v-btn fab dark small color="white" @click="likeitToggle()">
                           <v-icon v-if="likeit == true" color="pink">favorite</v-icon>
                           <v-icon v-if="likeit == false" color="pink">favorite_border</v-icon>
@@ -199,10 +218,10 @@ import Vue from "vue";
 import axios from "axios";
 import { mapState } from "vuex";
 import board from "../components/Board";
-const config = require('../config')
+const config = require("../config");
 
 export default {
-  name:'Board',
+  name: "Board",
   data() {
     return {
       tradeList: [],
@@ -222,12 +241,28 @@ export default {
       t_method: "",
       t_price: 0,
       likeit: false,
-      likeitList: []
+      likeitList: [],
+      reviewList: [],
+      headers: [
+        {
+          text: "ID",
+          align: "left",
+          sortable: false,
+          value: "id"
+        },
+        { text: "내용", sortable: false },
+        { text: "평점", sortable: false },
+        { text: "날짜", sortable: false }
+      ]
     };
   },
   async created() {
     console.log("여여여여", this.$route.params.id);
-
+    var rList = await this.$http.get(
+      `${config.serverUri}/review/getReview/${this.$route.params.id}`
+    );
+    console.log(`알리스트`, rList.data.data);
+    this.reviewList = rList.data.data;
     await this.$http.get(
       `${config.serverUri}/trade/plusVisitor/${this.$route.params.id}`
     );
@@ -235,9 +270,7 @@ export default {
       `${config.serverUri}/search/getOneItem/${this.$route.params.id}`
     );
     var rest = await this.$http.get(
-      `${config.serverUri}/trade/getTradeListByItemId/${
-        this.$route.params.id
-      }`
+      `${config.serverUri}/trade/getTradeListByItemId/${this.$route.params.id}`
     );
     // 로그인이 안되어 있다면, likeit 해제
     if (this.Token !== null) {
@@ -298,14 +331,12 @@ export default {
         total_price: this.t_price
       });
 
-      if(this.t_method=="buy"){
-        await this.$http.post(`${config.serverUri}/item/itemStatusUpdate`,{
+      if (this.t_method == "buy") {
+        await this.$http.post(`${config.serverUri}/item/itemStatusUpdate`, {
           id: this.$route.params.id,
           status: 2
-        })
+        });
       }
-
-
     },
     computeDate() {
       console.log("dd", this.dates, "dd", this.datesend);
