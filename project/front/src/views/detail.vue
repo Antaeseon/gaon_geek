@@ -16,8 +16,7 @@
               </v-tab-item>
               <v-tab-item>
                 <v-card flat>
-                  <board :childid="this.$store.state.id"></board>
-                  <v-card-text>{{ qna }}</v-card-text>
+                  <board :childid="this.$store.state.id" :Board="allBoard" :pItem="mainItem"></board>
                 </v-card>
               </v-tab-item>
 
@@ -224,12 +223,17 @@ export default {
   name: "Board",
   data() {
     return {
+      sending: {
+        hi: "dd",
+        ff: "aa"
+      },
+
       tradeList: [],
       pagaItem: [],
       mainItem: {},
       items: [],
+      allBoard: [],
       active: null,
-      qna: "판매문의입니다아",
       review: "리뷰입니다아",
       dates: "",
       datesend: "",
@@ -287,6 +291,11 @@ export default {
     this.items = this.mainItem.imageUrl;
     this.tradeList = rest.data.response;
     console.log("ddd", this.mainItem);
+    var retrunBoardList = await this.$http.get(
+      `${config.serverUri}/board/getBoard/${this.$route.params.id}`
+    );
+    this.allBoard=retrunBoardList.data.data
+    console.log('오롤보드',this.allBoard)
   },
   components: {
     board

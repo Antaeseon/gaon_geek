@@ -19,6 +19,7 @@ var sensRouter = require('./routes/api/sens')
 var itemUpdate = require('./routes/itemUpdate')
 var chat = require('./routes/chat')
 var review =require('./routes/review')
+var board =require('./routes/board')
 // 익스프레스 객체를 생성하고 환경 설정을 한다.
 
 // set up express app
@@ -58,6 +59,7 @@ app.use('/sens',sensRouter)
 app.use('/item',itemUpdate)
 app.use('/chat',chat)
 app.use('/review',review)
+app.use('/board',board)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
