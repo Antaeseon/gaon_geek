@@ -13,18 +13,18 @@
           <v-layout row wrap>
             <v-flex>
               <div>
-                <h3>업체 검색</h3>
+                <h3>{{ $t("message.shopsearch") }}</h3>
               </div>
               <v-text-field
                 outline
                 v-model="shopNameKeyword"
-                label="업체 검색"
+                v-bind:label="$t('message.shopsearch')"
                 append-icon="search"
               ></v-text-field>
               <v-layout justify-space-between row wrap>
               <v-flex xs6>
                 <gmap-autocomplete
-                  placeholder="위치 검색"
+                  v-bind:placeholder="$t('message.locationsearch')"
                   style="
                     width: 100%;
                     font-size: 15px;
@@ -45,7 +45,7 @@
                 <v-select
                 :items="distance"
                 v-model="distanceKeyword"
-                label="거리(Km)"
+                v-bind:label="$t('message.distance')"
                 ></v-select>
               </v-flex>
               </v-layout>
@@ -54,28 +54,28 @@
                 <v-select
                 :items="taglist"
                 v-model="selected_tag"
-                label="태그 검색"
+                v-bind:label="$t('message.tagsearch')"
                 chips
                 deletable-chips
                 @change="filter_etc"
                 ></v-select>
               </v-flex>
               <v-flex xs9>
-              <v-btn @click="filter()">조회하기</v-btn>
+              <v-btn @click="filter()">{{ $t("message.search") }}</v-btn>
               <v-btn
                 @click.stop="addMarker()"
               >
-                지도로 보기
+                {{ $t("message.viewmap") }}
               </v-btn>
               </v-flex>
               <v-flex xs1>
                 <v-btn-toggle v-model="selected_sorting">
                   <v-btn flat value="ru" @click="sorting('ru')">
-                    <span>평점</span>
+                    <span>{{ $t("message.rating") }}</span>
                     <v-icon>arrow_drop_up</v-icon>
                   </v-btn>
                   <v-btn flat value="rd" @click="sorting('rd')">
-                    <span>평점</span>
+                    <span>{{ $t("message.rating") }}</span>
                     <v-icon>arrow_drop_down</v-icon>
                   </v-btn>
                 </v-btn-toggle>
@@ -88,7 +88,7 @@
       height="800px"
     >
       <v-card>
-        <v-card-title class="headline">명품 중고 업체 위치</v-card-title>
+        <v-card-title class="headline"><span>{{ $t("message.locationofshop") }}</span></v-card-title>
 
         <v-card-text>
           <!-- Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running. -->
@@ -140,7 +140,7 @@
             flat="flat"
             @click="dialog = false"
           >
-            확인
+            {{ $t("message.ok") }}
           </v-btn>
         </v-card-actions>
 
@@ -345,7 +345,7 @@ export default {
             }
             else
             {
-              alert("거리 필터링에 실패하였습니다. 다시 시도해주세요!");
+              alert(this.$t("message.distancefilterfail"));
               index = this.shoplist.length + 1;
               this.filteredShoplist = this.filteredShoplistBackup.slice();
             }

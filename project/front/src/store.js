@@ -59,11 +59,11 @@ export default new Vuex.Store({
             sessionStorage.removeItem('Token')
             sessionStorage.removeItem('id')
             sessionStorage.removeItem('isSeller')
-            // localStorage로 하면 F5누를때, 다시 로그인 상태로 됨...
-            // localStorage.removeItem('Token')
-            // localStorage.removeItem('id')
-            // localStorage.removeItem('isSeller')
-            // console.log('token 삭제')
+                // localStorage로 하면 F5누를때, 다시 로그인 상태로 됨...
+                // localStorage.removeItem('Token')
+                // localStorage.removeItem('id')
+                // localStorage.removeItem('isSeller')
+                // console.log('token 삭제')
         },
         enrollDup(state) {
             state.isSubmitDup = true;
@@ -134,10 +134,10 @@ export default new Vuex.Store({
             }
             // 정렬 및 중복 제거 
             state.cnt_length = state.cnt_length.slice() // 정렬하기 전에 복사본을 만든다.
-                .sort(function (a, b) {
+                .sort(function(a, b) {
                     return a - b;
                 })
-                .reduce(function (a, b) {
+                .reduce(function(a, b) {
                     if (a.slice(-1)[0] !== b) a.push(b); // slice(-1)[0] 을 통해 마지막 아이템을 가져온다.
                     return a;
                 }, []);

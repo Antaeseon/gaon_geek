@@ -16,28 +16,28 @@
         <!-- <v-flex md3> -->     
           <v-text-field 
             outline
-            label="아이템 이름"
+            v-bind:label="$t('message.itemname')"
             append-icon="search"
             v-model="item_name"
           ></v-text-field>
           <v-layout>
             <v-flex xs6>
-            <div><h3>브랜드 선택</h3></div>
+            <div><h3>{{ $t('message.selectbrand') }}</h3></div>
         <v-select
             v-model="selected_brand"
             :items="brand"
-            label="Select Brand"
+            v-bind:label="$t('message.selectbrand')"
             chips
             multiple
             persistent-hint
         ></v-select>
             </v-flex>
             <v-flex xs6>
-            <div><h3>색상 선택</h3></div>
+            <div><h3>{{ $t('message.selectcolor') }}</h3></div>
         <v-select
             v-model="selected_color"
             :items="color"
-            label="Select Color"
+            v-bind:label="$t('message.selectcolor')"
             chips
             multiple
             persistent-hint
@@ -47,48 +47,48 @@
           </v-layout>
         <v-layout>
           <v-flex xs6>
-          <div><h3>카테고리</h3></div>
+          <div><h3>{{ $t('message.selectcategory') }}</h3></div>
         <v-select
             v-model="selected_category"
             :items="category"
-            label="Select Category"
+            v-bind:label="$t('message.selectcategory')"
             multiple
             chips
             persistent-hint
         ></v-select>
           </v-flex>
           <v-flex xs6>
-          <div><h3>태그</h3></div>
+          <div><h3>{{ $t('message.selecttag') }}</h3></div>
         <v-select
             v-model="selected_tag"
             :items="tag"
-            label="Select Tag"
+            v-bind:label="$t('message.selecttag')"
             multiple
             chips
             persistent-hint
         ></v-select>
           </v-flex>
         </v-layout>
-        <div><h3>가격대</h3></div>
+        <div><h3>{{ $t('message.pricevariation') }}</h3></div>
         <v-radio-group 
         class="justify-center" 
         v-model="priceORrental" 
         color="red" 
         row 
         >
-          <v-radio label="구매" value="구매" ></v-radio>
-          <v-radio label="렌탈" value="렌탈" ></v-radio>
+          <v-radio v-bind:label="$t('message.buy')" value="구매" ></v-radio>
+          <v-radio v-bind:label="$t('message.rent')" value="렌탈" ></v-radio>
         </v-radio-group>
         <v-layout>
           <v-flex xs6>
           <v-text-field 
-            label="최소 가격"
+            v-bind:label="$t('message.min')"
             v-model="min_price"
           ></v-text-field>
           </v-flex>
           <v-flex xs6>
           <v-text-field 
-            label="최대 가격"
+            v-bind:label="$t('message.max')"
             v-model="max_price"
           ></v-text-field>
           </v-flex>
@@ -96,28 +96,28 @@
         <v-layout justify-space-between>
           <v-flex xs10>
         <v-btn @click="filter()">
-           조회하기
+           {{ $t('message.search') }}
         </v-btn>
         <v-btn @click="clear()">
-           초기화
+           {{ $t('message.clear') }}
         </v-btn>
         </v-flex>
         <v-flex xs5>
           <v-btn-toggle v-model="selected_sorting">
             <v-btn flat value="pu" @click="sorting('pu')">
-              <span>가격</span>
+              <span>{{ $t('message.buy') }}</span>
               <v-icon>arrow_drop_up</v-icon>
             </v-btn>
             <v-btn flat value="pd" @click="sorting('pd')">
-              <span>가격</span>
+              <span>{{ $t('message.buy') }}</span>
               <v-icon>arrow_drop_down</v-icon>
             </v-btn>
             <v-btn flat value="ru" @click="sorting('ru')">
-              <span>렌탈</span>
+              <span>{{ $t('message.rent') }}</span>
               <v-icon>arrow_drop_up</v-icon>
             </v-btn>
             <v-btn flat value="rd" @click="sorting('rd')">
-              <span>렌탈</span>
+              <span>{{ $t('message.rent') }}</span>
               <v-icon>arrow_drop_down</v-icon>
             </v-btn>
           </v-btn-toggle>
