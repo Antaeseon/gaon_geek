@@ -2,7 +2,7 @@
     
 <v-container fluid grid-list-md>
   <div style="text-align:center">
-    <h1>나라를 선택해주세요</h1>
+    <h1>{{ $t("message.chooseCountry") }}</h1>
   </div>
   <v-layout row wrap>
     
@@ -27,7 +27,7 @@
 
       <div style="font-weight:bold;">
           <h2>
-            한국
+            {{ $t("message.korea") }}
           </h2>
       </div>
 
@@ -56,7 +56,7 @@
 
       <div style="font-weight:bold;">
           <h2>
-            이탈리아
+            {{ $t("message.italy") }}
           </h2>
       </div>
 
@@ -82,7 +82,7 @@
 
       <div style="font-weight:bold;">
           <h2>
-            일본
+            {{ $t("message.japan") }}
           </h2>
       </div>
 
@@ -108,7 +108,7 @@
 
       <div style="font-weight:bold;">
           <h2>
-            호주
+            {{ $t("message.austrailia") }}
           </h2>
       </div>
 
@@ -136,7 +136,7 @@
 
       <div style="font-weight:bold;">
           <h2>
-            영국
+            {{ $t("message.uk") }}
           </h2>
       </div>
 
@@ -162,7 +162,7 @@
 
       <div style="font-weight:bold;">
           <h2>
-            미국
+            {{ $t("message.usa") }}
           </h2>
       </div>
 
@@ -188,7 +188,7 @@
 
       <div style="font-weight:bold;">
           <h2>
-            프랑스
+            {{ $t("message.france") }}
           </h2>
       </div>
 
@@ -215,7 +215,7 @@
 
       <div style="font-weight:bold;">
           <h2>
-            중국
+            {{ $t("message.china") }}
           </h2>
       </div>
 
@@ -242,7 +242,7 @@
 
       <div style="font-weight:bold;">
           <h2>
-            독일
+            {{ $t("message.germany") }}
           </h2>
       </div>
 
@@ -269,7 +269,7 @@
 
       <div style="text-align:center; font-weight:bold;">
           <h2>
-            인도
+            {{ $t("message.india") }}
           </h2>
       </div>
 

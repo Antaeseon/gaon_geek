@@ -8,7 +8,7 @@
             <v-icon>home</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Home</v-list-tile-title>
+            <v-list-tile-title>{{ $t("message.home") }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <!-- mypage router로 지시
@@ -36,7 +36,7 @@
             <v-icon>place</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>판매자 위치</v-list-tile-title>
+            <v-list-tile-title>{{ $t("message.sellerLoc") }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <!-- mypage router로 지시 -->
@@ -45,7 +45,7 @@
             <v-icon>shopping_basket</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>shopping</v-list-tile-title>
+            <v-list-tile-title>Shopping</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
@@ -59,7 +59,7 @@
             <v-icon>supervisor_account</v-icon>
           </v-list-tile-action>
           <v-list-tile-content v-if="!isSeller">
-            <v-list-tile-title>판매자 등록</v-list-tile-title>
+            <v-list-tile-title>{{ $t("message.selleren") }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
@@ -78,7 +78,7 @@
               <v-icon>mdi-account-edit</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>판매자 정보 수정</v-list-tile-title>
+            <v-list-tile-title>{{ $t("message.sellerMod") }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         
@@ -87,7 +87,7 @@
               <v-icon>mdi-briefcase-plus</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>물품 등록</v-list-tile-title>
+            <v-list-tile-title>{{ $t("message.itemen") }}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <v-list-tile router :to="{name: 'aboutus'}">
@@ -193,10 +193,14 @@
   </v-app>
 </template>
 
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
+
 <script>
 import { mapGetters, mapState } from "vuex";
 import store from "./store";
 import router from "./router";
+import VueI18n from 'vue-i18n'
 const config = require('./config')
 window.channelPluginSettings = {
     "pluginKey": "cae3e8e9-3d9d-4da3-a757-b0d1157b1f26" //please fill with your plugin key
@@ -244,7 +248,8 @@ export default {
       dialog: store.state.login_dialog,
       drawer: null,
       uid: "",
-      pwd: ""
+      pwd: "",
+      i18n : null,
     };
   },
   computed: {
