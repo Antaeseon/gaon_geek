@@ -17,7 +17,7 @@ export default {
     state: ['상', '중', '하'],
     status: ['대여 가능', '대여 중', '판매 완료', '세탁 중', '배송 중', '수리 중'],
     nation: ['대한민국', '이탈리아', '일본', '호주', '영국', '미국', '프랑스', '중국', '독일', '인도'],
-    color: ['Beige', 'Black', 'Blue', 'Brown', 'Charcoal', 'Gray', 'Green',
-        'Indigo', 'Khaki', 'Light Pink', 'Lime', 'Olive', 'Orange', "Pink", 'Red', 'Sky', 'White', 'Yellow'
+    color: ['Beige', 'Black', 'Blue', 'Brown', 'Burgundy', 'Charcoal', 'Gold', 'Gray', 'Green', 'Indigo', 'Khaki', 'Light Pink', 'Lime', 'Melange',
+        'Navy', 'Olive', 'Oatmeal', 'Orange', "Pink", 'Red', 'Silver', 'Sky', 'White', 'Wine', 'Yellow'
     ],
 }
