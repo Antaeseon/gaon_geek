@@ -23,12 +23,23 @@
               ></v-text-field>
               <v-layout justify-space-between row wrap>
               <v-flex xs6>
-                <v-text-field
-                  outline
-                  v-model="locationKeyword"
-                  label="위치 검색"
-                  append-icon="search"
-                ></v-text-field>
+                <gmap-autocomplete
+                  placeholder="위치 검색"
+                  style="
+                    width: 100%;
+                    font-size: 15px;
+                    font-weight: bold;
+                    outline: primary;
+                    background-color: #E2E2E2;
+                    height: 50px;
+                    line-height: normal;
+                    text-align: left;
+                    padding: .8em .5em;
+                    border-radius: 2px;
+                    border: primary;  
+                  "
+                  @place_changed="setFilterPlace"
+                ></gmap-autocomplete>
               </v-flex>
               <v-flex xs4>
                 <v-select
@@ -324,19 +335,22 @@ export default {
           });
         });
       }
-
-        for(let index = 0; index < this.shoplist.length; index++)
-        {
-          distanceFilter(this.locationKeyword).then((result) =>{
-          if(result.tag != 'Error')
+        distanceFilter(this.locationKeyword).then((result) =>{
+          for(let index = 0; index < this.shoplist.length; index++)
           {
-            let dist = this.computeDistance(result.lat,result.lon, this.shoplist[index].lat, this.shoplist[index].lon);
-            if(dist <= this.distanceKeyword) this.filteredShoplist.push(this.shoplist[index]);
+            if(result.tag != 'Error')
+            {
+              let dist = this.computeDistance(result.lat,result.lon, this.shoplist[index].lat, this.shoplist[index].lon);
+              if(dist <= this.distanceKeyword) this.filteredShoplist.push(this.shoplist[index]);
+            }
+            else
+            {
+              alert("거리 필터링에 실패하였습니다. 다시 시도해주세요!");
+              index = this.shoplist.length + 1;
+              this.filteredShoplist = this.filteredShoplistBackup.slice();
+            }
           }
-          else this.filteredShoplist.push(this.shoplist[index]);
-        
-          });
-        }
+        });
     },
     filter_etc()
     {
@@ -365,7 +379,9 @@ export default {
      setPlace(place) {
       this.currentPlace = place;
     },
-
+    setFilterPlace(place) {
+      this.locationKeyword = place.formatted_address;
+    },
     // shop name, tag, shop사진, 클릭했을 때가 가장 좋음.
     addMarker() {
       console.log("A:"+this.startLocation.lat, this.startLocation.lng);
@@ -478,8 +494,7 @@ export default {
         this.infoOpened = true
         this.infoCurrentKey = key
       }
-    }
-    
+    },
   },
   computed: {
     ...mapState(['showShop']),
