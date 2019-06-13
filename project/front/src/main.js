@@ -35,7 +35,7 @@ Vue.use(require('vue-moment'));
 
 Vue.use(VueI18n)
 const i18n = new VueI18n({
-    locale: 'en',
+    locale: 'ko',
     messages: messages.messages,
 })
 

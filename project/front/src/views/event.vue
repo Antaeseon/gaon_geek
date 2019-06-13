@@ -18,7 +18,7 @@
                 ></v-img>
 
                 <v-card-actions >
-                <v-btn  style="margin:auto; font-size:30px;"  flat color="orange" >참여하기</v-btn>
+                <v-btn  style="margin:auto; font-size:30px;"  flat color="orange" >{{ $t("message.join") }}</v-btn>
                 </v-card-actions>
 
             </v-card>
@@ -34,7 +34,7 @@
                 ></v-img>
 
                 <v-card-actions>
-                <v-btn style="margin:auto; font-size:30px;"  flat color="orange" >참여하기</v-btn>
+                <v-btn style="margin:auto; font-size:30px;"  flat color="orange" >{{ $t("message.join") }}</v-btn>
                 </v-card-actions>
 
             </v-card>

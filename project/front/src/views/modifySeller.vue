@@ -9,18 +9,18 @@
                 :value="modifySellerError"
                 type="error"
                 >
-                장애가 발생했습니다. 잠시만 기다려주세요.
+                {{ $t("message.error") }}
                 </v-alert>
                 <v-card>
                     <v-toolbar flat height="30"> 
-                        <v-toolbar-title>Modify Seller</v-toolbar-title>
+                        <v-toolbar-title>{{ $t("message.sellerMod") }}</v-toolbar-title>
                     </v-toolbar>
                     <div class="pa-3">
                     <v-text-field
                         v-model="name"
                         :error-messages="nameErrors"
                         required
-                        label="업체명을 입력하세요."
+                        v-bind:label="$t('message.inputsellername')"
                         @input="$v.name.$touch()"
                         @blur="$v.name.$touch()"
                     >
@@ -29,7 +29,7 @@
                     v-model="nation"
                     :items="nation_lists"
                     attach
-                    label="서비스 국가를 선택하세요."
+                    v-bind:label="$t('message.inputservicenation')"
                     :error-messages="nationErrors"
                     @input="$v.nation.$touch()"
                     @blur="$v.nation.$touch()"
@@ -38,7 +38,7 @@
                         v-model="location"
                         :error-messages="locationErrors"
                         required
-                        label="업체 위치를 입력하세요."
+                        v-bind:label="$t('message.inputsellerloc')"
                         @input="$v.location.$touch()"
                         @blur="$v.location.$touch()"
                     >
@@ -47,7 +47,7 @@
                         v-model="about_us"
                         :error-messages="aboutusErrors"
                         required
-                        label="업체 소개를 입력하세요."
+                        v-bind:label="$t('message.inputsellerprofile')"
                         @input="$v.about_us.$touch()"
                         @blur="$v.about_us.$touch()"
                     >
@@ -56,7 +56,7 @@
                         v-model="tag"
                         :error-messages="tagErrors"
                         required
-                        label="업체 소개에 보여질 카테고리 태그를 입력해주세요."
+                        v-bind:label="$t('message.inputcategorytag')"
                         @input="$v.tag.$touch()"
                         @blur="$v.tag.$touch()"
                     >
@@ -68,7 +68,7 @@
                         large
                         @click="submit"
                     >
-                        Submit
+                        {{ $t('message.submit') }}
                     </v-btn>
                     </div>
                 </v-card>

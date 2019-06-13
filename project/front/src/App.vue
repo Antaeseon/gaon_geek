@@ -109,7 +109,12 @@
         <!-- <v-btn icon v-if="showId">
           <v-icon>notifications</v-icon>
         </v-btn> -->
-
+        <v-btn flat dark icon @click="$i18n.locale = 'ko'">
+          한국어&nbsp&nbsp&nbsp&nbsp&nbsp
+        </v-btn>
+        <v-btn flat dark icon @click="$i18n.locale = 'en'">
+          English
+        </v-btn>
         <v-menu offset-y v-if="showId">
           <template v-slot:activator="{ on }">
             <v-btn flat dark v-on="on" icon>

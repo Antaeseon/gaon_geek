@@ -9,7 +9,7 @@
       column
       justify-center
     >
-      <h1 class="display-2 font-weight-thin mb-3">WearEver에 물품을 등록해보세요!</h1>
+      <h1 class="display-2 font-weight-thin mb-3">{{ $t("message.enrollitem") }}</h1>
     </v-layout>
   </v-parallax>
     <v-container grid-list-xs text-xs-center>
@@ -18,13 +18,13 @@
     :value="isSubmitError"
     type="error"
     >
-    장애가 발생했습니다. 잠시만 기다려주세요.
+    {{ $t("message.error") }}
     </v-alert>
     <form>
       <v-text-field
         v-model="item_name"
         :error-messagesd="item_nameErrors"
-        label="Item Name"
+        v-bind:label="$t('message.itemname')"
         required
         @input="$v.item_name.$touch()"
         @blur="$v.item_name.$touch()"
@@ -33,7 +33,7 @@
       v-model="brand"
       :items="brand_list"
       attach
-      label="Brand"
+      v-bind:label="$t('message.brand')"
       required
       :error-messages="brandErrors"
       @input="$v.brand.$touch()"
@@ -43,7 +43,7 @@
       v-model="color"
       :items="color_list"
       attach
-      label="Color"
+      v-bind:label="$t('message.color')"
       :error-messages="colorErrors"
       @input="$v.color.$touch()"
       @blur="$v.color.$touch()"
@@ -51,7 +51,7 @@
       <v-textarea
         v-model="detail"
         :error-messages="detailErrors"
-        label="Detail"
+        v-bind:label="$t('message.detail')"
         required
         @input="$v.detail.$touch()"
         @blur="$v.detail.$touch()"
@@ -59,7 +59,7 @@
       <v-text-field
         v-model="rental"
         :error-messages="rentalErrors"
-        label="Rental Fee/Day(Won)"
+        v-bind:label="$t('message.rentalfee')"
         required
         @input="$v.rental.$touch()"
         @blur="$v.rental.$touch()"
@@ -68,7 +68,7 @@
       <v-text-field
         v-model="price"
         :error-messages="priceErrors"
-        label="Selling Price(Won)"
+        v-bind:label="$t('message.sellingfee')"
         required
         @input="$v.price.$touch()"
         @blur="$v.price.$touch()"
@@ -77,7 +77,7 @@
       <v-text-field
         v-model="material"
         :error-messages="materialErrors"
-        label="Material"
+        v-bind:label="$t('message.material')"
         required
         @input="$v.material.$touch()"
         @blur="$v.material.$touch()"
@@ -85,7 +85,7 @@
       <v-text-field
         v-model="selected_size"
         :error-messages="sizeErrors"
-        label="Size"
+        v-bind:label="$t('message.size')"
         required
         @input="$v.selected_size.$touch()"
         @blur="$v.selected_size.$touch()"
@@ -95,7 +95,7 @@
         v-model="state"
         :items="state_list"
         attach
-        label="State"
+        v-bind:label="$t('message.state')"
         :error-messages="stateErrors"
         @input="$v.state.$touch()"
         @blur="$v.state.$touch()"
@@ -106,7 +106,7 @@
         v-model="selected_category"
         :items="category"
         attach
-        label="Category"
+        v-bind:label="$t('message.category')"
         :error-messages="categoryErrors"
         @input="$v.selected_category.$touch()"
         @blur="$v.selected_category.$touch()"
@@ -117,7 +117,7 @@
         v-model="selected_tag"
         :items="tag"
         attach
-        label="Tag"
+        v-bind:label="$t('message.tag')"
         chips
         multiple
         :error-messages="tagErrors"
@@ -138,7 +138,7 @@
     </v-flex> -->
     <v-text-field
     readonly
-    label="Select Item Images"
+    v-bind:label="$t('message.selectitemimages')"
     v-model="imageName"
     prepend-icon='attach_file'
     required
@@ -158,7 +158,7 @@
 
     <v-text-field
     readonly
-    label="Select guarantee of item"
+    v-bind:label="$t('message.selectgurantee')"
     v-model="certificateName"
     prepend-icon='attach_file'
     required
@@ -177,14 +177,14 @@
       <v-checkbox
         v-model="checkbox"
         :error-messages="checkboxErrors"
-        label="Do you agree?"
+        v-bind:label="$t('message.agree')"
         required
         @change="$v.checkbox.$touch()"
         @blur="$v.checkbox.$touch()"
       ></v-checkbox>
 
-      <v-btn @click="submit">Submit</v-btn>
-      <v-btn @click="clear">Clear</v-btn>
+      <v-btn @click="submit">{{ $t('message.submit') }}</v-btn>
+      <v-btn @click="clear">{{ $t('message.clear') }}</v-btn>
     </form>
   </v-container>
 </div>
@@ -346,7 +346,7 @@ export default {
       if(this.formBlankTest())
       {
           if (!this.checkbox) {
-          alert("약관에 동의해주세요");
+          alert(this.$t('message.pleaseagree'));
           return;
           }
               const formData = new FormData();
