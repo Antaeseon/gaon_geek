@@ -516,14 +516,18 @@ export default {
       this.currentPlace = place;
     },
     addMarker() {
+      this.markers=[];
       if (this.currentPlace) {
         // console.log(this.currentPlace.formatted_address)
         this.location = this.currentPlace.formatted_address.slice(); //JSON.stringify();
+        
         //   console.log("current:"+JSON.stringify(this.currentPlace.name))
         const marker = {
           lat: this.currentPlace.geometry.location.lat(),
           lng: this.currentPlace.geometry.location.lng()
         };
+
+        // console.log("marker:"+marker.lat);
         this.markers.push({ position: marker });
         this.places.push(this.currentPlace);
         this.center = marker;
