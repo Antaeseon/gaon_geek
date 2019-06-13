@@ -154,8 +154,8 @@ export default {
         `${config.serverUri}/board/getBoard/${this.pItem._id}`
       );
       this.allBoard = retrunBoardList.data.data;
-      this.Board=this.allBoard
-       console.log(id);
+      this.Board = this.allBoard;
+      console.log(id);
     },
     editItem(item) {
       this.editedIndex = this.board.indexOf(item);
@@ -187,6 +187,11 @@ export default {
         title: this.title,
         content: this.content
       });
+      var retrunBoardList = await this.$http.get(
+        `${config.serverUri}/board/getBoard/${this.pItem._id}`
+      );
+      this.allBoard = retrunBoardList.data.data;
+      this.Board = this.allBoard;
 
       this.close();
     }
