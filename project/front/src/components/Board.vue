@@ -34,7 +34,8 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-            <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+            <v-btn color="blue darken-1" flat @click="save" v-if="stat==true">Save</v-btn>
+            <v-btn color="blue darken-1" flat @click="update" v-else>Update</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -87,6 +88,7 @@ export default {
   data: () => ({
     expand: false,
     dialog: false,
+    stat: true,
     answer: "답변없음",
     inputanswer: "",
     today: new Date().toISOString().substr(0, 10),
@@ -94,6 +96,7 @@ export default {
     content: "",
     userid: "",
     itemInfo: {},
+    tempUpdateItem: {},
     headers: [
       { text: "작성자", value: "childid" },
       {
@@ -109,8 +112,8 @@ export default {
     board: [],
     editedIndex: -1
   }),
-  created() {
-    console.log(this.Board);
+  mounted() {
+    console.log("aaa", this.Board);
   },
   // async created() {
   //   this.userid = this.childid;
@@ -158,32 +161,61 @@ export default {
       console.log(id);
     },
     editItem(item) {
-      this.editedIndex = this.board.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      if (this.childid != item.buyer_id) {
+        alert("작성자만 수정 가능합니다.");
+        return;
+      }
       this.dialog = true;
+      this.stat = false;
+      this.tempUpdateItem = item;
+      this.title = item.title;
+      this.content = item.content;
     },
-    aaa() {
-      console.log("나와라", this.$store.state.id);
-    },
-    deleteItem(item) {
-      const index = this.board.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
-        this.board.splice(index, 1);
-    },
+    async deleteItem(item) {
+      if (this.childid != item.buyer_id) {
+        alert("작성자만 삭제 가능합니다.");
+        return;
+      }
 
+      if (confirm("Are you sure you want to delete this item?")) {
+        console.log(item);
+        await this.$http.post(`${config.serverUri}/board/removeBoard`, {
+          id: item._id
+        });
+        var retrunBoardList = await this.$http.get(
+          `${config.serverUri}/board/getBoard/${this.pItem._id}`
+        );
+        this.allBoard = retrunBoardList.data.data;
+        this.Board = this.allBoard;
+      }
+    },
     close() {
       this.dialog = false;
       setTimeout(() => {
         this.title = "";
         this.content = "";
+        this.stat = true;
       }, 300);
     },
-
     async save() {
       await this.$http.post(`${config.serverUri}/board/saveBoard`, {
         shop_id: this.pItem.shop_id,
         buyer_id: this.childid,
         item_id: this.pItem._id,
+        title: this.title,
+        content: this.content
+      });
+      var retrunBoardList = await this.$http.get(
+        `${config.serverUri}/board/getBoard/${this.pItem._id}`
+      );
+      this.allBoard = retrunBoardList.data.data;
+      this.Board = this.allBoard;
+
+      this.close();
+    },
+    async update() {
+      await this.$http.post(`${config.serverUri}/board/modifyBoard`, {
+        id: this.tempUpdateItem._id,
         title: this.title,
         content: this.content
       });
