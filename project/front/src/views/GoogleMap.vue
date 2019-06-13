@@ -12,10 +12,10 @@ data: () => ({
   locations : [
       {
         // 서울
-        position: {
-          lat: 37.541,
-          lng: 126.986,
-        },
+        // position: {
+        //   lat: 37.541,
+        //   lng: 126.986,
+        // },
       }
     ]
     }),
